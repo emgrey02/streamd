@@ -70,7 +70,6 @@ export default function MovieList({ cat }: Props) {
         } else if (direction === 'back') {
             let scrollCont =
                 target.previousElementSibling?.previousElementSibling;
-            console.log('back button pressed');
             scrollCont?.scrollBy({
                 left: -window.innerWidth + 120,
                 behavior: 'smooth',
@@ -137,7 +136,12 @@ export default function MovieList({ cat }: Props) {
                         </button>
                     </>
                 )}
-                <button className="self-end py-4">See More</button>
+                <button
+                    onClick={() => router.push(`/${cat}/1`)}
+                    className="self-end py-4"
+                >
+                    See More
+                </button>
             </div>
         </>
     );
