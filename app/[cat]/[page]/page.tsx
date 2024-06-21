@@ -19,7 +19,11 @@ interface Movie {
     vote_count: number;
 }
 
-export default async function Page({ params }: { params: { page: string } }) {
+export default async function Page({
+    params,
+}: {
+    params: { cat: string; page: string };
+}) {
     const options = {
         method: 'GET',
         headers: {
@@ -29,24 +33,24 @@ export default async function Page({ params }: { params: { page: string } }) {
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/movie/now_playing?language=en-US&page=${params.page}`,
+        `https://api.themoviedb.org/3/movie/${params.cat}?language=en-US&page=${params.page}`,
         options
     );
 
     if (!res.ok) {
-        console.error('failed to fetch movies');
+        console.error('failed to fetch now playing movies');
     }
 
     const movies = await res.json();
     const totalPages = movies.total_pages;
     return (
         <>
-            <h1 className="font-medium text-center">Now Playing</h1>
+            <h1 className="font-medium text-center">{params.cat}</h1>
             <div className="grid grid-cols-2 px-4 py-8">
                 {+params.page > 1 && (
                     <Link
                         className="col-start-1"
-                        href={`/now_playing/${+params.page - 1}`}
+                        href={`/${params.cat}/${+params.page - 1}`}
                     >
                         Previous
                     </Link>
@@ -54,7 +58,7 @@ export default async function Page({ params }: { params: { page: string } }) {
                 {+params.page < totalPages && (
                     <Link
                         className="col-start-2 justify-self-end"
-                        href={`/now_playing/${+params.page + 1}`}
+                        href={`/${params.cat}/${+params.page + 1}`}
                     >
                         Next
                     </Link>
@@ -89,7 +93,7 @@ export default async function Page({ params }: { params: { page: string } }) {
                 {+params.page > 1 && (
                     <Link
                         className="col-start-1"
-                        href={`/now_playing/${+params.page - 1}`}
+                        href={`/${params.cat}/${+params.page - 1}`}
                     >
                         Previous
                     </Link>
@@ -97,7 +101,7 @@ export default async function Page({ params }: { params: { page: string } }) {
                 {+params.page < totalPages && (
                     <Link
                         className="col-start-2 justify-self-end"
-                        href={`/now_playing/${+params.page + 1}`}
+                        href={`/${params.cat}/${+params.page + 1}`}
                     >
                         Next
                     </Link>
