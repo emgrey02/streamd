@@ -77,12 +77,14 @@ export default async function Page({
                                 key={index}
                             >
                                 <h3>{m.title}</h3>
-                                <Image
-                                    src={`https://image.tmdb.org/t/p/w200${m.poster_path}`}
-                                    alt="movie poster"
-                                    width={200}
-                                    height={300}
-                                />
+                                <Link href={`/movie/${m.id.toString()}`}>
+                                    <Image
+                                        src={`https://image.tmdb.org/t/p/w200${m.poster_path}`}
+                                        alt="movie poster"
+                                        width={200}
+                                        height={300}
+                                    />
+                                </Link>
                                 <p>{m.release_date}</p>
                             </li>
                         )
