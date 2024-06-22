@@ -62,7 +62,7 @@ export default async function Page() {
                         )
                     )}
                 </ul>
-            :   <p>you haven't favorited any movies!</p>}
+            :   <p>you haven&apos;t favorited any movies!</p>}
         </>
     );
 }
