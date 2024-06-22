@@ -4,13 +4,17 @@ import Image from 'next/image';
 import { Key } from 'react';
 import { User, currentUser } from '@clerk/nextjs/server';
 import FavoriteButton from '@/app/components/FavoriteButton';
+import Link from 'next/link';
 
 export default async function Movie({ params }: { params: { id: string } }) {
     let movieId = params.id;
+    let accountId: unknown;
 
     const user: User | null = await currentUser();
 
-    let accountId: string | unknown = user?.publicMetadata.accountId;
+    if (user) {
+        accountId = user.publicMetadata.accountId;
+    }
 
     const options = {
         method: 'GET',
@@ -51,12 +55,17 @@ export default async function Movie({ params }: { params: { id: string } }) {
                             )
                         )}
                     </ul>
-                    <FavoriteButton movieId={deets.id} accountId={accountId} />
+                    {typeof accountId === 'string' && (
+                        <FavoriteButton
+                            movieId={deets.id}
+                            accountId={accountId}
+                        />
+                    )}
                 </div>
             </div>
             <p>{deets.release_date}</p>
             <p>{deets.overview}</p>
-            {/* <button onClick={() => redirect('/')}>Back</button> */}
+            <Link href="/">Back</Link>
         </>
     );
 }
