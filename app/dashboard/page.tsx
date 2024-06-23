@@ -1,42 +1,39 @@
-import { auth, currentUser } from '@clerk/nextjs/server';
+import { kv } from '@vercel/kv';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Key } from 'react';
 
-const dynamic = 'force-dynamic';
+export const dynamic = 'force-dynamic';
 
 export default async function Page() {
-    const { userId } = auth();
+    const userSession: UserSession | null = await kv.get('userSession');
+    const accountId: string | undefined = userSession?.account_id;
 
-    const user = await currentUser();
+    cache: 'no-store' as RequestInit;
 
-    let favMovies;
+    const options: RequestInit = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+        cache: 'no-store',
+    };
 
-    if (userId) {
-        const accountId = user?.publicMetadata.accountId;
-        const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-            },
-        };
+    let res = await fetch(
+        `https://api.themoviedb.org/4/account/${accountId}/movie/favorites?page=1&language=en-US`,
+        options
+    );
 
-        let res = await fetch(
-            `https://api.themoviedb.org/4/account/${accountId}/movie/favorites?page=1&language=en-US`,
-            options
-        );
-
-        if (!res.ok) {
-            console.error('failed to fetch favorite movies');
-        }
-
-        favMovies = await res.json();
+    if (!res.ok) {
+        console.error('failed to fetch favorite movies');
     }
+
+    const favMovies = await res.json();
 
     return (
         <>
             <h1>User Dashboard</h1>
-            {userId && <p>{user?.firstName}</p>}
             <h2> your favorite movies:</h2>
             {favMovies && favMovies.results.length >= 1 ?
                 <ul>
@@ -46,16 +43,22 @@ export default async function Page() {
                                 poster_path: string;
                                 title: string;
                                 overview: string;
+                                id: string;
                             },
                             index: Key | null | undefined
                         ) => (
                             <li key={index}>
-                                <Image
-                                    src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-                                    alt="movie poster"
-                                    width={200}
-                                    height={300}
-                                />
+                                <Link
+                                    className="col-start-1"
+                                    href={`/movie/${movie.id}`}
+                                >
+                                    <Image
+                                        src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                                        alt="movie poster"
+                                        width={200}
+                                        height={300}
+                                    />
+                                </Link>
                                 <p>{movie.title}</p>
                                 <p>{movie.overview}</p>
                             </li>

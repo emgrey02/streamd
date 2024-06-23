@@ -2,19 +2,15 @@
 
 import Image from 'next/image';
 import { Key } from 'react';
-import { User, currentUser } from '@clerk/nextjs/server';
 import FavoriteButton from '@/app/components/FavoriteButton';
 import Link from 'next/link';
+import { kv } from '@vercel/kv';
 
 export default async function Movie({ params }: { params: { id: string } }) {
     let movieId = params.id;
-    let accountId: unknown;
 
-    const user: User | null = await currentUser();
-
-    if (user) {
-        accountId = user.publicMetadata.accountId;
-    }
+    const userSession: UserSession | null = await kv.get('userSession');
+    const accountId: string | undefined = userSession?.account_id;
 
     const options = {
         method: 'GET',

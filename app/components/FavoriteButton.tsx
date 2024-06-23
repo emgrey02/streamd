@@ -14,6 +14,7 @@ export default function FavoriteButton({
 
     async function retrieveFavorites() {
         let favorites = await getFavorites(accountId);
+        console.log(favorites);
         setFavorites(favorites);
     }
 
