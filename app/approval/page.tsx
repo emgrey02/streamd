@@ -5,6 +5,7 @@ import { kv } from '@vercel/kv';
 
 //user is sent to this page after authenticating with tmdb
 export default async function Page() {
+    const url = process.env.BASE_URL;
     //get request token
     const reqToken = await kv.get('reqToken');
     console.log('reqtoken', reqToken);
@@ -39,5 +40,5 @@ export default async function Page() {
     let session = await kv.get('userSession');
     console.log(session);
 
-    redirect('http://localhost:3000/dashboard');
+    redirect(`${url}/dashboard`);
 }

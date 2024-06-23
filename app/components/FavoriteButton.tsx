@@ -14,7 +14,6 @@ export default function FavoriteButton({
 
     async function retrieveFavorites() {
         let favorites = await getFavorites(accountId);
-        console.log(favorites);
         setFavorites(favorites);
     }
 
@@ -28,10 +27,8 @@ export default function FavoriteButton({
                 return m.id.toString() == movieId.toString();
             });
             if (res === undefined) {
-                console.log('no match found');
                 setCanFavorite(true);
             } else {
-                console.log("it's a match:" + res);
                 setCanFavorite(false);
             }
         }

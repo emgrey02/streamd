@@ -1,15 +1,16 @@
-import { redirect } from 'next/navigation';
 import { kv } from '@vercel/kv';
 import MovieList from './components/MovieList';
 import { Key } from 'react';
 import TmdbSignIn from './components/TmdbSignIn';
 
 export default async function Home() {
-    //if user hasn't been authenticated with tmdb
     const userSession: UserSession | null = await kv.get('userSession');
     const accessToken: string | undefined = userSession?.access_token;
 
-    if (!accessToken) {
+    const url: string | undefined = process.env.BASE_URL;
+
+    //if user hasn't been authenticated with tmdb
+    if (!accessToken && url) {
         //create options object for fetch call
         const options = {
             method: 'POST',
@@ -19,7 +20,7 @@ export default async function Home() {
                 Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
             },
             body: JSON.stringify({
-                redirect_to: 'http://localhost:3000/approval',
+                redirect_to: `${url}/approval`,
             }),
         };
 
@@ -37,10 +38,10 @@ export default async function Home() {
         //assign request Token
         const resJson = await res.json();
         const reqToken: string = resJson.request_token;
+
+        //use the request token we got and add it to the kv database
         await kv.set('reqToken', reqToken);
     }
-
-    //use the request token we got and add it to the kv database
 
     let movieCats: string[] = [
         'now_playing',
@@ -49,6 +50,7 @@ export default async function Home() {
         'upcoming',
     ];
 
+    //get request token that we just assigned
     const reqToken: string | null = await kv.get('reqToken');
 
     return (

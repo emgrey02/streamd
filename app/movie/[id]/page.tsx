@@ -3,8 +3,8 @@
 import Image from 'next/image';
 import { Key } from 'react';
 import FavoriteButton from '@/app/components/FavoriteButton';
-import Link from 'next/link';
 import { kv } from '@vercel/kv';
+import BackButton from '@/app/components/BackButton';
 
 export default async function Movie({ params }: { params: { id: string } }) {
     let movieId = params.id;
@@ -61,7 +61,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
             </div>
             <p>{deets.release_date}</p>
             <p>{deets.overview}</p>
-            <Link href="/">Back</Link>
+            <BackButton />
         </>
     );
 }

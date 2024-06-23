@@ -30,6 +30,9 @@ export default function MovieList({ cat }: Props) {
     const router = useRouter();
     const [movieList, setMovieList] = useState<Movie[]>();
     const [isHovering, setIsHovered] = useState(false);
+    const [scrollPx, setScrollPx] = useState(0);
+    const [scrollWidth, setScrollWidth] = useState(2000);
+    const [elWidth, setElWidth] = useState(0);
     const onMouseEnter = () => setIsHovered(true);
     const onMouseLeave = () => setIsHovered(false);
 
@@ -59,36 +62,46 @@ export default function MovieList({ cat }: Props) {
 
     //scroll through movies
     function scrollDiv(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
-        const target = event.target as HTMLButtonElement;
+        const target = event.currentTarget as HTMLButtonElement;
         const direction = target.id;
-        if (direction === 'forward') {
-            let scrollCont = target.previousElementSibling;
-            scrollCont?.scrollBy({
-                left: window.innerWidth - 120,
-                behavior: 'smooth',
-            });
-        } else if (direction === 'back') {
-            let scrollCont =
-                target.previousElementSibling?.previousElementSibling;
-            scrollCont?.scrollBy({
-                left: -window.innerWidth + 120,
-                behavior: 'smooth',
-            });
+        let scrollCont = target.parentElement;
+
+        if (scrollCont) {
+            //total width of element - total amount of scrolling
+            setScrollWidth(scrollCont.scrollWidth);
+
+            //the width of the element within the client view
+            setElWidth(scrollCont.clientWidth);
+
+            if (direction === 'forward') {
+                scrollCont?.scrollBy({
+                    left: window.innerWidth - 120,
+                    behavior: 'smooth',
+                });
+            } else if (direction === 'back') {
+                scrollCont?.scrollBy({
+                    left: -window.innerWidth + 120,
+                    behavior: 'smooth',
+                });
+            }
+
+            //because smooth scroll behavior takes time
+            setTimeout(() => {
+                setScrollPx(scrollCont.scrollLeft + scrollCont.clientWidth);
+            }, 500);
         }
     }
 
     return (
-        <>
-            <div
-                className="relative h-min my-16 flex flex-col"
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
-            >
+        <div className="flex flex-col my-8">
+            <div className="relative h-min grid gap-y-4 ">
                 <h2>{capCat}</h2>
                 {movieList && movieList.length >= 1 && (
                     <ul
                         id="scroll-cont"
                         className="grid grid-flow-col overflow-x-scroll h-min"
+                        onMouseEnter={onMouseEnter}
+                        onMouseLeave={onMouseLeave}
                     >
                         {movieList.map(
                             (movie: Movie, index: Key | null | undefined) => (
@@ -116,33 +129,57 @@ export default function MovieList({ cat }: Props) {
                                 </li>
                             )
                         )}
+                        {isHovering && (
+                            <>
+                                {scrollPx >= scrollWidth || (
+                                    <button
+                                        id="forward"
+                                        onClick={scrollDiv}
+                                        className="absolute row-start-2 right-0 h-full bg-slate-800/50"
+                                    >
+                                        <svg
+                                            fill="#ffffff"
+                                            width="30px"
+                                            height="30px"
+                                            viewBox="-8.5 0 32 32"
+                                            version="1.1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <title>next</title>
+                                            <path d="M0 24.781v-17.594l15.281 8.813z"></path>
+                                        </svg>
+                                    </button>
+                                )}
+                                {scrollPx == elWidth || (
+                                    <button
+                                        id="back"
+                                        onClick={scrollDiv}
+                                        className="absolute row-start-2 left-0 h-full bg-slate-800/50"
+                                    >
+                                        <svg
+                                            fill="#ffffff"
+                                            width="30px"
+                                            height="30px"
+                                            viewBox="-8.5 0 32 32"
+                                            version="1.1"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                        >
+                                            <title>back</title>
+                                            <path d="M15.281 7.188v17.594l-15.281-8.781z"></path>
+                                        </svg>
+                                    </button>
+                                )}
+                            </>
+                        )}
                     </ul>
                 )}
-                {isHovering && (
-                    <>
-                        <button
-                            id="forward"
-                            onClick={scrollDiv}
-                            className="absolute right-0 top-1/2"
-                        >
-                            slide
-                        </button>
-                        <button
-                            id="back"
-                            onClick={scrollDiv}
-                            className="absolute left-0 top-1/2"
-                        >
-                            slide
-                        </button>
-                    </>
-                )}
-                <button
-                    onClick={() => router.push(`/${cat}/1`)}
-                    className="self-end py-4"
-                >
-                    See More
-                </button>
             </div>
-        </>
+            <button
+                onClick={() => router.push(`/${cat}/1`)}
+                className="self-end my-8"
+            >
+                See More
+            </button>
+        </div>
     );
 }

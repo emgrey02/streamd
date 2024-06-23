@@ -36,7 +36,7 @@ export default async function Page() {
             <h1>User Dashboard</h1>
             <h2> your favorite movies:</h2>
             {favMovies && favMovies.results.length >= 1 ?
-                <ul>
+                <ul className="grid grid-flow-col overflow-x-scroll">
                     {favMovies.results.map(
                         (
                             movie: {
@@ -47,7 +47,7 @@ export default async function Page() {
                             },
                             index: Key | null | undefined
                         ) => (
-                            <li key={index}>
+                            <li className="min-w-56 grid px-2" key={index}>
                                 <Link
                                     className="col-start-1"
                                     href={`/movie/${movie.id}`}
@@ -60,7 +60,6 @@ export default async function Page() {
                                     />
                                 </Link>
                                 <p>{movie.title}</p>
-                                <p>{movie.overview}</p>
                             </li>
                         )
                     )}
