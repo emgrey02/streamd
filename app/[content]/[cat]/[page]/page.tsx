@@ -22,7 +22,7 @@ interface Movie {
 export default async function Page({
     params,
 }: {
-    params: { cat: string; page: string };
+    params: { content: string; cat: string; page: string };
 }) {
     const options = {
         method: 'GET',
@@ -33,16 +33,16 @@ export default async function Page({
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/movie/${params.cat}?language=en-US&page=${params.page}`,
+        `https://api.themoviedb.org/3/${params.content}/${params.cat}?language=en-US&page=${params.page}`,
         options
     );
 
     if (!res.ok) {
-        console.error('failed to fetch now playing movies');
+        console.error('failed to fetch movie/show category');
     }
 
-    const movies = await res.json();
-    const totalPages = movies.total_pages;
+    const cont = await res.json();
+    const totalPages = cont.total_pages;
     return (
         <>
             <h1 className="font-medium text-center">{params.cat}</h1>
@@ -50,7 +50,7 @@ export default async function Page({
                 {+params.page > 1 && (
                     <Link
                         className="col-start-1"
-                        href={`/${params.cat}/${+params.page - 1}`}
+                        href={`/${params.content}/${params.cat}/${+params.page - 1}`}
                     >
                         Previous
                     </Link>
@@ -58,34 +58,34 @@ export default async function Page({
                 {+params.page < totalPages && (
                     <Link
                         className="col-start-2 justify-self-end"
-                        href={`/${params.cat}/${+params.page + 1}`}
+                        href={`/${params.content}/${params.cat}/${+params.page + 1}`}
                     >
                         Next
                     </Link>
                 )}
             </div>
-            {movies && movies.results.length >= 1 && (
+            {cont && cont.results.length >= 1 && (
                 <ul
                     id="scroll-cont"
                     className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 place-items-center gap-y-16"
                 >
-                    {movies.results.map(
-                        (m: Movie, index: Key | null | undefined) => (
+                    {cont.results.map(
+                        (m: Movie | Show, index: Key | null | undefined) => (
                             <li
                                 data-num={index}
                                 className="min-w-56 grid px-2 place-content-center place-items-center"
                                 key={index}
                             >
-                                <h3>{m.title}</h3>
-                                <Link href={`/movie/${m.id.toString()}`}>
+                                <Link
+                                    href={`/${params.content}/${m.id.toString()}`}
+                                >
                                     <Image
                                         src={`https://image.tmdb.org/t/p/w200${m.poster_path}`}
-                                        alt="movie poster"
+                                        alt="poster"
                                         width={200}
                                         height={300}
                                     />
                                 </Link>
-                                <p>{m.release_date}</p>
                             </li>
                         )
                     )}
@@ -95,7 +95,7 @@ export default async function Page({
                 {+params.page > 1 && (
                     <Link
                         className="col-start-1"
-                        href={`/${params.cat}/${+params.page - 1}`}
+                        href={`/${params.content}/${params.cat}/${+params.page - 1}`}
                     >
                         Previous
                     </Link>
@@ -103,7 +103,7 @@ export default async function Page({
                 {+params.page < totalPages && (
                     <Link
                         className="col-start-2 justify-self-end"
-                        href={`/${params.cat}/${+params.page + 1}`}
+                        href={`/${params.content}/${params.cat}/${+params.page + 1}`}
                     >
                         Next
                     </Link>

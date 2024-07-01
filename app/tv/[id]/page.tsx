@@ -3,12 +3,13 @@
 import Image from 'next/image';
 import { Key } from 'react';
 import FavoriteButton from '@/app/components/FavoriteButton';
+import { kv } from '@vercel/kv';
 import BackButton from '@/app/components/BackButton';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 
-export default async function Movie({ params }: { params: { id: string } }) {
-    let movieId = params.id;
+export default async function Show({ params }: { params: { id: string } }) {
+    let showId = params.id;
 
     const accountId = cookies().get('accId')?.value;
 
@@ -21,37 +22,39 @@ export default async function Movie({ params }: { params: { id: string } }) {
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`,
+        `https://api.themoviedb.org/3/tv/${showId}?language=en-US`,
         options
     );
 
     let creditsRes = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`,
+        `https://api.themoviedb.org/3/tv/${showId}/aggregate_credits?language=en-US`,
         options
     );
 
     if (!res.ok) {
-        console.error('failed to fetch movie data');
+        console.error('failed to fetch show data');
     }
 
     if (!creditsRes.ok) {
-        console.error('failed to fetch movie cast & crew data');
+        console.error('failed to fetch show cast & crew data');
     }
 
     let deets = await res.json();
     let creds = await creditsRes.json();
 
     return (
-        <div className="m-8">
+        <main className="m-8">
             <div className="flex gap-4">
                 <Image
                     src={`https://image.tmdb.org/t/p/w400${deets.poster_path}`}
-                    alt="movie poster"
+                    alt="tv poster"
                     width={400}
                     height={1200}
                 />
                 <div className="grid gap-4">
-                    <h1 className="text-2xl font-bold">{deets.title}</h1>
+                    <h1 className="text-2xl font-bold text-slate-200">
+                        {deets.name}
+                    </h1>
                     <p>{deets.tagline}</p>
                     <ul>
                         <h2>Genres:</h2>
@@ -63,7 +66,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
                     </ul>
                     {accountId && (
                         <FavoriteButton
-                            content="movie"
+                            content="tv"
                             contentId={deets.id}
                             accountId={accountId}
                         />
@@ -86,7 +89,8 @@ export default async function Movie({ params }: { params: { id: string } }) {
                                     <p className="font-bold text-base tracking-wide">
                                         {p.name}
                                     </p>
-                                    <p>as {p.character}</p>
+                                    <p>as {p.roles[0].character}</p>
+
                                     <div className="h-full grid justify-center items-end">
                                         {p.profile_path ?
                                             <Image
@@ -108,6 +112,6 @@ export default async function Movie({ params }: { params: { id: string } }) {
                     See All Cast & Crew
                 </Link>
             </div>
-        </div>
+        </main>
     );
 }

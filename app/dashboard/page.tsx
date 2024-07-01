@@ -1,70 +1,80 @@
-import { kv } from '@vercel/kv';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Key } from 'react';
-
-export const dynamic = 'force-dynamic';
+'use server';
+import ContentList from '../components/ContentList';
+import BackButton from '../components/BackButton';
+import { cookies } from 'next/headers';
+import TmdbSignIn from '../components/TmdbSignIn';
 
 export default async function Page() {
-    const userSession: UserSession | null = await kv.get('userSession');
-    const accountId: string | undefined = userSession?.account_id;
+    const accessToken: string | undefined = cookies().get('accToken')?.value;
+    const accountId: string | undefined = cookies().get('accId')?.value;
+    let reqToken: string | undefined = cookies().get('reqToken')?.value;
 
-    cache: 'no-store' as RequestInit;
+    async function getRequestToken() {
+        let url = process.env.BASE_URL;
+        const options: RequestInit = {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+            },
+            body: JSON.stringify({
+                redirect_to: `${url}/approval`,
+            }),
+            next: { revalidate: 60 },
+        };
 
-    const options: RequestInit = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-        cache: 'no-store',
-    };
+        options.next as RequestInit;
 
-    let res = await fetch(
-        `https://api.themoviedb.org/4/account/${accountId}/movie/favorites?page=1&language=en-US`,
-        options
-    );
+        //fetch to get a request token from TMDB
+        const res = await fetch(
+            'https://api.themoviedb.org/4/auth/request_token',
+            options
+        );
 
-    if (!res.ok) {
-        console.error('failed to fetch favorite movies');
+        //error handling
+        if (!res.ok) {
+            console.error('failed to fetch data');
+        }
+
+        //assign request Token
+        console.log('assigning new request token');
+        const resJson = await res.json();
+        const reqToken = resJson.request_token;
+        return reqToken;
     }
 
-    const favMovies = await res.json();
+    if (!accessToken) {
+        reqToken = await getRequestToken();
+    }
 
     return (
-        <>
-            <h1>User Dashboard</h1>
-            <h2> your favorite movies:</h2>
-            {favMovies && favMovies.results.length >= 1 ?
-                <ul className="grid grid-flow-col overflow-x-scroll">
-                    {favMovies.results.map(
-                        (
-                            movie: {
-                                poster_path: string;
-                                title: string;
-                                overview: string;
-                                id: string;
-                            },
-                            index: Key | null | undefined
-                        ) => (
-                            <li className="min-w-56 grid px-2" key={index}>
-                                <Link
-                                    className="col-start-1"
-                                    href={`/movie/${movie.id}`}
-                                >
-                                    <Image
-                                        src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-                                        alt="movie poster"
-                                        width={200}
-                                        height={300}
-                                    />
-                                </Link>
-                                <p>{movie.title}</p>
-                            </li>
-                        )
-                    )}
+        <main className="px-4">
+            <h1>dashboard</h1>
+            <BackButton />
+            {accessToken ?
+                <ul>
+                    <li className="py-8">
+                        <ContentList
+                            accountId={accountId}
+                            content="movie"
+                            cat="favorites"
+                        />
+                    </li>
+                    <li>
+                        <ContentList
+                            accountId={accountId}
+                            content="tv"
+                            cat="favorites"
+                        />
+                    </li>
                 </ul>
-            :   <p>you haven&apos;t favorited any movies!</p>}
-        </>
+            :   <>
+                    <p>Sign in to see your dashboard</p>
+                    {reqToken && <TmdbSignIn rt={reqToken} />}
+                </>
+            }
+            <BackButton />
+        </main>
     );
 }

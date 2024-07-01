@@ -1,44 +1,37 @@
-'use server';
+'use client';
 
-import { redirect } from 'next/navigation';
-import { kv } from '@vercel/kv';
+import { getReqToken, getTmdbSession, setSessionCookies } from '../actions';
+import { useEffect } from 'react';
 
 //user is sent to this page after authenticating with tmdb
 export default async function Page() {
     const url = process.env.BASE_URL;
-    //get request token
-    const reqToken = await kv.get('reqToken');
-    console.log('reqtoken', reqToken);
 
-    //create new options object for fetching session_id using request token
-    const sessionOptions = {
-        method: 'POST',
-        headers: {
-            accept: 'application/json',
-            'content-type': 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-        body: JSON.stringify({
-            request_token: reqToken,
-        }),
-    };
+    useEffect(() => {
+        //get request token
+        // const reqToken = await kv.get('reqToken');
+        async function getTokenCookie() {
+            let reqToken = await getReqToken();
+            return reqToken;
+        }
 
-    //get session_id & return it
-    const sessionRes = await fetch(
-        'https://api.themoviedb.org/4/auth/access_token',
-        sessionOptions
-    );
+        // const reqToken = cookies().get('reqToken')?.value;
+        // console.log('reqToken post approval:', reqToken);
 
-    if (!sessionRes.ok) {
-        console.error('failed to get access token');
-    }
+        //get session_id & return it
+        async function getSessionInfo() {
+            const reqToken = await getTokenCookie();
+            let sessionInfo = await getTmdbSession(reqToken);
+            return sessionInfo;
+        }
 
-    const sessionResJson = await sessionRes.json();
-    console.log(sessionResJson);
+        async function setTheCookies() {
+            let userSession = await getSessionInfo();
+            setSessionCookies(userSession);
+        }
 
-    await kv.set('userSession', sessionResJson);
-    let session = await kv.get('userSession');
-    console.log(session);
+        setTheCookies();
+    }, []);
 
-    redirect(`${url}/dashboard`);
+    return <p>you are now signed in!</p>;
 }

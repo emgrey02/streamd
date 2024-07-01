@@ -1,34 +1,20 @@
 'use client';
 
 import { Key, useEffect, useState } from 'react';
-import { getMovies } from '@/app/actions';
+import { getContent, getFavorites } from '@/app/actions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
-interface Movie {
-    adult: boolean;
-    backdrop_path: string;
-    genre_ids: number[];
-    id: number;
-    original_language: string;
-    original_title: string;
-    overview: string;
-    popularity: number;
-    poster_path: string;
-    release_date: string;
-    title: string;
-    video: boolean;
-    vote_average: number;
-    vote_count: number;
-}
-
 type Props = {
+    accountId?: string;
+    content: string;
     cat: string;
 };
 
-export default function MovieList({ cat }: Props) {
+export default function ContentList({ accountId, content, cat }: Props) {
     const router = useRouter();
-    const [movieList, setMovieList] = useState<Movie[]>();
+    const [contentList, setContentList] = useState<Movie[] | Show[]>();
+
     const [isHovering, setIsHovered] = useState(false);
     const [scrollPx, setScrollPx] = useState(0);
     const [scrollWidth, setScrollWidth] = useState(2000);
@@ -38,13 +24,18 @@ export default function MovieList({ cat }: Props) {
 
     let capCat: string;
 
-    async function retrieveMovies() {
-        let movies = await getMovies(cat, 1);
-        setMovieList(movies.results);
+    async function retrieveContent() {
+        if (cat === 'favorites' && accountId) {
+            let favorites = await getFavorites(accountId, content);
+            setContentList(favorites);
+        } else {
+            let cont = await getContent(content, cat, 1);
+            setContentList(cont.results);
+        }
     }
 
     useEffect(() => {
-        retrieveMovies();
+        retrieveContent();
     }, []);
 
     //capitalize category
@@ -57,10 +48,19 @@ export default function MovieList({ cat }: Props) {
         capCat = array.join(' ');
     } else {
         let capLetter = cat.slice(0, 1).toUpperCase();
-        capCat = capLetter + cat.slice(1);
+        if (cat === 'favorites') {
+            capCat = capLetter + cat.slice(1, -1);
+            if (content === 'movie') {
+                capCat = capCat + ' ' + content + 's';
+            } else {
+                capCat = capCat + ' ' + content + ' shows';
+            }
+        } else {
+            capCat = capLetter + cat.slice(1);
+        }
     }
 
-    //scroll through movies
+    //scroll through content
     function scrollDiv(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
         const target = event.currentTarget as HTMLButtonElement;
         const direction = target.id;
@@ -94,38 +94,41 @@ export default function MovieList({ cat }: Props) {
 
     return (
         <div className="flex flex-col my-8">
-            <div className="relative h-min grid gap-y-4 ">
+            <div
+                className="relative h-min grid gap-y-4 px-8"
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
+            >
                 <h2>{capCat}</h2>
-                {movieList && movieList.length >= 1 && (
+                {contentList && contentList.length >= 1 && (
                     <ul
                         id="scroll-cont"
-                        className="grid grid-flow-col overflow-x-scroll h-min"
-                        onMouseEnter={onMouseEnter}
-                        onMouseLeave={onMouseLeave}
+                        className="grid grid-flow-col overflow-x-scroll snap-x"
                     >
-                        {movieList.map(
-                            (movie: Movie, index: Key | null | undefined) => (
+                        {contentList.map(
+                            (
+                                ent: Movie | Show,
+                                index: Key | null | undefined
+                            ) => (
                                 <li
                                     data-num={index}
-                                    className="min-w-56 grid px-2"
+                                    className="min-w-56 grid px-2 snap-start"
                                     key={index}
                                 >
-                                    <h3>{movie.title}</h3>
                                     <button
                                         onClick={() =>
                                             router.push(
-                                                `/movie/${movie.id.toString()}`
+                                                `/${content}/${ent.id.toString()}`
                                             )
                                         }
                                     >
                                         <Image
-                                            src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-                                            alt="movie poster"
+                                            src={`https://image.tmdb.org/t/p/w200${ent.poster_path}`}
+                                            alt={`${content} poster`}
                                             width={200}
                                             height={300}
                                         />
                                     </button>
-                                    <p>{movie.release_date}</p>
                                 </li>
                             )
                         )}
@@ -135,7 +138,7 @@ export default function MovieList({ cat }: Props) {
                                     <button
                                         id="forward"
                                         onClick={scrollDiv}
-                                        className="absolute row-start-2 right-0 h-full bg-slate-800/50"
+                                        className="absolute row-start-2 right-0 h-full bg-slate-900/70"
                                     >
                                         <svg
                                             fill="#ffffff"
@@ -154,7 +157,7 @@ export default function MovieList({ cat }: Props) {
                                     <button
                                         id="back"
                                         onClick={scrollDiv}
-                                        className="absolute row-start-2 left-0 h-full bg-slate-800/50"
+                                        className="absolute row-start-2 left-0 h-full bg-slate-900/70"
                                     >
                                         <svg
                                             fill="#ffffff"
@@ -174,12 +177,14 @@ export default function MovieList({ cat }: Props) {
                     </ul>
                 )}
             </div>
-            <button
-                onClick={() => router.push(`/${cat}/1`)}
-                className="self-end my-8"
-            >
-                See More
-            </button>
+            {contentList && contentList.length == 20 && (
+                <button
+                    onClick={() => router.push(`/${content}/${cat}/1`)}
+                    className="self-end my-8 px-8"
+                >
+                    See More
+                </button>
+            )}
         </div>
     );
 }
