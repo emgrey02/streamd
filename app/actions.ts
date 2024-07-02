@@ -34,7 +34,7 @@ export async function tmdbLogOut(at: string) {
         headers: {
             accept: 'application/json',
             'content-type': 'application/json',
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
         body: JSON.stringify({
             access_token: at,
@@ -47,6 +47,7 @@ export async function tmdbLogOut(at: string) {
     );
 
     if (!res.ok) {
+        console.log(await res.json());
         console.error('failed to log out');
     } else {
         console.log('successfully logged out');
@@ -62,7 +63,7 @@ export async function getTmdbSession(rt: string) {
         headers: {
             accept: 'application/json',
             'content-type': 'application/json',
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
         body: JSON.stringify({
             request_token: rt,
@@ -76,11 +77,13 @@ export async function getTmdbSession(rt: string) {
     );
 
     if (!sessionRes.ok) {
+        console.log(await sessionRes.json());
         console.error('failed to get access token');
+    } else {
+        console.log('successfully got a request token');
     }
 
     const sessionResJson = await sessionRes.json();
-    console.log(sessionResJson);
     return sessionResJson;
 }
 
@@ -99,7 +102,7 @@ export async function getContentAccountInfo(
         method: 'GET',
         headers: {
             accept: 'application/json',
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
     };
 
@@ -109,7 +112,10 @@ export async function getContentAccountInfo(
     );
 
     if (!res.ok) {
+        console.log(await res.json());
         console.error('failed to get content account info');
+    } else {
+        console.log('successfully got content account info');
     }
 
     return await res.json();
@@ -124,7 +130,7 @@ export async function getContent(
         method: 'GET',
         headers: {
             accept: 'application/json',
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
     };
 
@@ -134,7 +140,10 @@ export async function getContent(
     );
 
     if (!res.ok) {
+        console.log(await res.json());
         console.error('failed to fetch content');
+    } else {
+        console.log('successfully retrieved content');
     }
 
     return await res.json();
@@ -149,7 +158,7 @@ export async function getFavorWatch(
         method: 'GET',
         headers: {
             accept: 'application/json',
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
     };
 
@@ -201,7 +210,7 @@ export async function addToFavorWatch(
         headers: {
             accept: 'application/json',
             'content-type': 'application/json',
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
         body: JSON.stringify(body),
     };
@@ -247,7 +256,7 @@ export async function removeFavorWatch(
         headers: {
             accept: 'application/json',
             'content-type': 'application/json',
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
         body: JSON.stringify(body),
     };

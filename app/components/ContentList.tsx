@@ -1,6 +1,6 @@
 'use client';
 
-import { Key, useEffect, useState } from 'react';
+import { Key, useEffect, useMemo, useState } from 'react';
 import { getContent, getFavorWatch } from '@/app/actions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -24,22 +24,22 @@ export default function ContentList({ accountId, content, cat }: Props) {
 
     let capCat: string;
 
-    async function retrieveContent() {
-        if (cat === 'favorites' && accountId) {
-            let favorites = await getFavorWatch(cat, accountId, content);
-            setContentList(favorites);
-        } else if (cat === 'watchlist' && accountId) {
-            let watchlist = await getFavorWatch(cat, accountId, content);
-            setContentList(watchlist);
-        } else {
-            let cont = await getContent(content, cat, 1);
-            setContentList(cont.results);
-        }
-    }
-
     useEffect(() => {
+        async function retrieveContent() {
+            console.log('retrieving content');
+            if (cat === 'favorites' && accountId) {
+                let favorites = await getFavorWatch(cat, accountId, content);
+                setContentList(favorites);
+            } else if (cat === 'watchlist' && accountId) {
+                let watchlist = await getFavorWatch(cat, accountId, content);
+                setContentList(watchlist);
+            } else {
+                let cont = await getContent(content, cat, 1);
+                setContentList(cont.results);
+            }
+        }
         retrieveContent();
-    });
+    }, [accountId, cat, content]);
 
     //capitalize category
     if (cat.includes('_')) {

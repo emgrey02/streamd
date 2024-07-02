@@ -11,13 +11,13 @@ export default async function Page() {
     let username;
 
     async function getRequestToken() {
-        let url = process.env.BASE_URL;
+        const url = process.env.NEXT_PUBLIC_BASE_URL;
         const options: RequestInit = {
             method: 'POST',
             headers: {
                 accept: 'application/json',
                 'content-type': 'application/json',
-                Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+                Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
             },
             body: JSON.stringify({
                 redirect_to: `${url}/approval`,
@@ -108,7 +108,7 @@ export default async function Page() {
                 </ul>
             :   <div className="text-center">
                     <p>Sign in to see your dashboard</p>
-                    {reqToken && <TmdbSignIn rt={reqToken} />}
+                    <TmdbSignIn rt={reqToken} />
                 </div>
             }
             <BackButton />

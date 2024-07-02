@@ -6,12 +6,11 @@ import { cookies } from 'next/headers';
 import { unstable_noStore as noStore } from 'next/cache';
 
 export default async function Home() {
-    noStore();
     let reqToken;
     let username;
     const accessToken = cookies().get('accToken')?.value;
     const accountId = cookies().get('accId')?.value;
-    const url: string | undefined = process.env.BASE_URL;
+    const url: string | undefined = process.env.NEXT_PUBLIC_BASE_URL;
 
     async function getRequestToken() {
         const options: RequestInit = {
@@ -19,7 +18,7 @@ export default async function Home() {
             headers: {
                 accept: 'application/json',
                 'content-type': 'application/json',
-                Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+                Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
             },
             body: JSON.stringify({
                 redirect_to: `${url}/approval`,
@@ -43,6 +42,7 @@ export default async function Home() {
         //assign request Token
         const resJson = await res.json();
         const reqToken = resJson.request_token;
+        console.log('new reqToken: ', reqToken);
         return reqToken;
     }
 

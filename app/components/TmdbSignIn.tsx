@@ -4,14 +4,16 @@ import Link from 'next/link';
 import { useEffect } from 'react';
 import { setReqToken } from '../actions';
 
-export default function TmdbSignIn(props: { rt: string }) {
+export default function TmdbSignIn(props: { rt: string | undefined }) {
     useEffect(() => {
         async function setToken() {
-            let res = await setReqToken(props.rt);
-            console.log(res);
+            if (props.rt) {
+                let res = await setReqToken(props.rt);
+                console.log(`retrieving request token is a ${res}`);
+            }
         }
         setToken();
-    });
+    }, [props.rt]);
 
     return (
         <Link

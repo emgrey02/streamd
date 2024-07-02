@@ -16,7 +16,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
         method: 'GET',
         headers: {
             accept: 'application/json',
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
     };
 
