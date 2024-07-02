@@ -11,7 +11,7 @@ export default function TmdbSignIn(props: { rt: string }) {
             console.log(res);
         }
         setToken();
-    }, []);
+    });
 
     return (
         <Link

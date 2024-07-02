@@ -1,7 +1,6 @@
 'use client';
 import {
     addToFavorWatch,
-    getFavorWatch,
     removeFavorWatch,
     getContentAccountInfo,
 } from '../actions';
@@ -18,22 +17,8 @@ export default function FavorWatchButton({
     contentId: string;
     accountId: string;
 }) {
-    const [favorites, setFavorites] = useState([]);
     const [canFavorite, setCanFavorite] = useState<boolean>(true);
-    const [watchlist, setWatchlist] = useState([]);
     const [canAddToWatchlist, setCanAddToWatchlist] = useState<boolean>(true);
-
-    console.log(accountId);
-
-    // async function retrieveFavorites() {
-    //     let favorites = await getFavorWatch('favorites', accountId, content);
-    //     setFavorites(favorites);
-    // }
-
-    // async function retrieveWatchlist() {
-    //     let watchlist = await getFavorWatch('watchlist', accountId, content);
-    //     setWatchlist(watchlist);
-    // }
 
     async function setStates() {
         const accountInfo = await getContentAccountInfo(content, contentId);
@@ -51,17 +36,9 @@ export default function FavorWatchButton({
         }
     }
 
-    // useEffect(() => {
-    //     if (whichOne === 'favorite') {
-    //         retrieveFavorites();
-    //     } else {
-    //         retrieveWatchlist();
-    //     }
-    // }, []);
-
     useEffect(() => {
         setStates();
-    }, []);
+    });
 
     async function handleClick(
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>

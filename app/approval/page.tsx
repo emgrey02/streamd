@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 
 //user is sent to this page after authenticating with tmdb
 export default function Page() {
-    const url = process.env.BASE_URL;
     let router = useRouter();
 
     useEffect(() => {
@@ -36,7 +35,7 @@ export default function Page() {
         setTimeout(() => {
             router.replace(`/`);
         }, 2000);
-    }, []);
+    });
 
     return (
         <>

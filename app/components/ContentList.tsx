@@ -39,7 +39,7 @@ export default function ContentList({ accountId, content, cat }: Props) {
 
     useEffect(() => {
         retrieveContent();
-    }, []);
+    });
 
     //capitalize category
     if (cat.includes('_')) {

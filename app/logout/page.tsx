@@ -5,8 +5,6 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function LogOut() {
-    // const userSession: UserSession | null = await kv.get('userSession');
-    // const accessToken: string | undefined = userSession?.access_token;
     const router = useRouter();
 
     useEffect(() => {
@@ -25,7 +23,7 @@ export default function LogOut() {
         setTimeout(() => {
             router.replace('/');
         }, 2000);
-    }, []);
+    });
 
     return (
         <div className="text-center my-8">

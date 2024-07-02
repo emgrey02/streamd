@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { Key } from 'react';
 import FavorWatchButton from '@/app/components/FavorWatchButton';
-import { kv } from '@vercel/kv';
 import BackButton from '@/app/components/BackButton';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
