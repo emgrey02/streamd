@@ -29,7 +29,7 @@ export default function LogOut() {
 
     return (
         <div className="text-center my-8">
-            <p>you've successfully logged out</p>
+            <p>you&apos;ve successfully logged out</p>
             <p>taking you home...</p>
         </div>
     );
