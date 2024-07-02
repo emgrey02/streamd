@@ -1,28 +1,30 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { getReqToken, getTmdbSession, setSessionCookies } from '../actions';
 import { useEffect } from 'react';
 
 //user is sent to this page after authenticating with tmdb
-export default async function Page() {
+export default function Page() {
     const url = process.env.BASE_URL;
+    let router = useRouter();
 
     useEffect(() => {
         //get request token
-        // const reqToken = await kv.get('reqToken');
         async function getTokenCookie() {
             let reqToken = await getReqToken();
             return reqToken;
         }
 
-        // const reqToken = cookies().get('reqToken')?.value;
-        // console.log('reqToken post approval:', reqToken);
-
-        //get session_id & return it
+        //get session info w/ request token & return it
         async function getSessionInfo() {
             const reqToken = await getTokenCookie();
-            let sessionInfo = await getTmdbSession(reqToken);
-            return sessionInfo;
+            if (reqToken) {
+                let sessionInfo = await getTmdbSession(reqToken);
+                return sessionInfo;
+            } else {
+                return null;
+            }
         }
 
         async function setTheCookies() {
@@ -31,7 +33,15 @@ export default async function Page() {
         }
 
         setTheCookies();
+        setTimeout(() => {
+            router.replace(`/`);
+        }, 2000);
     }, []);
 
-    return <p>you are now signed in!</p>;
+    return (
+        <>
+            <p className="text-center my-8">you are now signed in!</p>
+            <p className="text-center">taking you home...</p>
+        </>
+    );
 }

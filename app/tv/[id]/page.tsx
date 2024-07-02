@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import { Key } from 'react';
-import FavoriteButton from '@/app/components/FavoriteButton';
+import FavorWatchButton from '@/app/components/FavorWatchButton';
 import { kv } from '@vercel/kv';
 import BackButton from '@/app/components/BackButton';
 import Link from 'next/link';
@@ -65,11 +65,20 @@ export default async function Show({ params }: { params: { id: string } }) {
                         )}
                     </ul>
                     {accountId && (
-                        <FavoriteButton
-                            content="tv"
-                            contentId={deets.id}
-                            accountId={accountId}
-                        />
+                        <>
+                            <FavorWatchButton
+                                whichOne="favorite"
+                                content="tv"
+                                contentId={deets.id}
+                                accountId={accountId}
+                            />
+                            <FavorWatchButton
+                                whichOne="watchlist"
+                                content="tv"
+                                contentId={deets.id}
+                                accountId={accountId}
+                            />
+                        </>
                     )}
                     <p>{deets.release_date}</p>
                     <p className="justify-self-end">{deets.overview}</p>

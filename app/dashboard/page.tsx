@@ -8,6 +8,7 @@ export default async function Page() {
     const accessToken: string | undefined = cookies().get('accToken')?.value;
     const accountId: string | undefined = cookies().get('accId')?.value;
     let reqToken: string | undefined = cookies().get('reqToken')?.value;
+    let username;
 
     async function getRequestToken() {
         let url = process.env.BASE_URL;
@@ -46,15 +47,37 @@ export default async function Page() {
 
     if (!accessToken) {
         reqToken = await getRequestToken();
+    } else {
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+            },
+        };
+
+        let res = await fetch(
+            `https://api.themoviedb.org/3/account/${accountId}`,
+            options
+        );
+
+        if (!res.ok) {
+            console.error('failed to fetch account info');
+        }
+
+        //assign username
+        const accountInfo = await res.json();
+        username = accountInfo.username;
     }
 
     return (
         <main className="px-4">
-            <h1>dashboard</h1>
+            <h1 className="text-center">Your Dashboard</h1>
             <BackButton />
+            {username && <p>Hello, {username}</p>}
             {accessToken ?
                 <ul>
-                    <li className="py-8">
+                    <li>
                         <ContentList
                             accountId={accountId}
                             content="movie"
@@ -68,11 +91,25 @@ export default async function Page() {
                             cat="favorites"
                         />
                     </li>
+                    <li>
+                        <ContentList
+                            accountId={accountId}
+                            content="movie"
+                            cat="watchlist"
+                        />
+                    </li>
+                    <li>
+                        <ContentList
+                            accountId={accountId}
+                            content="tv"
+                            cat="watchlist"
+                        />
+                    </li>
                 </ul>
-            :   <>
+            :   <div className="text-center">
                     <p>Sign in to see your dashboard</p>
                     {reqToken && <TmdbSignIn rt={reqToken} />}
-                </>
+                </div>
             }
             <BackButton />
         </main>

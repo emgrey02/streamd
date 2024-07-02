@@ -1,43 +1,17 @@
-import { kv } from '@vercel/kv';
 import ContentList from './components/ContentList';
-import { Key } from 'react';
+import { Key, Suspense } from 'react';
 import TmdbSignIn from './components/TmdbSignIn';
 import TmdbSignOut from './components/TmdbSignOut';
 import { cookies } from 'next/headers';
-import Cryptr from 'cryptr';
-import { setReqToken } from './actions';
 import { unstable_noStore as noStore } from 'next/cache';
-import { access } from 'fs';
 
 export default async function Home() {
     noStore();
-    const cryptr = new Cryptr('token');
     let reqToken;
-
+    let username;
     const accessToken = cookies().get('accToken')?.value;
-    console.log('access token is: ', accessToken);
-    // async function getSessionData() {
-    //     const encryptedUserSession = cookies().get('userSession')?.value;
-    //     console.log(encryptedUserSession);
-    //     return encryptedUserSession ?
-    //             JSON.parse(cryptr.decrypt(encryptedUserSession))
-    //         :   null;
-    // }
-
-    // const userSession: UserSession | null = await kv.get('userSession');
-    // const accessToken: string | undefined = userSession?.access_token;
-
-    // const userSession: UserSession | null = await getSessionData();
-    // console.log(userSession);
-    // const accessToken: string | undefined = userSession?.access_token;
-    // console.log(accessToken);
-
+    const accountId = cookies().get('accId')?.value;
     const url: string | undefined = process.env.BASE_URL;
-
-    //if user hasn't been authenticated with tmdb
-
-    // console.log('not authenticated');
-    //create options object for fetch call
 
     async function getRequestToken() {
         const options: RequestInit = {
@@ -72,39 +46,34 @@ export default async function Home() {
         return reqToken;
     }
 
+    // if there is no accessToken/if user is logged out
+    // then retrieve a request token in case user wants to log in
     if (!accessToken) {
         reqToken = await getRequestToken();
+    } else {
+        // a user is logged in
+        // get username of current user
+        const options = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+            },
+        };
+
+        let res = await fetch(
+            `https://api.themoviedb.org/3/account/${accountId}`,
+            options
+        );
+
+        if (!res.ok) {
+            console.error('failed to fetch account info');
+        }
+
+        //assign username
+        const accountInfo = await res.json();
+        username = accountInfo.username;
     }
-
-    // use the request token we got and add it to the kv database
-    // await kv.set('reqToken', reqToken);
-    // } else {
-    //     //get username of current user
-    //     const accountId = userSession?.account_id;
-
-    //     const options = {
-    //         method: 'GET',
-    //         headers: {
-    //             accept: 'application/json',
-    //             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-    //         },
-    //     };
-
-    //     let res = await fetch(
-    //         `https://api.themoviedb.org/3/account/${accountId}`,
-    //         options
-    //     );
-
-    //     if (!res.ok) {
-    //         console.error('failed to fetch account info');
-    //     }
-
-    //     //assign username
-    //     const accountInfo = await res.json();
-    //     const username = accountInfo.username;
-    //     // await kv.set('username', username);
-    //     // cookies().set('username', username);
-    // }
 
     let movieCats: string[] = [
         'now_playing',
@@ -120,24 +89,6 @@ export default async function Home() {
         'top_rated',
     ];
 
-    //get request token that we just assigned
-    // const reqToken: string | null = await kv.get('reqToken');
-    // let reqTokenRes = await fetch(`${process.env.BASE_URL}/api`, {
-    //     method: 'GET',
-    //     headers: {
-    //         accept: 'application/json',
-    //     },
-    // });
-
-    // let fullRes = await reqTokenRes.json();
-    // console.log(fullRes);
-
-    // let reqToken = cookies().get('reqToken')?.value;
-
-    //get username
-    // const username: string | null = await kv.get('username');
-    // const username: string | undefined = cookies().get('username')?.value;
-
     return (
         <main className="min-h-screen py-4">
             {!accessToken ?
@@ -146,21 +97,25 @@ export default async function Home() {
                     <TmdbSignIn rt={reqToken} />
                 </div>
             :   <div className="px-4">
-                    <p>Hello!</p>
+                    <p>Hello, {username} :)</p>
                     <TmdbSignOut />
                 </div>
             }
             <ul>
                 {movieCats.map((category: string, index: Key) => (
                     <li key={index}>
-                        <ContentList content="movie" cat={category} />
+                        <Suspense fallback={<p>Loading...</p>}>
+                            <ContentList content="movie" cat={category} />
+                        </Suspense>
                     </li>
                 ))}
             </ul>
             <ul>
                 {showCats.map((category: string, index: Key) => (
                     <li key={index}>
-                        <ContentList content="tv" cat={category} />
+                        <Suspense fallback={<p>Loading...</p>}>
+                            <ContentList content="tv" cat={category} />
+                        </Suspense>
                     </li>
                 ))}
             </ul>

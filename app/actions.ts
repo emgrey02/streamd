@@ -84,9 +84,35 @@ export async function getTmdbSession(rt: string) {
     return sessionResJson;
 }
 
-export async function deleteCookie(name: string) {
-    console.log(`deleting ${name} cookie`);
-    return cookies().delete(name);
+export async function deleteCookies() {
+    console.log(`deleting cookies`);
+    cookies().delete('accId');
+    cookies().delete('reqToken');
+    return cookies().delete('accToken');
+}
+
+export async function getContentAccountInfo(
+    content: string,
+    contentId: string
+) {
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    let res = await fetch(
+        `https://api.themoviedb.org/3/${content}/${contentId}/account_states`,
+        options
+    );
+
+    if (!res.ok) {
+        console.error('failed to get content account info');
+    }
+
+    return await res.json();
 }
 
 export async function getContent(
@@ -114,7 +140,11 @@ export async function getContent(
     return await res.json();
 }
 
-export async function getFavorites(accountId: string, content: string) {
+export async function getFavorWatch(
+    whichOne: string,
+    accountId: string,
+    content: string
+) {
     const options = {
         method: 'GET',
         headers: {
@@ -124,78 +154,114 @@ export async function getFavorites(accountId: string, content: string) {
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/4/account/${accountId}/${content}/favorites?language=en-US&page=1&sort_by=created_at.asc`,
+        `https://api.themoviedb.org/4/account/${accountId}/${content}/${whichOne}?language=en-US&page=1&sort_by=created_at.asc`,
         options
     );
 
     if (!res.ok) {
-        console.error('failed to fetch favorite movies');
+        console.error(`failed to fetch ${whichOne} ${content}s`);
     }
 
-    let favorites = await res.json();
-    return favorites.results;
+    let favorWatch = await res.json();
+    // console.log(favorWatch);
+    return favorWatch.results;
 }
 
-export async function addToFavorites(
+interface body {
+    media_type: string;
+    media_id: number;
+    favorite?: boolean;
+    watchlist?: boolean;
+}
+
+export async function addToFavorWatch(
+    whichOne: string,
     type: string,
     contentId: string,
     accountId: string
 ) {
+    let body: body;
+
+    if (whichOne === 'favorite') {
+        body = {
+            media_type: type,
+            media_id: +contentId,
+            favorite: true,
+        };
+    } else {
+        body = {
+            media_type: type,
+            media_id: +contentId,
+            watchlist: true,
+        };
+    }
+
     const options = {
         method: 'POST',
         headers: {
             accept: 'application/json',
             'content-type': 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
         },
-        body: JSON.stringify({
-            media_type: type,
-            media_id: +contentId,
-            favorite: true,
-        }),
+        body: JSON.stringify(body),
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/account/${accountId}/favorite/`,
+        `https://api.themoviedb.org/3/account/${accountId}/${whichOne}`,
         options
     );
 
     if (!res.ok) {
+        console.log(`failed to get ${whichOne}`);
         console.error(await res.json());
         return false;
     } else {
+        console.log(`success in adding ${type} to ${whichOne}`);
         return true;
     }
 }
 
-export async function removeFavorite(
+export async function removeFavorWatch(
+    whichOne: string,
     type: string,
     contentId: string,
     accountId: string
 ) {
+    let body: body;
+
+    if (whichOne === 'favorite') {
+        body = {
+            media_type: type,
+            media_id: +contentId,
+            favorite: false,
+        };
+    } else {
+        body = {
+            media_type: type,
+            media_id: +contentId,
+            watchlist: false,
+        };
+    }
     const options = {
         method: 'POST',
         headers: {
             accept: 'application/json',
             'content-type': 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
         },
-        body: JSON.stringify({
-            media_type: type,
-            media_id: +contentId,
-            favorite: false,
-        }),
+        body: JSON.stringify(body),
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/account/${accountId}/favorite`,
+        `https://api.themoviedb.org/3/account/${accountId}/${whichOne}`,
         options
     );
 
     if (!res.ok) {
-        console.error(await res.json());
+        console.error('failed', await res.json());
         return false;
     } else {
+        console.log(`success in removing ${type} from ${whichOne}`);
         return true;
     }
 }

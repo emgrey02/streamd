@@ -1,7 +1,7 @@
 'use client';
 
 import { Key, useEffect, useState } from 'react';
-import { getContent, getFavorites } from '@/app/actions';
+import { getContent, getFavorWatch } from '@/app/actions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
@@ -26,8 +26,11 @@ export default function ContentList({ accountId, content, cat }: Props) {
 
     async function retrieveContent() {
         if (cat === 'favorites' && accountId) {
-            let favorites = await getFavorites(accountId, content);
+            let favorites = await getFavorWatch(cat, accountId, content);
             setContentList(favorites);
+        } else if (cat === 'watchlist' && accountId) {
+            let watchlist = await getFavorWatch(cat, accountId, content);
+            setContentList(watchlist);
         } else {
             let cont = await getContent(content, cat, 1);
             setContentList(cont.results);
@@ -55,6 +58,10 @@ export default function ContentList({ accountId, content, cat }: Props) {
             } else {
                 capCat = capCat + ' ' + content + ' shows';
             }
+        } else if (cat === 'watchlist') {
+            capCat = capLetter + cat.slice(1);
+            let capLetterCont = content.slice(0, 1).toUpperCase();
+            capCat = capLetterCont + content.slice(1) + ' ' + capCat;
         } else {
             capCat = capLetter + cat.slice(1);
         }
@@ -100,7 +107,7 @@ export default function ContentList({ accountId, content, cat }: Props) {
                 onMouseLeave={onMouseLeave}
             >
                 <h2>{capCat}</h2>
-                {contentList && contentList.length >= 1 && (
+                {contentList && contentList.length >= 1 ?
                     <ul
                         id="scroll-cont"
                         className="grid grid-flow-col overflow-x-scroll snap-x"
@@ -175,7 +182,7 @@ export default function ContentList({ accountId, content, cat }: Props) {
                             </>
                         )}
                     </ul>
-                )}
+                :   <p></p>}
             </div>
             {contentList && contentList.length == 20 && (
                 <button

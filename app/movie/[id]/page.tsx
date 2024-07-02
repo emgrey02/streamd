@@ -2,10 +2,10 @@
 
 import Image from 'next/image';
 import { Key } from 'react';
-import FavoriteButton from '@/app/components/FavoriteButton';
 import BackButton from '@/app/components/BackButton';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
+import FavorWatchButton from '@/app/components/FavorWatchButton';
 
 export default async function Movie({ params }: { params: { id: string } }) {
     let movieId = params.id;
@@ -62,11 +62,20 @@ export default async function Movie({ params }: { params: { id: string } }) {
                         )}
                     </ul>
                     {accountId && (
-                        <FavoriteButton
-                            content="movie"
-                            contentId={deets.id}
-                            accountId={accountId}
-                        />
+                        <>
+                            <FavorWatchButton
+                                whichOne="favorite"
+                                content="movie"
+                                contentId={deets.id}
+                                accountId={accountId}
+                            />
+                            <FavorWatchButton
+                                whichOne="watchlist"
+                                content="movie"
+                                contentId={deets.id}
+                                accountId={accountId}
+                            />
+                        </>
                     )}
                     <p>{deets.release_date}</p>
                     <p className="justify-self-end">{deets.overview}</p>

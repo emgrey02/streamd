@@ -1,25 +1,36 @@
 'use client';
 
-import { deleteCookie, getAccessToken, tmdbLogOut } from '../actions';
+import { deleteCookies, getAccessToken, tmdbLogOut } from '../actions';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-export default async function LogOut() {
+export default function LogOut() {
     // const userSession: UserSession | null = await kv.get('userSession');
     // const accessToken: string | undefined = userSession?.access_token;
     const router = useRouter();
 
     useEffect(() => {
-        async function removeCookie() {
+        async function removeCookies() {
             const accessToken: string | undefined = await getAccessToken();
-            console.log(accessToken);
-
-            const didItWork = await tmdbLogOut(accessToken);
-            console.log(didItWork);
-            let res = await deleteCookie('accToken');
-            console.log(res);
+            if (accessToken) {
+                const didItWork = await tmdbLogOut(accessToken);
+                console.log(didItWork);
+                let res = await deleteCookies();
+                console.log(res);
+            }
         }
 
-        removeCookie().then(() => router.push('/'));
+        removeCookies();
+
+        setTimeout(() => {
+            router.replace('/');
+        }, 2000);
     }, []);
+
+    return (
+        <div className="text-center my-8">
+            <p>you've successfully logged out</p>
+            <p>taking you home...</p>
+        </div>
+    );
 }
