@@ -1,17 +1,23 @@
 'use client';
 
-import { Key, useEffect, useMemo, useState } from 'react';
+import { Key, useEffect, useState } from 'react';
 import { getContent, getFavorWatch } from '@/app/actions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 type Props = {
+    sessionId?: string;
     accountId?: string;
     content: string;
     cat: string;
 };
 
-export default function ContentList({ accountId, content, cat }: Props) {
+export default function ContentList({
+    sessionId,
+    accountId,
+    content,
+    cat,
+}: Props) {
     const router = useRouter();
     const [contentList, setContentList] = useState<Movie[] | Show[]>();
 
@@ -27,11 +33,21 @@ export default function ContentList({ accountId, content, cat }: Props) {
     useEffect(() => {
         async function retrieveContent() {
             console.log('retrieving content');
-            if (cat === 'favorites' && accountId) {
-                let favorites = await getFavorWatch(cat, accountId, content);
+            if (cat === 'favorite' && accountId && sessionId) {
+                let favorites = await getFavorWatch(
+                    sessionId,
+                    cat,
+                    accountId,
+                    content
+                );
                 setContentList(favorites);
-            } else if (cat === 'watchlist' && accountId) {
-                let watchlist = await getFavorWatch(cat, accountId, content);
+            } else if (cat === 'watchlist' && accountId && sessionId) {
+                let watchlist = await getFavorWatch(
+                    sessionId,
+                    cat,
+                    accountId,
+                    content
+                );
                 setContentList(watchlist);
             } else {
                 let cont = await getContent(content, cat, 1);
@@ -39,7 +55,7 @@ export default function ContentList({ accountId, content, cat }: Props) {
             }
         }
         retrieveContent();
-    }, [accountId, cat, content]);
+    }, [sessionId, accountId, cat, content]);
 
     //capitalize category
     if (cat.includes('_')) {
@@ -107,7 +123,7 @@ export default function ContentList({ accountId, content, cat }: Props) {
                 onMouseLeave={onMouseLeave}
             >
                 <h2>{capCat}</h2>
-                {contentList && contentList.length >= 1 ?
+                {contentList && contentList.length > 0 ?
                     <ul
                         id="scroll-cont"
                         className="grid grid-flow-col overflow-x-scroll snap-x"
@@ -125,7 +141,7 @@ export default function ContentList({ accountId, content, cat }: Props) {
                                     <button
                                         onClick={() =>
                                             router.push(
-                                                `/${content}/${ent.id.toString()}`
+                                                `/${content === 'movies' ? 'movie' : content}/${ent.id.toString()}`
                                             )
                                         }
                                     >
@@ -182,7 +198,10 @@ export default function ContentList({ accountId, content, cat }: Props) {
                             </>
                         )}
                     </ul>
-                :   <p></p>}
+                :   <p className="h-60 grid place-items-center">
+                        Add some {content} to your {cat}!
+                    </p>
+                }
             </div>
             {contentList && contentList.length == 20 && (
                 <button

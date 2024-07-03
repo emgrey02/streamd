@@ -1,7 +1,12 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { getReqToken, getTmdbSession, setSessionCookies } from '../actions';
+import {
+    getReqToken,
+    createTmdbSession,
+    setSessionCookies,
+    getUserInfo,
+} from '../actions';
 import { useEffect } from 'react';
 
 //user is sent to this page after authenticating with tmdb
@@ -9,33 +14,36 @@ export default function Page() {
     let router = useRouter();
 
     useEffect(() => {
-        //get request token
+        //get request token stored in cookie
         async function getTokenCookie() {
             let reqToken = await getReqToken();
+            console.log(reqToken);
             return reqToken;
         }
 
-        //get session info w/ request token & return it
-        async function getSessionInfo() {
+        //get access Token & other session info w/ this request token & return it
+        async function getSessionId() {
             const reqToken = await getTokenCookie();
             if (reqToken) {
-                let sessionInfo = await getTmdbSession(reqToken);
-                return sessionInfo;
+                let sessionInfo = await createTmdbSession(reqToken);
+                console.log(sessionInfo);
+                return sessionInfo.session_id;
             } else {
                 return null;
             }
         }
 
+        //set cookies with user session info
         async function setTheCookies() {
-            let userSession = await getSessionInfo();
-            setSessionCookies(userSession);
+            let sessionId = await getSessionId();
+            console.log(sessionId);
+            let userInfo: any = await getUserInfo(sessionId);
+            console.log(userInfo);
+            await setSessionCookies(sessionId, userInfo);
         }
 
-        setTheCookies();
-        setTimeout(() => {
-            router.replace(`/`);
-        }, 2000);
-    });
+        setTheCookies().then(() => router.replace('/'));
+    }, [router]);
 
     return (
         <>

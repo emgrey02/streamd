@@ -3,6 +3,7 @@ import {
     addToFavorWatch,
     removeFavorWatch,
     getContentAccountInfo,
+    getSessionId,
 } from '../actions';
 import { useEffect, useState } from 'react';
 
@@ -11,34 +12,40 @@ export default function FavorWatchButton({
     content,
     contentId,
     accountId,
+    sessionId,
 }: {
     whichOne: string;
     content: string;
     contentId: string;
     accountId: string;
+    sessionId: string;
 }) {
     const [canFavorite, setCanFavorite] = useState<boolean>(true);
     const [canAddToWatchlist, setCanAddToWatchlist] = useState<boolean>(true);
-
-    async function setStates() {
-        const accountInfo = await getContentAccountInfo(content, contentId);
-
-        if (accountInfo.favorite) {
-            setCanFavorite(false);
-        } else {
-            setCanFavorite(true);
-        }
-
-        if (accountInfo.watchlist) {
-            setCanAddToWatchlist(false);
-        } else {
-            setCanAddToWatchlist(true);
-        }
-    }
+    console.log('sessionId: ', sessionId);
 
     useEffect(() => {
+        async function setStates() {
+            const accountInfo = await getContentAccountInfo(
+                sessionId,
+                content,
+                contentId
+            );
+
+            if (accountInfo.favorite) {
+                setCanFavorite(false);
+            } else {
+                setCanFavorite(true);
+            }
+
+            if (accountInfo.watchlist) {
+                setCanAddToWatchlist(false);
+            } else {
+                setCanAddToWatchlist(true);
+            }
+        }
         setStates();
-    });
+    }, [content, contentId, sessionId]);
 
     async function handleClick(
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -52,7 +59,8 @@ export default function FavorWatchButton({
                     'favorite',
                     content,
                     contentId,
-                    accountId
+                    accountId,
+                    sessionId
                 );
                 if (s1) {
                     setCanFavorite(false);
@@ -63,7 +71,8 @@ export default function FavorWatchButton({
                     'favorite',
                     content,
                     contentId,
-                    accountId
+                    accountId,
+                    sessionId
                 );
                 if (s2) {
                     setCanFavorite(true);
@@ -74,7 +83,8 @@ export default function FavorWatchButton({
                     'watchlist',
                     content,
                     contentId,
-                    accountId
+                    accountId,
+                    sessionId
                 );
                 if (s3) {
                     setCanAddToWatchlist(false);
@@ -85,7 +95,8 @@ export default function FavorWatchButton({
                     'watchlist',
                     content,
                     contentId,
-                    accountId
+                    accountId,
+                    sessionId
                 );
                 if (s4) {
                     setCanAddToWatchlist(true);

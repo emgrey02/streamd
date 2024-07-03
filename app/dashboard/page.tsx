@@ -5,23 +5,19 @@ import { cookies } from 'next/headers';
 import TmdbSignIn from '../components/TmdbSignIn';
 
 export default async function Page() {
-    const accessToken: string | undefined = cookies().get('accToken')?.value;
+    const sessionId: string | undefined = cookies().get('sessionId')?.value;
     const accountId: string | undefined = cookies().get('accId')?.value;
-    let reqToken: string | undefined = cookies().get('reqToken')?.value;
-    let username;
+    const username: string | undefined = cookies().get('username')?.value;
+    let reqToken;
 
     async function getRequestToken() {
-        const url = process.env.NEXT_PUBLIC_BASE_URL;
         const options: RequestInit = {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 accept: 'application/json',
                 'content-type': 'application/json',
                 Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
             },
-            body: JSON.stringify({
-                redirect_to: `${url}/approval`,
-            }),
             next: { revalidate: 60 },
         };
 
@@ -29,45 +25,25 @@ export default async function Page() {
 
         //fetch to get a request token from TMDB
         const res = await fetch(
-            'https://api.themoviedb.org/4/auth/request_token',
+            'https://api.themoviedb.org/3/authentication/token/new',
             options
         );
 
         //error handling
         if (!res.ok) {
-            console.error('failed to fetch data');
+            console.error('failed to fetch request token from tmdb');
         }
 
         //assign request Token
-        console.log('assigning new request token');
         const resJson = await res.json();
         const reqToken = resJson.request_token;
+        console.log('got request token');
+        console.log(resJson);
         return reqToken;
     }
 
-    if (!accessToken) {
+    if (!sessionId) {
         reqToken = await getRequestToken();
-    } else {
-        const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-            },
-        };
-
-        let res = await fetch(
-            `https://api.themoviedb.org/3/account/${accountId}`,
-            options
-        );
-
-        if (!res.ok) {
-            console.error('failed to fetch account info');
-        }
-
-        //assign username
-        const accountInfo = await res.json();
-        username = accountInfo.username;
     }
 
     return (
@@ -75,38 +51,42 @@ export default async function Page() {
             <h1 className="text-center">Your Dashboard</h1>
             <BackButton />
             {username && <p>Hello, {username}</p>}
-            {accessToken ?
+            {sessionId ?
                 <ul>
                     <li>
                         <ContentList
+                            sessionId={sessionId}
                             accountId={accountId}
-                            content="movie"
-                            cat="favorites"
+                            content="movies"
+                            cat="favorite"
                         />
                     </li>
                     <li>
                         <ContentList
+                            sessionId={sessionId}
                             accountId={accountId}
                             content="tv"
-                            cat="favorites"
+                            cat="favorite"
                         />
                     </li>
                     <li>
                         <ContentList
+                            sessionId={sessionId}
                             accountId={accountId}
-                            content="movie"
+                            content="movies"
                             cat="watchlist"
                         />
                     </li>
                     <li>
                         <ContentList
+                            sessionId={sessionId}
                             accountId={accountId}
                             content="tv"
                             cat="watchlist"
                         />
                     </li>
                 </ul>
-            :   <div className="text-center">
+            :   <div className="text-center flex flex-col items-center justify-center gap-4 h-96">
                     <p>Sign in to see your dashboard</p>
                     <TmdbSignIn rt={reqToken} />
                 </div>

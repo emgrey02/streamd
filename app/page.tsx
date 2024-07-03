@@ -3,26 +3,26 @@ import { Key, Suspense } from 'react';
 import TmdbSignIn from './components/TmdbSignIn';
 import TmdbSignOut from './components/TmdbSignOut';
 import { cookies } from 'next/headers';
-import { unstable_noStore as noStore } from 'next/cache';
+import { setAccountIdCookie } from './actions';
 
 export default async function Home() {
-    let reqToken;
-    let username;
-    const accessToken = cookies().get('accToken')?.value;
-    const accountId = cookies().get('accId')?.value;
-    const url: string | undefined = process.env.NEXT_PUBLIC_BASE_URL;
+    let reqToken = cookies().get('reqToken')?.value;
+    const sessionId = cookies().get('sessionId')?.value;
+    const username = cookies().get('username')?.value;
+    console.log('sessionId: ', sessionId);
+
+    //madstronaut
+    //nastygurl
+    // 66849350052b6585261b9b63
 
     async function getRequestToken() {
         const options: RequestInit = {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 accept: 'application/json',
                 'content-type': 'application/json',
                 Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
             },
-            body: JSON.stringify({
-                redirect_to: `${url}/approval`,
-            }),
             next: { revalidate: 60 },
         };
 
@@ -30,49 +30,27 @@ export default async function Home() {
 
         //fetch to get a request token from TMDB
         const res = await fetch(
-            'https://api.themoviedb.org/4/auth/request_token',
+            'https://api.themoviedb.org/3/authentication/token/new',
             options
         );
 
         //error handling
         if (!res.ok) {
-            console.error('failed to fetch data');
+            console.error('failed to fetch request token from tmdb');
         }
 
         //assign request Token
         const resJson = await res.json();
         const reqToken = resJson.request_token;
-        console.log('new reqToken: ', reqToken);
+        console.log('got request token');
+        console.log(resJson);
         return reqToken;
     }
 
-    // if there is no accessToken/if user is logged out
+    // if there is no sessionId/if user is logged out
     // then retrieve a request token in case user wants to log in
-    if (!accessToken) {
+    if (!sessionId) {
         reqToken = await getRequestToken();
-    } else {
-        // a user is logged in
-        // get username of current user
-        const options = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-            },
-        };
-
-        let res = await fetch(
-            `https://api.themoviedb.org/3/account/${accountId}`,
-            options
-        );
-
-        if (!res.ok) {
-            console.error('failed to fetch account info');
-        }
-
-        //assign username
-        const accountInfo = await res.json();
-        username = accountInfo.username;
     }
 
     let movieCats: string[] = [
@@ -91,12 +69,12 @@ export default async function Home() {
 
     return (
         <main className="min-h-screen py-4">
-            {!accessToken ?
-                <div className="px-4">
+            {!sessionId ?
+                <div className="px-4 text-center flex flex-col gap-4 items-center">
                     <p>Sign in to access your favorite tv shows & movies.</p>
                     <TmdbSignIn rt={reqToken} />
                 </div>
-            :   <div className="px-4">
+            :   <div className="px-4 flex flex-col items-start gap-4">
                     <p>Hello, {username} :)</p>
                     <TmdbSignOut />
                 </div>

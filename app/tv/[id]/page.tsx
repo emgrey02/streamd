@@ -10,6 +10,7 @@ import { cookies } from 'next/headers';
 export default async function Show({ params }: { params: { id: string } }) {
     let showId = params.id;
 
+    const sessionId = cookies().get('sessionId')?.value;
     const accountId = cookies().get('accId')?.value;
 
     const options = {
@@ -63,19 +64,21 @@ export default async function Show({ params }: { params: { id: string } }) {
                             )
                         )}
                     </ul>
-                    {accountId && (
+                    {accountId && sessionId && (
                         <>
                             <FavorWatchButton
                                 whichOne="favorite"
                                 content="tv"
                                 contentId={deets.id}
                                 accountId={accountId}
+                                sessionId={sessionId}
                             />
                             <FavorWatchButton
                                 whichOne="watchlist"
                                 content="tv"
                                 contentId={deets.id}
                                 accountId={accountId}
+                                sessionId={sessionId}
                             />
                         </>
                     )}

@@ -10,6 +10,7 @@ import FavorWatchButton from '@/app/components/FavorWatchButton';
 export default async function Movie({ params }: { params: { id: string } }) {
     let movieId = params.id;
 
+    const sessionId = cookies().get('sessionId')?.value;
     const accountId = cookies().get('accId')?.value;
 
     const options = {
@@ -61,19 +62,21 @@ export default async function Movie({ params }: { params: { id: string } }) {
                             )
                         )}
                     </ul>
-                    {accountId && (
+                    {accountId && sessionId && (
                         <>
                             <FavorWatchButton
                                 whichOne="favorite"
                                 content="movie"
                                 contentId={deets.id}
                                 accountId={accountId}
+                                sessionId={sessionId}
                             />
                             <FavorWatchButton
                                 whichOne="watchlist"
                                 content="movie"
                                 contentId={deets.id}
                                 accountId={accountId}
+                                sessionId={sessionId}
                             />
                         </>
                     )}

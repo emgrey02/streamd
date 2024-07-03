@@ -2,6 +2,8 @@ import { Mina } from 'next/font/google';
 import Link from 'next/link';
 import './globals.css';
 import { Metadata } from 'next';
+import TmdbSignIn from './components/TmdbSignIn';
+import TmdbSignOut from './components/TmdbSignOut';
 
 const inter = Mina({
     weight: ['400', '700'],
@@ -24,15 +26,14 @@ export default async function RootLayout({
                 className={`${inter.className} p-2 w-full h-full relative bg-slate-800 text-gray-300`}
             >
                 <nav className="flex justify-between w-full py-2 px-4 ">
-                    <h1 className="font-bold text-lg text-brand-blue">
-                        streamie
+                    <h1 className="font-bold text-lg text-brand-blue tracking-widest">
+                        <Link href="/">streamie</Link>
                     </h1>
-                    <ul className="grid grid-cols-2">
+                    <ul className="grid">
                         <li className="w-fit">
-                            <Link href="/">Home</Link>
-                        </li>
-                        <li className="w-fit">
-                            <Link href="/dashboard">Dashboard</Link>
+                            <Link className="tracking-widest" href="/dashboard">
+                                dashboard
+                            </Link>
                         </li>
                     </ul>
                 </nav>

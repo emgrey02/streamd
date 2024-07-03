@@ -11,24 +11,36 @@ export async function setReqToken(rt: string) {
     }
 }
 
+export async function setAccountIdCookie(accId: string) {
+    console.log('setting account id cookie');
+    cookies().set('accId', accId);
+}
+
 export async function getReqToken() {
     console.log('getting request token cookie');
     const cookie = cookies().get('reqToken')?.value;
     return cookie;
 }
 
-export async function setSessionCookies(s: any) {
+export async function setSessionCookies(
+    sessionId: string,
+    userInfo: { id: string; username: string }
+) {
+    console.log(sessionId, userInfo.id, userInfo.username);
     console.log('setting user session cookies');
-    cookies().set('accId', s.account_id);
-    cookies().set('accToken', s.access_token);
+    cookies().set('sessionId', sessionId);
+    cookies().set('accId', userInfo.id);
+    cookies().set('username', userInfo.username);
+    console.log('session cookies are set');
 }
 
-export async function getAccessToken() {
-    return cookies().get('accToken')?.value;
+export async function getSessionId() {
+    return cookies().get('sessionId')?.value;
 }
 
-export async function tmdbLogOut(at: string) {
-    console.log(at);
+export async function tmdbLogOut(sessionId: string) {
+    console.log('logging out...');
+    console.log(sessionId);
     const options = {
         method: 'DELETE',
         headers: {
@@ -37,17 +49,16 @@ export async function tmdbLogOut(at: string) {
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
         body: JSON.stringify({
-            access_token: at,
+            session_id: sessionId,
         }),
     };
 
     let res = await fetch(
-        'https://api.themoviedb.org/4/auth/access_token',
+        'https://api.themoviedb.org/3/authentication/session',
         options
     );
 
     if (!res.ok) {
-        console.log(await res.json());
         console.error('failed to log out');
     } else {
         console.log('successfully logged out');
@@ -56,7 +67,7 @@ export async function tmdbLogOut(at: string) {
     return await res.json();
 }
 
-export async function getTmdbSession(rt: string) {
+export async function createTmdbSession(rt: string) {
     //create new options object for fetching session_id using request token
     const sessionOptions: RequestInit = {
         method: 'POST',
@@ -68,33 +79,37 @@ export async function getTmdbSession(rt: string) {
         body: JSON.stringify({
             request_token: rt,
         }),
-        cache: 'no-store',
+        next: { revalidate: 60 },
     };
 
     const sessionRes = await fetch(
-        'https://api.themoviedb.org/4/auth/access_token',
+        'https://api.themoviedb.org/3/authentication/session/new',
         sessionOptions
     );
 
     if (!sessionRes.ok) {
-        console.log(await sessionRes.json());
-        console.error('failed to get access token');
+        const sessionResJson = await sessionRes.json();
+        console.log(sessionResJson);
+        console.error('failed to get session id');
+        return sessionResJson;
     } else {
-        console.log('successfully got a request token');
+        const sessionResJson = await sessionRes.json();
+        console.log(sessionResJson);
+        console.log('successfully got a session id');
+        return sessionResJson;
     }
-
-    const sessionResJson = await sessionRes.json();
-    return sessionResJson;
 }
 
 export async function deleteCookies() {
     console.log(`deleting cookies`);
     cookies().delete('accId');
     cookies().delete('reqToken');
-    return cookies().delete('accToken');
+    cookies().delete('sessionId');
+    return cookies().delete('username');
 }
 
 export async function getContentAccountInfo(
+    sessionId: string,
     content: string,
     contentId: string
 ) {
@@ -107,18 +122,39 @@ export async function getContentAccountInfo(
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/${content}/${contentId}/account_states`,
+        `https://api.themoviedb.org/3/${content}/${contentId}/account_states?session_id=${sessionId}`,
         options
     );
 
     if (!res.ok) {
-        console.log(await res.json());
         console.error('failed to get content account info');
     } else {
         console.log('successfully got content account info');
     }
 
     return await res.json();
+}
+
+export async function getUserInfo(sessionId: string) {
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    let res = await fetch(
+        `https://api.themoviedb.org/3/account/account_id?session_id=${sessionId}`,
+        options
+    );
+
+    if (!res.ok) {
+        console.error('failed to fetch account info');
+    }
+    const userInfo = await res.json();
+    console.log(userInfo);
+    return userInfo;
 }
 
 export async function getContent(
@@ -134,22 +170,24 @@ export async function getContent(
         },
     };
 
+    console.log(content, cat, pageNum);
+
     let res = await fetch(
         `https://api.themoviedb.org/3/${content}/${cat}?language=en-US&page=${pageNum}`,
         options
     );
 
     if (!res.ok) {
-        console.log(await res.json());
         console.error('failed to fetch content');
     } else {
         console.log('successfully retrieved content');
     }
-
-    return await res.json();
+    let result = await res.json();
+    return result;
 }
 
 export async function getFavorWatch(
+    sessionId: string,
     whichOne: string,
     accountId: string,
     content: string
@@ -163,15 +201,15 @@ export async function getFavorWatch(
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/4/account/${accountId}/${content}/${whichOne}?language=en-US&page=1&sort_by=created_at.asc`,
+        `https://api.themoviedb.org/3/account/${accountId}/${whichOne}/${content}?session_id=${sessionId}&language=en-US&page=1&sort_by=created_at.asc`,
         options
     );
 
-    if (!res.ok) {
-        console.error(`failed to fetch ${whichOne} ${content}s`);
-    }
-
     let favorWatch = await res.json();
+    if (!res.ok) {
+        console.log(favorWatch);
+        console.error(`failed to fetch ${whichOne} ${content}`);
+    }
     // console.log(favorWatch);
     return favorWatch.results;
 }
@@ -187,7 +225,8 @@ export async function addToFavorWatch(
     whichOne: string,
     type: string,
     contentId: string,
-    accountId: string
+    accountId: string,
+    sessionId: string
 ) {
     let body: body;
 
@@ -216,12 +255,12 @@ export async function addToFavorWatch(
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/account/${accountId}/${whichOne}`,
+        `https://api.themoviedb.org/3/account/${accountId}/${whichOne}?session_id=${sessionId}`,
         options
     );
 
     if (!res.ok) {
-        console.log(`failed to get ${whichOne}`);
+        console.log(`failed to add ${type} to ${whichOne}`);
         console.error(await res.json());
         return false;
     } else {
@@ -234,7 +273,8 @@ export async function removeFavorWatch(
     whichOne: string,
     type: string,
     contentId: string,
-    accountId: string
+    accountId: string,
+    sessionId: string
 ) {
     let body: body;
 
@@ -262,7 +302,7 @@ export async function removeFavorWatch(
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/account/${accountId}/${whichOne}`,
+        `https://api.themoviedb.org/3/account/${accountId}/${whichOne}?session_id=${sessionId}`,
         options
     );
 
