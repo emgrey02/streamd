@@ -44,26 +44,34 @@ export default async function Movie({ params }: { params: { id: string } }) {
 
     return (
         <div className="m-8">
-            <div className="flex gap-4">
+            <div className="grid gap-4 md:flex">
                 <Image
                     src={`https://image.tmdb.org/t/p/w400${deets.poster_path}`}
                     alt="movie poster"
                     width={400}
-                    height={1200}
+                    height={600}
+                    priority
                 />
                 <div className="grid gap-4">
-                    <h1 className="text-2xl font-bold">{deets.title}</h1>
+                    <h1 className="text-2xl font-bold text-slate-200">
+                        {deets.title}
+                    </h1>
                     <p>{deets.tagline}</p>
-                    <ul>
+                    <ul className="flex flex-wrap gap-4">
                         <h2>Genres:</h2>
                         {deets.genres.map(
                             (genre: { name: string }, index: Key) => (
-                                <li key={index}>{genre.name}</li>
+                                <li
+                                    className="w-min ring-1 rounded-lg h-min px-2 py-0 ring-slate-400"
+                                    key={index}
+                                >
+                                    {genre.name}
+                                </li>
                             )
                         )}
                     </ul>
                     {accountId && sessionId && (
-                        <>
+                        <div className="grid grid-cols-2 w-64">
                             <FavorWatchButton
                                 whichOne="favorite"
                                 content="movie"
@@ -78,16 +86,16 @@ export default async function Movie({ params }: { params: { id: string } }) {
                                 accountId={accountId}
                                 sessionId={sessionId}
                             />
-                        </>
+                        </div>
                     )}
                     <p>{deets.release_date}</p>
-                    <p className="justify-self-end">{deets.overview}</p>
+                    <p className="max-w-xl">{deets.overview}</p>
                 </div>
             </div>
             <BackButton />
             <div className="flex flex-col">
                 <h2 className="my-8 font-bold text-xl">Cast</h2>
-                <ul className="grid grid-flow-col grid-rows-2 place-items-center auto-cols-fr gap-8 text-sm">
+                <ul className="grid grid-flow-col grid-rows-4 md:grid-rows-3 lg:grid-rows-2 2xl:grid-rows-1 place-items-center gap-8 text-sm">
                     {creds.cast.map(
                         (p: any, index: number) =>
                             index < 8 && (
@@ -99,7 +107,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
                                         {p.name}
                                     </p>
                                     <p>as {p.character}</p>
-                                    <div className="h-full grid justify-center items-end">
+                                    <div className="h-full grid justify-center items-end min-w-36">
                                         {p.profile_path ?
                                             <Image
                                                 src={`https://image.tmdb.org/t/p/w200${p.profile_path}`}

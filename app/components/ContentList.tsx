@@ -79,7 +79,7 @@ export default function ContentList({
             let capLetterCont = content.slice(0, 1).toUpperCase();
             capCat = capLetterCont + content.slice(1) + ' ' + capCat;
         } else {
-            capCat = capLetter + cat.slice(1);
+            capCat = capLetter + cat.slice(1) + ' ' + content;
         }
     }
 

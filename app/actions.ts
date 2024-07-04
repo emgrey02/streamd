@@ -1,7 +1,39 @@
 'use server';
 import { cookies } from 'next/headers';
 
-export async function setReqToken(rt: string) {
+export async function getRequestToken() {
+    const options: RequestInit = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+        },
+        next: { revalidate: 60 },
+    };
+
+    options.next as RequestInit;
+
+    //fetch to get a request token from TMDB
+    const res = await fetch(
+        'https://api.themoviedb.org/3/authentication/token/new',
+        options
+    );
+
+    //error handling
+    if (!res.ok) {
+        console.error('failed to fetch request token from tmdb');
+    }
+
+    //assign request Token
+    const resJson = await res.json();
+    const reqToken = resJson.request_token;
+    console.log('successfully got request token from tmdb');
+    console.log(resJson);
+    return reqToken;
+}
+
+export async function setReqTokenCookie(rt: string) {
     console.log('setting request token cookie');
     cookies().set('reqToken', rt);
     if (cookies().get('reqToken')?.value === rt) {
@@ -16,7 +48,7 @@ export async function setAccountIdCookie(accId: string) {
     cookies().set('accId', accId);
 }
 
-export async function getReqToken() {
+export async function getReqTokenCookie() {
     console.log('getting request token cookie');
     const cookie = cookies().get('reqToken')?.value;
     return cookie;

@@ -108,10 +108,10 @@ export default function FavorWatchButton({
     return (
         <>
             {whichOne === 'favorite' ?
-                <button className="w-min" onClick={handleClick}>
+                <button className="w-fit h-min" onClick={handleClick}>
                     {canFavorite ? 'Favorite' : 'UnFavorite'}
                 </button>
-            :   <button className="w-min" onClick={handleClick}>
+            :   <button className="w-fit h-min" onClick={handleClick}>
                     {canAddToWatchlist ?
                         'Add to Watchlist'
                     :   'Remove from Watchlist'}

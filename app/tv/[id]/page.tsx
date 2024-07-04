@@ -41,31 +41,42 @@ export default async function Show({ params }: { params: { id: string } }) {
 
     let deets = await res.json();
     let creds = await creditsRes.json();
+    console.log(deets);
 
     return (
         <main className="m-8">
-            <div className="flex gap-4">
+            <div className="grid gap-4 md:flex">
                 <Image
                     src={`https://image.tmdb.org/t/p/w400${deets.poster_path}`}
                     alt="tv poster"
                     width={400}
                     height={1200}
                 />
-                <div className="grid gap-4">
+                <div className="flex flex-col gap-4">
                     <h1 className="text-2xl font-bold text-slate-200">
                         {deets.name}
                     </h1>
+                    <p className="font-light">tv show</p>
+                    <div className="flex gap-4">
+                        <p>{deets.number_of_episodes} total episodes</p>
+                        <p>{deets.number_of_seasons} seasons</p>
+                    </div>
                     <p>{deets.tagline}</p>
-                    <ul>
+                    <ul className="flex flex-wrap my-4 gap-4">
                         <h2>Genres:</h2>
                         {deets.genres.map(
                             (genre: { name: string }, index: Key) => (
-                                <li key={index}>{genre.name}</li>
+                                <li
+                                    className="w-min ring-1 rounded-lg h-min px-2 py-0 ring-slate-400"
+                                    key={index}
+                                >
+                                    {genre.name}
+                                </li>
                             )
                         )}
                     </ul>
                     {accountId && sessionId && (
-                        <>
+                        <div className="grid grid-cols-2 w-64">
                             <FavorWatchButton
                                 whichOne="favorite"
                                 content="tv"
@@ -80,16 +91,16 @@ export default async function Show({ params }: { params: { id: string } }) {
                                 accountId={accountId}
                                 sessionId={sessionId}
                             />
-                        </>
+                        </div>
                     )}
                     <p>{deets.release_date}</p>
-                    <p className="justify-self-end">{deets.overview}</p>
+                    <p className="max-w-xl">{deets.overview}</p>
                 </div>
             </div>
             <BackButton />
             <div className="flex flex-col">
                 <h2 className="my-8 font-bold text-xl">Cast</h2>
-                <ul className="grid grid-flow-col grid-rows-2 place-items-center auto-cols-fr gap-8 text-sm">
+                <ul className="grid grid-flow-col grid-rows-4 md:grid-rows-3 lg:grid-rows-2 2xl:grid-rows-1 place-items-center gap-8 text-sm">
                     {creds.cast.map(
                         (p: any, index: number) =>
                             index < 8 && (

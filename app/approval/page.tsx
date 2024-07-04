@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import {
-    getReqToken,
+    getReqTokenCookie,
     createTmdbSession,
     setSessionCookies,
     getUserInfo,
@@ -16,7 +16,7 @@ export default function Page() {
     useEffect(() => {
         //get request token stored in cookie
         async function getTokenCookie() {
-            let reqToken = await getReqToken();
+            let reqToken = await getReqTokenCookie();
             console.log(reqToken);
             return reqToken;
         }

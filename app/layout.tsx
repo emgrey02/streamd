@@ -1,12 +1,13 @@
-import { Mina } from 'next/font/google';
+import { Exo } from 'next/font/google';
 import Link from 'next/link';
 import './globals.css';
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import TmdbSignIn from './components/TmdbSignIn';
 import TmdbSignOut from './components/TmdbSignOut';
 
-const inter = Mina({
-    weight: ['400', '700'],
+//Mina weight: ['400', '700'],
+const inter = Exo({
     subsets: ['latin'],
 });
 
@@ -20,20 +21,28 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
+    const cookieStore = cookies();
+    const sessionId = cookieStore.get('sessionId')?.value;
+
     return (
         <html lang="en">
             <body
                 className={`${inter.className} p-2 w-full h-full relative bg-slate-800 text-gray-300`}
             >
-                <nav className="flex justify-between w-full py-2 px-4 ">
+                <nav className="flex justify-between w-full py-2 px-4 my-2">
                     <h1 className="font-bold text-lg text-brand-blue tracking-widest">
                         <Link href="/">streamie</Link>
                     </h1>
-                    <ul className="grid">
+                    <ul className="grid grid-cols-2 gap-4">
                         <li className="w-fit">
                             <Link className="tracking-widest" href="/dashboard">
                                 dashboard
                             </Link>
+                        </li>
+                        <li>
+                            {sessionId ?
+                                <TmdbSignOut />
+                            :   <TmdbSignIn />}
                         </li>
                     </ul>
                 </nav>
