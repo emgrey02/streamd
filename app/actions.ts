@@ -7,7 +7,7 @@ export async function getRequestToken() {
         headers: {
             accept: 'application/json',
             'content-type': 'application/json',
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_TMDB_AUTH_TOKEN}`,
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
         next: { revalidate: 60 },
     };
