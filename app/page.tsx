@@ -31,10 +31,6 @@ export default async function Home() {
                 </div>
             :   <div className="px-4 flex flex-col items-start my-8">
                     <p>Hello, {username}. Please, have a look around.</p>
-                    <p>
-                        *Go to your dashboard to see your personal favorites,
-                        watchlists, and rated tv shows/movies.
-                    </p>
                 </div>
             }
             <ul className="grid gap-4">

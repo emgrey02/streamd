@@ -11,10 +11,12 @@ export default async function Page() {
     const username: string | undefined = cookies().get('username')?.value;
 
     return (
-        <main className="px-4">
-            <h1 className="text-center">Your Dashboard</h1>
+        <main className="md:px-2">
+            <h1 className="text-center text-lg font-bold mt-8">
+                Your Dashboard
+            </h1>
+            {username && <p className="text-center">Hello, {username}</p>}
             <BackButton />
-            {username && <p className="my-8">Hello, {username}</p>}
             {sessionId ?
                 <ul className="grid gap-8">
                     <li>

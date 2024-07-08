@@ -7,6 +7,7 @@ import BackButton from '@/app/components/BackButton';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
 import SubmitRating from '@/app/components/SubmitRating';
+import CastComp from '@/app/components/CastComp';
 
 export default async function Show({ params }: { params: { id: string } }) {
     let showId = params.id;
@@ -126,42 +127,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                 </div>
             </div>
             <BackButton />
-            <div className="flex flex-col">
-                <h2 className="my-8 font-bold text-xl">Cast</h2>
-                <ul className="grid grid-flow-col grid-rows-4 md:grid-rows-3 lg:grid-rows-2 2xl:grid-rows-1 place-items-center gap-8 text-sm">
-                    {creds.cast.map(
-                        (p: any, index: number) =>
-                            index < 8 && (
-                                <li
-                                    key={index}
-                                    className="grid gap-y-2 w-full h-full"
-                                >
-                                    <p className="font-bold text-base tracking-wide">
-                                        {p.name}
-                                    </p>
-                                    <p>as {p.roles[0].character}</p>
-
-                                    <div className="h-full grid justify-center items-end">
-                                        {p.profile_path ?
-                                            <Image
-                                                src={`https://image.tmdb.org/t/p/w200${p.profile_path}`}
-                                                alt={`${p.name} headshot`}
-                                                width={'150'}
-                                                height={'275'}
-                                            />
-                                        :   <div className="w-36 h-56 bg-slate-900/80 text-slate-400 grid place-items-center">
-                                                no image available
-                                            </div>
-                                        }
-                                    </div>
-                                </li>
-                            )
-                    )}
-                </ul>
-                <Link className="self-end my-8" href="">
-                    See All Cast & Crew
-                </Link>
-            </div>
+            <CastComp creds={creds} cont="tv" />
             <div className="w-full">
                 <h2 className="text-xl font-bold my-8">Reviews</h2>
                 <ul className="grid max-w-3xl">

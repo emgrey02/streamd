@@ -3,10 +3,10 @@
 import Image from 'next/image';
 import { Key } from 'react';
 import BackButton from '@/app/components/BackButton';
-import Link from 'next/link';
 import { cookies } from 'next/headers';
 import FavorWatchButton from '@/app/components/FavorWatchButton';
 import SubmitRating from '@/app/components/SubmitRating';
+import CastComp from '@/app/components/CastComp';
 
 export default async function Movie({ params }: { params: { id: string } }) {
     let movieId = params.id;
@@ -79,16 +79,17 @@ export default async function Movie({ params }: { params: { id: string } }) {
                     <p>{deets.tagline}</p>
                     <ul className="flex flex-wrap items-center gap-x-2 gap-y-1">
                         <h2>Genres:</h2>
-                        {deets.genres.map(
-                            (genre: { name: string }, index: Key) => (
-                                <li
-                                    className="w-fit text-sm ring-1 rounded-lg h-min px-2 py-0 ring-slate-400"
-                                    key={index}
-                                >
-                                    {genre.name}
-                                </li>
-                            )
-                        )}
+                        {deets.genres &&
+                            deets.genres.map(
+                                (genre: { name: string }, index: Key) => (
+                                    <li
+                                        className="w-fit text-sm ring-1 rounded-lg h-min px-2 py-0 ring-slate-400"
+                                        key={index}
+                                    >
+                                        {genre.name}
+                                    </li>
+                                )
+                            )}
                     </ul>
                     {accountId && sessionId && (
                         <>
@@ -122,73 +123,43 @@ export default async function Movie({ params }: { params: { id: string } }) {
                 </div>
             </div>
             <BackButton />
-            <div className="flex flex-col">
-                <h2 className="my-8 font-bold text-xl">Cast</h2>
-                <ul className="grid grid-flow-col grid-rows-4 md:grid-rows-3 lg:grid-rows-2 2xl:grid-rows-1 place-items-center gap-8 text-sm">
-                    {creds.cast.map(
-                        (p: any, index: number) =>
-                            index < 8 && (
-                                <li
-                                    key={index}
-                                    className="grid gap-y-2 w-full h-full"
-                                >
-                                    <p className="font-bold text-base tracking-wide">
-                                        {p.name}
-                                    </p>
-                                    <p>as {p.character}</p>
-                                    <div className="h-full grid justify-center items-end min-w-36">
-                                        {p.profile_path ?
-                                            <Image
-                                                src={`https://image.tmdb.org/t/p/w200${p.profile_path}`}
-                                                alt={`${p.name} headshot`}
-                                                width={'150'}
-                                                height={'275'}
-                                            />
-                                        :   <div className="w-36 h-56 bg-slate-900/80 text-slate-400 grid place-items-center">
-                                                no image available
-                                            </div>
-                                        }
-                                    </div>
-                                </li>
-                            )
-                    )}
-                </ul>
-                <Link className="self-end my-8" href="">
-                    See All Cast & Crew
-                </Link>
-            </div>
+            <CastComp creds={creds} cont="movie" />
+
             <div className="w-full">
                 <h2 className="text-xl font-bold my-8">Reviews</h2>
                 <ul className="grid max-w-3xl">
-                    {reviews.results.map((post: any, index: Key) => (
-                        <li key={index} className="grid gap-4">
-                            <p>
-                                user:{' '}
-                                <span className="font-bold">{post.author}</span>
-                            </p>
-                            <div className="flex flex-col gap-2">
+                    {reviews.results &&
+                        reviews.results.map((post: any, index: Key) => (
+                            <li key={index} className="grid gap-4">
                                 <p>
-                                    rating:{' '}
-                                    {post.author_details.rating ?
-                                        post.author_details.rating.toString() +
-                                        '/10'
-                                    :   'none'}
+                                    user:{' '}
+                                    <span className="font-bold">
+                                        {post.author}
+                                    </span>
                                 </p>
-                                <div className="h-3 w-50 relative overflow-hidden bg-slate-900">
-                                    <div
-                                        className={`h-full bg-green-300/70 absolute`}
-                                        style={{
-                                            width: `${post.author_details.rating * 10}%`,
-                                        }}
-                                    ></div>
+                                <div className="flex flex-col gap-2">
+                                    <p>
+                                        rating:{' '}
+                                        {post.author_details.rating ?
+                                            post.author_details.rating.toString() +
+                                            '/10'
+                                        :   'none'}
+                                    </p>
+                                    <div className="h-3 w-50 relative overflow-hidden bg-slate-900">
+                                        <div
+                                            className={`h-full bg-green-300/70 absolute`}
+                                            style={{
+                                                width: `${post.author_details.rating * 10}%`,
+                                            }}
+                                        ></div>
+                                    </div>
                                 </div>
-                            </div>
-                            <p className="w-full leading-relaxed">
-                                {post.content}
-                            </p>
-                            <div className="w-full h-[1px] bg-slate-500 my-10"></div>
-                        </li>
-                    ))}
+                                <p className="w-full leading-relaxed">
+                                    {post.content}
+                                </p>
+                                <div className="w-full h-[1px] bg-slate-500 my-10"></div>
+                            </li>
+                        ))}
                 </ul>
             </div>
         </div>

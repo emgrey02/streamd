@@ -3,7 +3,6 @@ import {
     addToFavorWatch,
     removeFavorWatch,
     getContentAccountInfo,
-    getSessionId,
 } from '../actions';
 import { useEffect, useState } from 'react';
 
@@ -22,7 +21,6 @@ export default function FavorWatchButton({
 }) {
     const [canFavorite, setCanFavorite] = useState<boolean>(true);
     const [canAddToWatchlist, setCanAddToWatchlist] = useState<boolean>(true);
-    console.log('sessionId: ', sessionId);
 
     useEffect(() => {
         async function setStates() {
@@ -52,6 +50,7 @@ export default function FavorWatchButton({
     ) {
         let target = e.currentTarget as HTMLButtonElement;
         let text = target.innerText;
+        console.log(target.innerText);
 
         switch (text) {
             case 'Favorite':

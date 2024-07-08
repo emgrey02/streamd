@@ -133,7 +133,7 @@ export default function ContentList({
     return (
         <div className="flex flex-col">
             <div
-                className="relative h-min grid gap-y-4 px-8"
+                className="relative h-min grid gap-y-4 px-2 md:px-8"
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
             >
