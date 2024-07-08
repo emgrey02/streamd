@@ -32,6 +32,11 @@ export default async function Show({ params }: { params: { id: string } }) {
         options
     );
 
+    let reviewsRes = await fetch(
+        `https://api.themoviedb.org/3/tv/${showId}/reviews?language=en-US`,
+        options
+    );
+
     if (!res.ok) {
         console.error('failed to fetch show data');
     }
@@ -40,9 +45,13 @@ export default async function Show({ params }: { params: { id: string } }) {
         console.error('failed to fetch show cast & crew data');
     }
 
+    if (!creditsRes.ok) {
+        console.error('failed to fetch show reviews');
+    }
+
     let deets = await res.json();
     let creds = await creditsRes.json();
-    console.log(deets);
+    let reviews = await reviewsRes.json();
 
     return (
         <main className="m-8">
@@ -152,6 +161,40 @@ export default async function Show({ params }: { params: { id: string } }) {
                 <Link className="self-end my-8" href="">
                     See All Cast & Crew
                 </Link>
+            </div>
+            <div className="w-full">
+                <h2 className="text-xl font-bold my-8">Reviews</h2>
+                <ul className="grid max-w-3xl">
+                    {reviews.results.map((post: any, index: Key) => (
+                        <li key={index} className="grid gap-4">
+                            <p>
+                                user:{' '}
+                                <span className="font-bold">{post.author}</span>
+                            </p>
+                            <div className="flex flex-col gap-2">
+                                <p>
+                                    rating:{' '}
+                                    {post.author_details.rating ?
+                                        post.author_details.rating.toString() +
+                                        '/10'
+                                    :   'none'}
+                                </p>
+                                <div className="h-3 w-50 relative overflow-hidden bg-slate-900">
+                                    <div
+                                        className={`h-full bg-green-300/70 absolute`}
+                                        style={{
+                                            width: `${post.author_details.rating * 10}%`,
+                                        }}
+                                    ></div>
+                                </div>
+                            </div>
+                            <p className="w-full leading-relaxed">
+                                {post.content}
+                            </p>
+                            <div className="w-full h-[1px] bg-slate-500 my-10"></div>
+                        </li>
+                    ))}
+                </ul>
             </div>
         </main>
     );

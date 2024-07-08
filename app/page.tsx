@@ -29,9 +29,12 @@ export default async function Home() {
                     <p>Sign in to access your favorite tv shows & movies.</p>
                     <TmdbSignIn />
                 </div>
-            :   <div className="px-4 flex flex-col items-start gap-4 my-8">
-                    <p>hello, {username}.</p>
-                    <p>please, have a look around</p>
+            :   <div className="px-4 flex flex-col items-start my-8">
+                    <p>Hello, {username}. Please, have a look around.</p>
+                    <p>
+                        *Go to your dashboard to see your personal favorites,
+                        watchlists, and rated tv shows/movies.
+                    </p>
                 </div>
             }
             <ul className="grid gap-4">
