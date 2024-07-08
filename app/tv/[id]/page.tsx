@@ -6,6 +6,7 @@ import FavorWatchButton from '@/app/components/FavorWatchButton';
 import BackButton from '@/app/components/BackButton';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
+import SubmitRating from '@/app/components/SubmitRating';
 
 export default async function Show({ params }: { params: { id: string } }) {
     let showId = params.id;
@@ -46,54 +47,72 @@ export default async function Show({ params }: { params: { id: string } }) {
     return (
         <main className="m-8">
             <div className="grid gap-4 md:flex">
-                <Image
-                    src={`https://image.tmdb.org/t/p/w400${deets.poster_path}`}
-                    alt="tv poster"
-                    width={400}
-                    height={1200}
-                />
-                <div className="flex flex-col gap-4">
-                    <h1 className="text-2xl font-bold text-slate-200">
-                        {deets.name}
-                    </h1>
-                    <p className="font-light">tv show</p>
+                {deets.poster_path ?
+                    <Image
+                        className="max-h-600"
+                        src={`https://image.tmdb.org/t/p/w400${deets.poster_path}`}
+                        alt="tv poster"
+                        width={400}
+                        height={1200}
+                    />
+                :   <div className="w-96 h-auto bg-slate-300/20 grid place-items-center">
+                        {deets.name} poster unavailable
+                    </div>
+                }
+                <div className="flex flex-col gap-8">
+                    <div>
+                        <h1 className="text-2xl font-bold text-slate-200">
+                            {deets.name}
+                        </h1>
+                        <p className="font-light">tv show</p>
+                    </div>
                     <div className="flex gap-4">
                         <p>{deets.number_of_episodes} total episodes</p>
                         <p>{deets.number_of_seasons} seasons</p>
                     </div>
                     <p>{deets.tagline}</p>
-                    <ul className="flex flex-wrap my-4 gap-4">
-                        <h2>Genres:</h2>
-                        {deets.genres.map(
-                            (genre: { name: string }, index: Key) => (
-                                <li
-                                    className="w-min ring-1 rounded-lg h-min px-2 py-0 ring-slate-400"
-                                    key={index}
-                                >
-                                    {genre.name}
-                                </li>
-                            )
-                        )}
-                    </ul>
+                    <div>
+                        <ul className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                            <h2>Genres:</h2>
+                            {deets.genres.map(
+                                (genre: { name: string }, index: Key) => (
+                                    <li
+                                        className="w-fit text-sm ring-1 rounded-lg h-min px-2 py-0 ring-slate-400"
+                                        key={index}
+                                    >
+                                        {genre.name}
+                                    </li>
+                                )
+                            )}
+                        </ul>
+                    </div>
                     {accountId && sessionId && (
-                        <div className="grid grid-cols-2 w-64">
-                            <FavorWatchButton
-                                whichOne="favorite"
+                        <>
+                            <div className="grid grid-cols-2 w-64">
+                                <FavorWatchButton
+                                    whichOne="favorite"
+                                    content="tv"
+                                    contentId={deets.id}
+                                    accountId={accountId}
+                                    sessionId={sessionId}
+                                />
+                                <FavorWatchButton
+                                    whichOne="watchlist"
+                                    content="tv"
+                                    contentId={deets.id}
+                                    accountId={accountId}
+                                    sessionId={sessionId}
+                                />
+                            </div>
+                            <SubmitRating
                                 content="tv"
-                                contentId={deets.id}
-                                accountId={accountId}
+                                id={deets.id}
                                 sessionId={sessionId}
+                                voteAvg={deets.vote_average}
+                                totalVotes={deets.vote_count}
                             />
-                            <FavorWatchButton
-                                whichOne="watchlist"
-                                content="tv"
-                                contentId={deets.id}
-                                accountId={accountId}
-                                sessionId={sessionId}
-                            />
-                        </div>
+                        </>
                     )}
-                    <p>{deets.release_date}</p>
                     <p className="max-w-xl">{deets.overview}</p>
                 </div>
             </div>

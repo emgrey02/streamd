@@ -1,6 +1,71 @@
 'use server';
 import { cookies } from 'next/headers';
 
+export async function deleteRating(
+    content: string,
+    id: number,
+    sessionId: string
+) {
+    const options = {
+        method: 'DELETE',
+        headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json;charset=utf-8',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    const res = await fetch(
+        `https://api.themoviedb.org/3/${content}/${id}/rating?session_id=${sessionId}`,
+        options
+    );
+
+    const resJson = await res.json();
+
+    //error handling
+    if (!res.ok) {
+        console.log(resJson);
+        console.error(`failed to rate this ${content}`);
+    }
+
+    return resJson;
+}
+
+export async function rateContent(
+    content: string,
+    id: number,
+    rating: number,
+    sessionId: string
+) {
+    console.log(rating);
+    const options = {
+        method: 'POST',
+        headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json;charset=utf-8',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+        body: JSON.stringify({
+            value: rating,
+        }),
+    };
+
+    const res = await fetch(
+        `https://api.themoviedb.org/3/${content}/${id}/rating?session_id=${sessionId}`,
+        options
+    );
+
+    const resJson = await res.json();
+
+    //error handling
+    if (!res.ok) {
+        console.log(resJson);
+        console.error(`failed to rate this ${content}`);
+    }
+
+    return resJson;
+}
+
 export async function getRequestToken() {
     const options: RequestInit = {
         method: 'GET',
@@ -143,7 +208,7 @@ export async function deleteCookies() {
 export async function getContentAccountInfo(
     sessionId: string,
     content: string,
-    contentId: string
+    contentId: number
 ) {
     const options = {
         method: 'GET',
@@ -218,7 +283,7 @@ export async function getContent(
     return result;
 }
 
-export async function getFavorWatch(
+export async function getFavorWatchRated(
     sessionId: string,
     whichOne: string,
     accountId: string,
@@ -256,7 +321,7 @@ interface body {
 export async function addToFavorWatch(
     whichOne: string,
     type: string,
-    contentId: string,
+    contentId: number,
     accountId: string,
     sessionId: string
 ) {
@@ -265,13 +330,13 @@ export async function addToFavorWatch(
     if (whichOne === 'favorite') {
         body = {
             media_type: type,
-            media_id: +contentId,
+            media_id: contentId,
             favorite: true,
         };
     } else {
         body = {
             media_type: type,
-            media_id: +contentId,
+            media_id: contentId,
             watchlist: true,
         };
     }
@@ -304,7 +369,7 @@ export async function addToFavorWatch(
 export async function removeFavorWatch(
     whichOne: string,
     type: string,
-    contentId: string,
+    contentId: number,
     accountId: string,
     sessionId: string
 ) {
@@ -313,13 +378,13 @@ export async function removeFavorWatch(
     if (whichOne === 'favorite') {
         body = {
             media_type: type,
-            media_id: +contentId,
+            media_id: contentId,
             favorite: false,
         };
     } else {
         body = {
             media_type: type,
-            media_id: +contentId,
+            media_id: contentId,
             watchlist: false,
         };
     }

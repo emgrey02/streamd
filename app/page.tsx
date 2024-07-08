@@ -25,27 +25,40 @@ export default async function Home() {
     return (
         <main className="min-h-screen py-4">
             {!sessionId ?
-                <div className="px-4 text-center flex flex-col gap-4 items-center">
+                <div className="px-4 text-center flex flex-col gap-4 items-center my-8">
                     <p>Sign in to access your favorite tv shows & movies.</p>
                     <TmdbSignIn />
                 </div>
-            :   <div className="px-4 flex flex-col items-start gap-4">
-                    <p>hello {username} :)</p>
+            :   <div className="px-4 flex flex-col items-start gap-4 my-8">
+                    <p>hello, {username}.</p>
+                    <p>please, have a look around</p>
                 </div>
             }
-            <ul>
+            <ul className="grid gap-4">
                 {movieCats.map((category: string, index: Key) => (
                     <li key={index}>
-                        <Suspense fallback={<p>Loading...</p>}>
+                        <Suspense
+                            fallback={
+                                <p className="h-60 grid place-items-center">
+                                    Loading...
+                                </p>
+                            }
+                        >
                             <ContentList content="movie" cat={category} />
                         </Suspense>
                     </li>
                 ))}
             </ul>
-            <ul>
+            <ul className="grid gap-4">
                 {showCats.map((category: string, index: Key) => (
                     <li key={index}>
-                        <Suspense fallback={<p>Loading...</p>}>
+                        <Suspense
+                            fallback={
+                                <p className="h-60 grid place-items-center">
+                                    Loading...
+                                </p>
+                            }
+                        >
                             <ContentList content="tv" cat={category} />
                         </Suspense>
                     </li>

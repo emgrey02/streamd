@@ -9,51 +9,14 @@ export default async function Page() {
     const sessionId: string | undefined = cookies().get('sessionId')?.value;
     const accountId: string | undefined = cookies().get('accId')?.value;
     const username: string | undefined = cookies().get('username')?.value;
-    let reqToken;
-
-    async function getRequestToken() {
-        const options: RequestInit = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                'content-type': 'application/json',
-                Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-            },
-            next: { revalidate: 60 },
-        };
-
-        options.next as RequestInit;
-
-        //fetch to get a request token from TMDB
-        const res = await fetch(
-            'https://api.themoviedb.org/3/authentication/token/new',
-            options
-        );
-
-        //error handling
-        if (!res.ok) {
-            console.error('failed to fetch request token from tmdb');
-        }
-
-        //assign request Token
-        const resJson = await res.json();
-        const reqToken = resJson.request_token;
-        console.log('got request token');
-        console.log(resJson);
-        return reqToken;
-    }
-
-    if (!sessionId) {
-        reqToken = await getRequestToken();
-    }
 
     return (
         <main className="px-4">
             <h1 className="text-center">Your Dashboard</h1>
             <BackButton />
-            {username && <p>Hello, {username}</p>}
+            {username && <p className="my-8">Hello, {username}</p>}
             {sessionId ?
-                <ul>
+                <ul className="grid gap-8">
                     <li>
                         <ContentList
                             sessionId={sessionId}
@@ -84,6 +47,22 @@ export default async function Page() {
                             accountId={accountId}
                             content="tv"
                             cat="watchlist"
+                        />
+                    </li>
+                    <li>
+                        <ContentList
+                            sessionId={sessionId}
+                            accountId={accountId}
+                            content="movies"
+                            cat="rated"
+                        />
+                    </li>
+                    <li>
+                        <ContentList
+                            sessionId={sessionId}
+                            accountId={accountId}
+                            content="tv"
+                            cat="rated"
                         />
                     </li>
                 </ul>
