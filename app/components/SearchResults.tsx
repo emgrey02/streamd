@@ -26,7 +26,7 @@ export default function SearchResults(props: {
     return (
         <>
             <BackButton />
-            <div className="grid grid-cols-2 px-4 py-8">
+            <div className="grid grid-cols-2 px-4 py-8 mx-16">
                 {+props.data.page > 1 && (
                     <Link
                         className="col-start-1"
@@ -44,7 +44,7 @@ export default function SearchResults(props: {
                     </Link>
                 )}
             </div>
-            <div className="flex flex-col m-4 md:flex-row md:gap-8 ">
+            <div className="flex flex-col md:m-4 md:flex-row md:gap-8 ">
                 <ul className="w-[150px] h-min grid grid-rows-4 bg-slate-950">
                     <li className="grid">
                         <Link
@@ -97,11 +97,11 @@ export default function SearchResults(props: {
                 </ul>
 
                 {res && (
-                    <ul className="flex flex-wrap gap-4 gap-y-10 my-8">
+                    <ul className="flex flex-wrap gap-2 md:gap-4 gap-y-10 my-8 justify-center">
                         {res.map((cont: any, index: number) => (
                             <li
                                 key={index}
-                                className="flex flex-col w-full justify-between h-[370px]"
+                                className="flex flex-col w-full justify-between sm:h-[340px]"
                             >
                                 <Card
                                     data={cont}
@@ -113,7 +113,7 @@ export default function SearchResults(props: {
                     </ul>
                 )}
             </div>
-            <div className="grid grid-cols-2 px-4 py-8">
+            <div className="grid grid-cols-2 px-4 py-8 mx-16">
                 {+props.data.page > 1 && (
                     <Link
                         className="col-start-1"

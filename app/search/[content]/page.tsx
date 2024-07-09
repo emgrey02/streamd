@@ -87,7 +87,9 @@ export default async function Search({
 
     return (
         <>
-            <h1 className="mx-4 mt-8 text-lg">Search results for: {search}</h1>
+            <h1 className="mx-4 mt-8 text-lg text-center">
+                Search results for: {search}
+            </h1>
             <SearchResults
                 data={data}
                 lengths={lengths}

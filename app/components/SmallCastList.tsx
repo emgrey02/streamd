@@ -9,7 +9,7 @@ interface Credits {
     crew: Array<object>[];
 }
 
-export default function CastComp(props: {
+export default function SmallCastList(props: {
     creds: Credits;
     cont?: string;
     personId?: string;
@@ -28,14 +28,14 @@ export default function CastComp(props: {
     return (
         <div className="flex flex-col">
             <h2 className="my-8 font-bold text-xl">Cast</h2>
-            <ul className="flex flex-wrap gap-4 gap-y-10">
+            <ul className="flex flex-wrap gap-4 gap-y-10 justify-center sm:justify-start">
                 {props.creds.cast &&
                     props.creds.cast.map(
                         (p: any, index: number) =>
                             index < +`${windowWidth >= 1024 ? 12 : 8}` && (
                                 <li
                                     key={index}
-                                    className="flex flex-col w-full justify-between h-[370px]"
+                                    className="flex flex-col w-full h-full justify-between sm:h-[370px]"
                                 >
                                     <Card
                                         data={p}

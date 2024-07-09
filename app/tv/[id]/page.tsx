@@ -4,11 +4,10 @@ import Image from 'next/image';
 import { Key } from 'react';
 import FavorWatchButton from '@/app/components/FavorWatchButton';
 import BackButton from '@/app/components/BackButton';
-import Link from 'next/link';
 import { cookies } from 'next/headers';
 import SubmitRating from '@/app/components/SubmitRating';
-import CastComp from '@/app/components/CastComp';
 import Genres from '@/app/components/Genres';
+import SmallCastList from '@/app/components/SmallCastList';
 
 export default async function Show({ params }: { params: { id: string } }) {
     let showId = params.id;
@@ -56,7 +55,7 @@ export default async function Show({ params }: { params: { id: string } }) {
     let reviews = await reviewsRes.json();
 
     return (
-        <main className="m-8">
+        <main className="m-2 md:m-4 lg:m-8">
             <div className="grid gap-4 md:flex">
                 {deets.poster_path ?
                     <Image
@@ -114,7 +113,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                 </div>
             </div>
             <BackButton />
-            <CastComp creds={creds} cont="tv" />
+            <SmallCastList creds={creds} cont="tv" />
             <div className="w-full">
                 <h2 className="text-xl font-bold my-8">Reviews</h2>
                 <ul className="grid max-w-3xl">

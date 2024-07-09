@@ -46,21 +46,35 @@ export default async function Credits({ params }: { params: { id: string } }) {
                     </div>
                 }
                 <div className="flex flex-col gap-4">
-                    <h1 className="text-xl font-bold">{creditsTv.name}</h1>
+                    <div>
+                        <h1 className="text-xl font-bold">{creditsTv.name}</h1>
+                        <p className="font-light text-sm">tv show</p>
+                    </div>
                     <p>Started Airing: {creditsTv.first_air_date}</p>
+                    <Genres data={creditsTv.genres} />
                 </div>
-                <Genres data={creditsTv.genres} />
             </div>
             <div className="w-full h-[2px] bg-slate-900 my-8"></div>
             <BackButton />
-            <h1 className="text-xl font-bold my-8">Full Cast</h1>
-            <ul id="scroll-cont" className="flex flex-wrap gap-4 gap-y-10">
+            <div id="cast" className="flex flex-col mb-8">
+                <h1 className="text-xl font-bold ">Full Cast</h1>
+                <Link
+                    href="#crew"
+                    className="text-sm hover:underline underline-offset-2"
+                >
+                    Skip to Full Crew
+                </Link>
+            </div>
+            <ul
+                id="scroll-cont"
+                className="flex flex-wrap gap-4 gap-y-10 justify-center sm:justify-start"
+            >
                 {credits &&
                     credits.cast.map(
                         (m: any, index: Key | null | undefined) => (
                             <li
                                 data-num={index}
-                                className="flex flex-col w-full justify-between h-[370px]"
+                                className="flex flex-col w-full justify-between sm:h-[370px]"
                                 key={index}
                             >
                                 <Card data={m} type="person" search={false} />
@@ -69,14 +83,25 @@ export default async function Credits({ params }: { params: { id: string } }) {
                     )}
             </ul>
             <BackButton />
-            <h2 className="text-xl font-bold my-8">Full Crew</h2>
-            <ul id="scroll-cont" className="flex flex-wrap gap-4 gap-y-10">
+            <div id="crew" className="flex flex-col mb-8">
+                <h1 className="text-xl font-bold ">Full Crew</h1>
+                <Link
+                    href="#cast"
+                    className="text-sm hover:underline underline-offset-2"
+                >
+                    Back to Full Cast
+                </Link>
+            </div>
+            <ul
+                id="scroll-cont"
+                className="flex flex-wrap gap-4 gap-y-10 justify-center sm:justify-start"
+            >
                 {credits &&
                     credits.crew.map(
                         (m: any, index: Key | null | undefined) => (
                             <li
                                 data-num={index}
-                                className="flex flex-col w-full justify-between h-[370px]"
+                                className="flex flex-col w-full justify-between sm:h-[370px]"
                                 key={index}
                             >
                                 <Card data={m} type="person" search={false} />

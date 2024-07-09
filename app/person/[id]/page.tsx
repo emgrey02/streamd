@@ -1,5 +1,5 @@
 import BackButton from '@/app/components/BackButton';
-import CastComp from '@/app/components/CastComp';
+import SmallCastList from '@/app/components/SmallCastList';
 import Image from 'next/image';
 
 export default async function Person({ params }: { params: { id: string } }) {
@@ -65,7 +65,7 @@ export default async function Person({ params }: { params: { id: string } }) {
                     <BackButton />
                     <div className="my-8">
                         <h2 className="text-xl font-bold my-4">Credits</h2>
-                        <CastComp
+                        <SmallCastList
                             creds={details.combined_credits}
                             cont="person"
                             personId={params.id}

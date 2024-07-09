@@ -6,8 +6,8 @@ import BackButton from '@/app/components/BackButton';
 import { cookies } from 'next/headers';
 import FavorWatchButton from '@/app/components/FavorWatchButton';
 import SubmitRating from '@/app/components/SubmitRating';
-import CastComp from '@/app/components/CastComp';
 import Genres from '@/app/components/Genres';
+import SmallCastList from '@/app/components/SmallCastList';
 
 export default async function Movie({ params }: { params: { id: string } }) {
     let movieId = params.id;
@@ -111,7 +111,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
                 </div>
             </div>
             <BackButton />
-            <CastComp creds={creds} cont="movie" />
+            <SmallCastList creds={creds} cont="movie" />
             <div className="w-full">
                 <h2 className="text-xl font-bold my-8">Reviews</h2>
                 <ul className="grid max-w-3xl">

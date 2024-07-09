@@ -29,6 +29,8 @@ export default async function Credits({ params }: { params: { id: string } }) {
         console.error('failed to get person credits');
     }
 
+    const genders = ['not specified', 'female', 'male', 'non-binary'];
+
     return (
         <div className="m-4">
             <BackButton />
@@ -45,7 +47,14 @@ export default async function Credits({ params }: { params: { id: string } }) {
                     </div>
                 }
                 <div className="flex flex-col gap-4">
-                    <h1 className="text-xl font-bold">{creditsPerson.name}</h1>
+                    <div>
+                        <h1 className="text-xl font-bold">
+                            {creditsPerson.name}
+                        </h1>
+                        <p className="text-sm font-light">
+                            {genders[creditsPerson.gender]}
+                        </p>
+                    </div>
                     <p>Born {creditsPerson.birthday}</p>
                     {creditsPerson.deathday && (
                         <p>Death: {creditsPerson.deathday}</p>
@@ -71,11 +80,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                                 className="flex flex-col w-full justify-between h-[370px]"
                                 key={index}
                             >
-                                <Card
-                                    data={m}
-                                    type={m.media_type}
-                                    search={false}
-                                />
+                                <Card data={m} type="person" search={false} />
                             </li>
                         )
                     )}
