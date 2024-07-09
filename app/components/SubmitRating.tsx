@@ -105,7 +105,7 @@ export default function SubmitRating(params: {
                 )}
                 {!isRating && !hasUserRated && (
                     <button className="w-fit" onClick={triggerRatingForm}>
-                        Rate {params.content === 'movie' ? 'movie' : 'show'}
+                        Rate {params.content === 'movie' ? 'movie' : 'tv show'}
                     </button>
                 )}
                 {!isRating && hasUserRated && (
@@ -128,7 +128,7 @@ export default function SubmitRating(params: {
                     <form className="flex flex-col">
                         <div className="flex flex-col gap-2">
                             <input
-                                className="accent-slate-500"
+                                className="accent-slate-500 cursor-pointer"
                                 type="range"
                                 id="rating"
                                 name="rating"
@@ -138,9 +138,14 @@ export default function SubmitRating(params: {
                                 defaultValue={userRating}
                                 onChange={changeRating}
                             ></input>
-                            <button type="submit" onClick={submitRating}>
-                                submit
-                            </button>
+                            <div className="flex justify-between">
+                                <button onClick={() => setIsRating(false)}>
+                                    cancel
+                                </button>
+                                <button type="submit" onClick={submitRating}>
+                                    submit
+                                </button>
+                            </div>
                         </div>
                     </form>
                 )}

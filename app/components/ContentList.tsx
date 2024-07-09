@@ -9,7 +9,7 @@ type Props = {
     sessionId?: string;
     accountId?: string;
     content: string;
-    cat: string;
+    cat: string[] | string;
 };
 
 export default function ContentList({
@@ -23,78 +23,104 @@ export default function ContentList({
     const [isHovering, setIsHovered] = useState(false);
     const [scrollPx, setScrollPx] = useState(0);
     const [scrollWidth, setScrollWidth] = useState(2000);
+    const [category, setCategory] = useState(cat || cat[0]);
     const [elWidth, setElWidth] = useState(0);
     const [message, setMessage] = useState('Loading...');
     const onMouseEnter = () => setIsHovered(true);
     const onMouseLeave = () => setIsHovered(false);
 
     let capCat: string;
+    console.log(content);
+    console.log(cat);
 
     useEffect(() => {
         async function retrieveContent() {
-            console.log('retrieving content');
-            if (cat === 'favorite' && accountId && sessionId) {
-                let favorites = await getFavorWatchRated(
-                    sessionId,
-                    cat,
-                    accountId,
-                    content
-                );
-                setContentList(favorites);
-                setMessage(`Favorite some ${content}!`);
-            } else if (cat === 'watchlist' && accountId && sessionId) {
-                let watchlist = await getFavorWatchRated(
-                    sessionId,
-                    cat,
-                    accountId,
-                    content
-                );
-                setContentList(watchlist);
-                setMessage(`Add some ${content} to your Watchlist!`);
-            } else if (cat === 'rated' && accountId && sessionId) {
-                let rated = await getFavorWatchRated(
-                    sessionId,
-                    cat,
-                    accountId,
-                    content
-                );
-                setContentList(rated);
-                setMessage(`Rate some ${content}!`);
+            if (accountId && sessionId) {
+                if (content === 'favorite') {
+                    let favorites = await getFavorWatchRated(
+                        sessionId,
+                        content,
+                        accountId,
+                        cat[0]
+                    );
+                    setCategory(cat[0]);
+                    setContentList(favorites);
+                    setMessage(`Favorite some ${content}!`);
+                } else if (content === 'watchlist') {
+                    let watchlist = await getFavorWatchRated(
+                        sessionId,
+                        content,
+                        accountId,
+                        cat[0]
+                    );
+                    setCategory(cat[0]);
+                    setContentList(watchlist);
+                    setMessage(`Add some ${content} to your Watchlist!`);
+                } else if (content === 'rated') {
+                    let rated = await getFavorWatchRated(
+                        sessionId,
+                        content,
+                        accountId,
+                        cat[0]
+                    );
+                    setCategory(cat[0]);
+                    setContentList(rated);
+                    setMessage(`Rate some ${cat[0]}!`);
+                }
             } else {
-                let cont = await getContent(content, cat, 1);
+                let cont = await getContent(content, cat[0], 1);
+                setCategory(cat[0]);
                 setContentList(cont.results);
             }
         }
         retrieveContent();
     }, [sessionId, accountId, cat, content]);
 
-    //capitalize category
-    if (cat.includes('_')) {
-        let array = cat.split('_');
-        let firstLetterCap = array[0].slice(0, 1).toUpperCase();
-        let secondLetterCap = array[1].slice(0, 1).toUpperCase();
-        array[0] = firstLetterCap + array[0].slice(1);
-        array[1] = secondLetterCap + array[1].slice(1);
-        capCat = `${content === 'movie' || content === 'movies' ? 'Movies' : 'Tv'}: ${array.join(' ')}`;
-    } else {
-        let capLetter = cat.slice(0, 1).toUpperCase();
-        if (cat === 'favorites' || cat === 'favorite') {
-            capCat =
-                capLetter +
-                `${cat === 'favorites' ? cat.slice(1, -1) : cat.slice(1)}`;
-            if (content === 'movie' || content === 'movies') {
-                capCat = `${capCat} ${content === 'movie' ? 'movie' : 'movies'}`;
-            } else {
-                capCat = capCat + ' ' + content + ' shows';
+    async function setContent(
+        e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+    ) {
+        let newCat = e.currentTarget.dataset.cat;
+        let cont;
+        if (
+            content === 'favorite' ||
+            content === 'watchlist' ||
+            content === 'rated'
+        ) {
+            if (sessionId && accountId && newCat) {
+                cont = await getFavorWatchRated(
+                    sessionId,
+                    content,
+                    accountId,
+                    newCat
+                );
+                if (newCat) {
+                    if (newCat === 'movies') newCat = 'movie';
+                    setCategory(newCat);
+                    setContentList(cont);
+                }
             }
-        } else if (cat === 'watchlist') {
-            capCat = capLetter + cat.slice(1);
-            let capLetterCont = content.slice(0, 1).toUpperCase();
-            capCat = capLetterCont + content.slice(1) + ' ' + capCat;
-        } else if (cat === 'rated') {
-            capCat = `${content === 'movie' || content === 'movies' ? 'Movies' : 'Tv'} You've ${capLetter}${cat.slice(1)}`;
         } else {
-            capCat = `${content === 'movie' || content === 'movies' ? 'Movies' : 'Tv'}: ${capLetter}${cat.slice(1)}`;
+            cont = await getContent(content, newCat, 1);
+            if (newCat) {
+                if (newCat === 'movies') newCat = 'movie';
+                setCategory(newCat);
+                setContentList(cont.results);
+            }
+        }
+    }
+
+    function capitalizeCategory(cat: string) {
+        if (cat.includes('_')) {
+            let array = cat.split('_');
+            let firstLetterCap = array[0].slice(0, 1).toUpperCase();
+            let secondLetterCap = array[1].slice(0, 1).toUpperCase();
+            array[0] = firstLetterCap + array[0].slice(1);
+            array[1] = secondLetterCap + array[1].slice(1);
+            return `${array.join(' ')}`;
+        } else {
+            let capLetter = cat.slice(0, 1).toUpperCase();
+            capCat = `${capLetter}${cat.slice(1)}`;
+            return capCat;
         }
     }
 
@@ -124,6 +150,7 @@ export default function ContentList({
             }
 
             //because smooth scroll behavior takes time
+            //wait for it to scroll and then set
             setTimeout(() => {
                 setScrollPx(scrollCont.scrollLeft + scrollCont.clientWidth);
             }, 500);
@@ -137,51 +164,62 @@ export default function ContentList({
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
             >
-                <h2>{capCat}</h2>
+                <h2>{capitalizeCategory(content)}</h2>
+                <ul className={`flex gap-6`}>
+                    {Array.isArray(cat) &&
+                        cat.map((c: string, index: number) => (
+                            <li
+                                key={index}
+                                className={`w-fit h-full px-4 py-2 ${c === category && 'bg-slate-900'}`}
+                            >
+                                <button data-cat={c} onClick={setContent}>
+                                    {capitalizeCategory(c)}
+                                </button>
+                            </li>
+                        ))}
+                </ul>
                 {contentList && contentList.length > 0 ?
                     <ul
                         id="scroll-cont"
                         className="flex items-start overflow-x-scroll snap-x"
                     >
-                        {contentList.map(
-                            (ent: any, index: Key | null | undefined) => (
-                                <li
-                                    data-num={index}
-                                    className="min-w-56 grid px-2 snap-start"
-                                    key={index}
+                        {contentList.map((ent: any, index: number) => (
+                            <li
+                                data-num={index}
+                                className="min-w-56 grid px-2 snap-start"
+                                key={index}
+                            >
+                                <button
+                                    onClick={() =>
+                                        router.push(
+                                            `/${ent.media_type || content}/${ent.id.toString()}`
+                                        )
+                                    }
                                 >
-                                    <button
-                                        onClick={() =>
-                                            router.push(
-                                                `/${content === 'movies' ? 'movie' : content}/${ent.id.toString()}`
-                                            )
-                                        }
-                                    >
-                                        {ent.poster_path ?
-                                            <Image
-                                                src={`https://image.tmdb.org/t/p/w200${ent.poster_path}`}
-                                                alt={`${content} poster`}
-                                                width={200}
-                                                height={300}
-                                            />
-                                        :   <div className="w-48 h-72 bg-slate-300/20 grid place-items-center">
-                                                {content === 'tv' ?
-                                                    ent.name
-                                                :   ent.title}{' '}
-                                                poster unavailable
-                                            </div>
-                                        }
-                                    </button>
-                                </li>
-                            )
-                        )}
+                                    {ent.poster_path || ent.profile_path ?
+                                        <Image
+                                            src={`https://image.tmdb.org/t/p/w200${ent.poster_path || ent.profile_path}`}
+                                            alt={`${content} poster`}
+                                            width={200}
+                                            height={300}
+                                        />
+                                    :   <div className="w-48 h-72 bg-slate-300/20 grid place-items-center">
+                                            {content === 'tv' ?
+                                                ent.name
+                                            :   ent.title}{' '}
+                                            poster unavailable
+                                        </div>
+                                    }
+                                </button>
+                            </li>
+                        ))}
                         {isHovering && (
                             <>
                                 {scrollPx >= scrollWidth || (
                                     <button
                                         id="forward"
                                         onClick={scrollDiv}
-                                        className="absolute row-start-2 right-0 h-full bg-slate-900/70"
+                                        className="absolute row-start-3 right-0 h-full bg-slate-900/70"
                                     >
                                         <svg
                                             fill="#ffffff"
@@ -200,7 +238,7 @@ export default function ContentList({
                                     <button
                                         id="back"
                                         onClick={scrollDiv}
-                                        className="absolute row-start-2 left-0 h-full bg-slate-900/70"
+                                        className="absolute row-start-3 left-0 h-full bg-slate-900/70"
                                     >
                                         <svg
                                             fill="#ffffff"
@@ -222,7 +260,7 @@ export default function ContentList({
             </div>
             {contentList && contentList.length == 20 && (
                 <button
-                    onClick={() => router.push(`/${content}/${cat}/1`)}
+                    onClick={() => router.push(`/${content}/${category}/1`)}
                     className="self-end mt-4 px-8"
                 >
                     See More

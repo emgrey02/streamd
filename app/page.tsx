@@ -1,5 +1,4 @@
 import ContentList from './components/ContentList';
-import { Key, Suspense } from 'react';
 import TmdbSignIn from './components/TmdbSignIn';
 import { cookies } from 'next/headers';
 import SearchBar from './components/SearchBar';
@@ -7,7 +6,6 @@ import SearchBar from './components/SearchBar';
 export default async function Home() {
     const sessionId = cookies().get('sessionId')?.value;
     const username = cookies().get('username')?.value;
-    console.log('sessionId: ', sessionId);
 
     let movieCats: string[] = [
         'now_playing',
@@ -23,6 +21,8 @@ export default async function Home() {
         'top_rated',
     ];
 
+    let trendingCats: string[] = ['all', 'movies', 'tv', 'people'];
+
     return (
         <main className="min-h-screen py-4">
             {!sessionId ?
@@ -31,40 +31,13 @@ export default async function Home() {
                     <TmdbSignIn />
                 </div>
             :   <div className="px-4 flex flex-col items-start my-8">
-                    <p>Hello, {username}. Please, have a look around.</p>
+                    <p>Hello, {username}!</p>
                 </div>
             }
             <SearchBar />
-            <ul className="grid gap-4">
-                {movieCats.map((category: string, index: Key) => (
-                    <li key={index}>
-                        <Suspense
-                            fallback={
-                                <p className="h-60 grid place-items-center">
-                                    Loading...
-                                </p>
-                            }
-                        >
-                            <ContentList content="movie" cat={category} />
-                        </Suspense>
-                    </li>
-                ))}
-            </ul>
-            <ul className="grid gap-4">
-                {showCats.map((category: string, index: Key) => (
-                    <li key={index}>
-                        <Suspense
-                            fallback={
-                                <p className="h-60 grid place-items-center">
-                                    Loading...
-                                </p>
-                            }
-                        >
-                            <ContentList content="tv" cat={category} />
-                        </Suspense>
-                    </li>
-                ))}
-            </ul>
+            <ContentList content="trending" cat={trendingCats} />
+            <ContentList content="movie" cat={movieCats} />
+            <ContentList content="tv" cat={showCats} />
         </main>
     );
 }

@@ -11,6 +11,7 @@ export default function Card(props: {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
     const p = props.data;
     let type = props.type;
+    console.log(type);
 
     useEffect(() => {
         function getWindowWidth() {
@@ -46,14 +47,15 @@ export default function Card(props: {
     return (
         <>
             <div className="max-w-[200px]">
-                <p className="font-bold text-base tracking-wide">
+                <p className="font-bold text-base tracking-wide line-clamp-2">
                     {p.name || p.title}
                 </p>
                 {!props.search && (
-                    <p className="text-sm">
+                    <p className="text-sm line-clamp-1">
                         {`as ${
                             p.character ||
                             (p.roles && p.roles[0].character) ||
+                            p.job ||
                             'unknown'
                         }`}
                     </p>
@@ -63,7 +65,6 @@ export default function Card(props: {
                 <Link href={`/${type}/${p.id}`}>
                     {p.profile_path || p.poster_path ?
                         <Image
-                            // className="w-[300px] h-[450px] sm:w-[200px] sm:h-[300px]"
                             src={`https://image.tmdb.org/t/p/${windowWidth < 640 ? 'w300' : 'w200'}/${p.poster_path || p.profile_path}`}
                             alt={`${props.type === 'tv' ? p.name : p.title} image`}
                             width={windowWidth < 640 ? '300' : '200'}

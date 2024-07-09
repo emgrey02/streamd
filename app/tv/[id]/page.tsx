@@ -54,6 +54,26 @@ export default async function Show({ params }: { params: { id: string } }) {
     let creds = await creditsRes.json();
     let reviews = await reviewsRes.json();
 
+    function getDate(birthday: string) {
+        let birthArray = birthday.split('-');
+        let months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+        ];
+        let month = months[+birthArray[1] - 1];
+        return `${month} ${birthArray[2]}, ${birthArray[0]}`;
+    }
+
     return (
         <main className="m-2 md:m-4 lg:m-8">
             <div className="grid gap-4 md:flex">
@@ -76,11 +96,11 @@ export default async function Show({ params }: { params: { id: string } }) {
                         </h1>
                         <p className="font-light">tv show</p>
                     </div>
-                    <div className="flex gap-4">
+                    <div className="flex gap-2">
                         <p>{deets.number_of_episodes} total episodes</p>
+                        <p>-</p>
                         <p>{deets.number_of_seasons} seasons</p>
                     </div>
-                    <p>{deets.tagline}</p>
                     <Genres data={deets.genres} />
                     {accountId && sessionId && (
                         <>
@@ -109,7 +129,14 @@ export default async function Show({ params }: { params: { id: string } }) {
                             />
                         </>
                     )}
-                    <p className="max-w-2xl">{deets.overview}</p>
+                    <div>
+                        <h2 className="font-bold">First Aired</h2>
+                        <p> {getDate(deets.first_air_date)}</p>
+                    </div>
+                    <div>
+                        <h2 className="font-bold text-lg">Overview</h2>
+                        <p className="max-w-2xl">{deets.overview}</p>
+                    </div>
                 </div>
             </div>
             <BackButton />

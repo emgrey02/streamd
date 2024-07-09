@@ -19,12 +19,48 @@ export default async function Person({ params }: { params: { id: string } }) {
     );
 
     const details = await res.json();
+    console.log(details);
 
     if (res!.ok) {
         console.error('failed to fetch person details');
     }
 
     const genders = ['not specified', 'female', 'male', 'non-binary'];
+
+    function getDate(birthday: string) {
+        console.log(birthday);
+        let birthArray = birthday.split('-');
+        let months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+        ];
+        let month = months[+birthArray[1] - 1];
+        return `${month} ${birthArray[2]}, ${birthArray[0]}`;
+    }
+
+    function getAge(birthdate: Date) {
+        const today = new Date();
+
+        const age =
+            today.getFullYear() -
+            birthdate.getFullYear() -
+            (+(today.getMonth() < birthdate.getMonth()) ||
+                +(
+                    today.getMonth() === birthdate.getMonth() &&
+                    today.getDate() < birthdate.getDate()
+                ));
+        return age;
+    }
 
     return (
         <div className="m-4">
@@ -47,19 +83,56 @@ export default async function Person({ params }: { params: { id: string } }) {
                         }
                         <div className="flex flex-col gap-4">
                             <div>
-                                <h1 className="font-bold text-lg">
+                                <h1 className="font-bold text-2xl">
                                     {details.name}
                                 </h1>
-                                <p>{genders[details.gender]}</p>
+                                <p className="font-light">
+                                    {genders[details.gender]}
+                                </p>
                             </div>
                             <div>
-                                <p>Birth: {details.birthday}</p>
+                                {details.birthday && (
+                                    <>
+                                        <p className="font-bold">Birthday</p>
+                                        <p className="font-light">
+                                            {getDate(details.birthday)}
+                                        </p>
+                                        <p>
+                                            (
+                                            {getAge(new Date(details.birthday))}{' '}
+                                            years old)
+                                        </p>
+                                    </>
+                                )}
                                 {details.deathday && (
-                                    <p>Death: {details.deathday}</p>
+                                    <>
+                                        <p className="font-bold">Death</p>
+                                        <p className="font-light">
+                                            {getDate(details.deathday)}
+                                        </p>
+                                    </>
                                 )}
                             </div>
-                            <p>From {details.place_of_birth}</p>
-                            <p className="max-w-2xl">{details.biography}</p>
+                            {details.place_of_birth && (
+                                <div>
+                                    <h2 className="font-bold">Birthplace</h2>
+                                    <p>From {details.place_of_birth}</p>
+                                </div>
+                            )}
+                            <div>
+                                <h2 className="font-bold">Known For</h2>
+                                <p>{details.known_for_department}</p>
+                            </div>
+                            {details.biography && (
+                                <div>
+                                    <h2 className="text-lg font-bold my-2">
+                                        Biography
+                                    </h2>
+                                    <p className="max-w-2xl">
+                                        {details.biography}
+                                    </p>
+                                </div>
+                            )}
                         </div>
                     </div>
                     <BackButton />

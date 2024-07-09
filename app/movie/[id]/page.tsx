@@ -54,6 +54,26 @@ export default async function Movie({ params }: { params: { id: string } }) {
     let creds = await creditsRes.json();
     let reviews = await reviewsRes.json();
 
+    function getDate(birthday: string) {
+        let birthArray = birthday.split('-');
+        let months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+        ];
+        let month = months[+birthArray[1] - 1];
+        return `${month} ${birthArray[2]}, ${birthArray[0]}`;
+    }
+
     return (
         <div className="m-2 md:m-4 lg:m-8">
             <div className="grid gap-4 md:flex">
@@ -106,8 +126,14 @@ export default async function Movie({ params }: { params: { id: string } }) {
                             />
                         </>
                     )}
-                    <p>released {deets.release_date}</p>
-                    <p className="max-w-xl">{deets.overview}</p>
+                    <div>
+                        <h2 className="font-bold">Released</h2>
+                        <p>{getDate(deets.release_date)}</p>
+                    </div>
+                    <div>
+                        <p className="font-bold text-lg">Overview</p>
+                        <p className="max-w-xl">{deets.overview}</p>
+                    </div>
                 </div>
             </div>
             <BackButton />

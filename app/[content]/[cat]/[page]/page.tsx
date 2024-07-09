@@ -18,7 +18,7 @@ export default async function Page({
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/${params.content}/${params.cat}?language=en-US&page=${params.page}`,
+        `https://api.themoviedb.org/3/${params.content}/${params.cat}${params.content === 'trending' ? '/day' : ''}?language=en-US&page=${params.page}`,
         options
     );
 
@@ -36,7 +36,7 @@ export default async function Page({
         let secondLetterCap = array[1].slice(0, 1).toUpperCase();
         array[0] = firstLetterCap + array[0].slice(1);
         array[1] = secondLetterCap + array[1].slice(1);
-        capCat = `${params.content === 'movie' ? 'Movies' : 'TV'}: ${array.join(' ')}`;
+        capCat = `${array.join(' ')}`;
     } else {
         let capLetter = params.cat.slice(0, 1).toUpperCase();
         if (params.cat === 'favorites') {
@@ -51,13 +51,15 @@ export default async function Page({
             let capLetterCont = params.content.slice(0, 1).toUpperCase();
             capCat = capLetterCont + params.content.slice(1) + ' ' + capCat;
         } else {
-            capCat = `${params.content === 'movie' ? 'Movies' : 'TV'}: ${capLetter}${params.cat.slice(1)}`;
+            capCat = `${capLetter}${params.cat.slice(1)}`;
         }
     }
 
     return (
         <>
-            <h1 className="font-medium text-center">{capCat}</h1>
+            <h1 className="font-medium text-center">
+                {params.content} {capCat}
+            </h1>
             <div className="grid grid-cols-2 px-4 py-8">
                 {+params.page > 1 && (
                     <Link
@@ -89,7 +91,7 @@ export default async function Page({
                                 key={index}
                             >
                                 <Link
-                                    href={`/${params.content}/${m.id.toString()}`}
+                                    href={`/${params.content === 'trending' ? m.media_type : params.content}/${m.id.toString()}`}
                                 >
                                     {m.poster_path ?
                                         <Image

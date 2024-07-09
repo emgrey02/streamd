@@ -1,6 +1,6 @@
 export default function Genres(props: { data: any }) {
     const deets = props.data;
-    console.log(deets);
+
     return (
         <div>
             <ul className="flex flex-wrap items-center gap-x-2 gap-y-1">

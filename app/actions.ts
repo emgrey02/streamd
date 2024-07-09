@@ -256,7 +256,7 @@ export async function getUserInfo(sessionId: string) {
 
 export async function getContent(
     content: string,
-    cat: string | null,
+    cat: string | undefined,
     pageNum: number
 ) {
     const options = {
@@ -268,9 +268,13 @@ export async function getContent(
     };
 
     console.log(content, cat, pageNum);
+    if (content === 'trending') {
+        if (cat === 'movies') cat = 'movie';
+        if (cat === 'people') cat = 'person';
+    }
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/${content}/${cat}?language=en-US&page=${pageNum}`,
+        `https://api.themoviedb.org/3/${content}/${cat}${content === 'trending' ? '/day' : ''}?language=en-US&page=${pageNum}`,
         options
     );
 
@@ -296,6 +300,10 @@ export async function getFavorWatchRated(
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
     };
+
+    if (content === 'movie') content = 'movies';
+
+    console.log(whichOne, content);
 
     let res = await fetch(
         `https://api.themoviedb.org/3/account/${accountId}/${whichOne}/${content}?session_id=${sessionId}&language=en-US&page=1&sort_by=created_at.asc`,

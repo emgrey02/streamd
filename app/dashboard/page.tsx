@@ -23,48 +23,24 @@ export default async function Page() {
                         <ContentList
                             sessionId={sessionId}
                             accountId={accountId}
-                            content="movies"
-                            cat="favorite"
+                            content="favorite"
+                            cat={['movie', 'tv']}
                         />
                     </li>
                     <li>
                         <ContentList
                             sessionId={sessionId}
                             accountId={accountId}
-                            content="tv"
-                            cat="favorite"
+                            content="watchlist"
+                            cat={['movie', 'tv']}
                         />
                     </li>
                     <li>
                         <ContentList
                             sessionId={sessionId}
                             accountId={accountId}
-                            content="movies"
-                            cat="watchlist"
-                        />
-                    </li>
-                    <li>
-                        <ContentList
-                            sessionId={sessionId}
-                            accountId={accountId}
-                            content="tv"
-                            cat="watchlist"
-                        />
-                    </li>
-                    <li>
-                        <ContentList
-                            sessionId={sessionId}
-                            accountId={accountId}
-                            content="movies"
-                            cat="rated"
-                        />
-                    </li>
-                    <li>
-                        <ContentList
-                            sessionId={sessionId}
-                            accountId={accountId}
-                            content="tv"
-                            cat="rated"
+                            content="rated"
+                            cat={['movie', 'tv']}
                         />
                     </li>
                 </ul>

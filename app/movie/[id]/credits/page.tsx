@@ -1,5 +1,6 @@
 import BackButton from '@/app/components/BackButton';
 import Card from '@/app/components/Card';
+import CreditsHeader from '@/app/components/CreditsHeader';
 import Genres from '@/app/components/Genres';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -23,41 +24,36 @@ export default async function Credits({ params }: { params: { id: string } }) {
     );
 
     const creditsMovie = await res.json();
-    console.log(creditsMovie);
     const credits = creditsMovie[`credits?language=en-US`];
-    console.log(credits);
 
     if (!res.ok) {
         console.error('failed to get movie credits');
     }
 
+    function getDate(birthday: string) {
+        let birthArray = birthday.split('-');
+        let months = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+        ];
+        let month = months[+birthArray[1] - 1];
+        return `${month} ${birthArray[2]}, ${birthArray[0]}`;
+    }
+
     return (
         <div className="m-4">
             <BackButton />
-            <div className="flex gap-4 mb-8">
-                {creditsMovie.poster_path ?
-                    <Image
-                        src={`https://image.tmdb.org/t/p/w200${creditsMovie.poster_path}`}
-                        alt={`${creditsMovie.name} profile image`}
-                        width={200}
-                        height={300}
-                    />
-                :   <div className="w-[200px] h-[300px] grid place-items-center text-center bg-slate-300/20">
-                        {creditsMovie.title} image unavailable
-                    </div>
-                }
-                <div className="flex flex-col gap-4">
-                    <div>
-                        <h1 className="text-xl font-bold">
-                            {creditsMovie.title}
-                        </h1>
-                        <p className="text-sm font-light">movie</p>
-                    </div>
-                    <p>Release date: {creditsMovie.release_date}</p>
-                    <Genres data={creditsMovie.genres} />
-                </div>
-            </div>
-            <div className="w-full h-[2px] bg-slate-900 my-8"></div>
+            <CreditsHeader data={creditsMovie} type="movie" />
             <BackButton />
             <div id="cast" className="flex flex-col mb-8">
                 <h1 className="text-xl font-bold">Full Cast</h1>
@@ -69,7 +65,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                 </Link>
             </div>
             <ul className="flex flex-wrap gap-4 gap-y-10 justify-center sm:justify-start">
-                {credits &&
+                {credits.cast &&
                     credits.cast.map(
                         (m: any, index: Key | null | undefined) => (
                             <li
@@ -81,6 +77,11 @@ export default async function Credits({ params }: { params: { id: string } }) {
                             </li>
                         )
                     )}
+                {credits.cast.length == 0 && (
+                    <p>
+                        {creditsMovie.title} doesn&apos;t have any Cast Members.
+                    </p>
+                )}
             </ul>
             <BackButton />
             <div id="crew" className="flex flex-col mb-8">
@@ -93,7 +94,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                 </Link>
             </div>
             <ul className="flex flex-wrap gap-4 gap-y-10 justify-center sm:justify-start">
-                {credits &&
+                {credits.crew &&
                     credits.crew.map(
                         (m: any, index: Key | null | undefined) => (
                             <li
@@ -105,6 +106,11 @@ export default async function Credits({ params }: { params: { id: string } }) {
                             </li>
                         )
                     )}
+                {credits.crew.length == 0 && (
+                    <p>
+                        {creditsMovie.title} doesn&apos;t have any Crew Members.
+                    </p>
+                )}
             </ul>
             <BackButton />
         </div>
