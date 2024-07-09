@@ -1,8 +1,6 @@
 import BackButton from '@/app/components/BackButton';
 import CastComp from '@/app/components/CastComp';
 import Image from 'next/image';
-import Link from 'next/link';
-import { Key, useState } from 'react';
 
 export default async function Person({ params }: { params: { id: string } }) {
     const personId = params.id;
@@ -21,10 +19,8 @@ export default async function Person({ params }: { params: { id: string } }) {
     );
 
     const details = await res.json();
-    console.log(details);
 
     if (res!.ok) {
-        console.log(details);
         console.error('failed to fetch person details');
     }
 
@@ -63,7 +59,7 @@ export default async function Person({ params }: { params: { id: string } }) {
                                 )}
                             </div>
                             <p>From {details.place_of_birth}</p>
-                            <p className="max-w-xl">{details.biography}</p>
+                            <p className="max-w-2xl">{details.biography}</p>
                         </div>
                     </div>
                     <BackButton />
@@ -71,6 +67,7 @@ export default async function Person({ params }: { params: { id: string } }) {
                         <h2 className="text-xl font-bold my-4">Credits</h2>
                         <CastComp
                             creds={details.combined_credits}
+                            cont="person"
                             personId={params.id}
                         />
                     </div>

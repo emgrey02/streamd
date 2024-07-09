@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { cookies } from 'next/headers';
 import SubmitRating from '@/app/components/SubmitRating';
 import CastComp from '@/app/components/CastComp';
+import Genres from '@/app/components/Genres';
 
 export default async function Show({ params }: { params: { id: string } }) {
     let showId = params.id;
@@ -81,21 +82,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                         <p>{deets.number_of_seasons} seasons</p>
                     </div>
                     <p>{deets.tagline}</p>
-                    <div>
-                        <ul className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                            <h2>Genres:</h2>
-                            {deets.genres.map(
-                                (genre: { name: string }, index: Key) => (
-                                    <li
-                                        className="w-fit text-sm ring-1 rounded-lg h-min px-2 py-0 ring-slate-400"
-                                        key={index}
-                                    >
-                                        {genre.name}
-                                    </li>
-                                )
-                            )}
-                        </ul>
-                    </div>
+                    <Genres data={deets.genres} />
                     {accountId && sessionId && (
                         <>
                             <div className="grid grid-cols-2 w-64">
@@ -123,7 +110,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                             />
                         </>
                     )}
-                    <p className="max-w-xl">{deets.overview}</p>
+                    <p className="max-w-2xl">{deets.overview}</p>
                 </div>
             </div>
             <BackButton />

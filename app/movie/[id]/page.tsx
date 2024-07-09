@@ -7,6 +7,7 @@ import { cookies } from 'next/headers';
 import FavorWatchButton from '@/app/components/FavorWatchButton';
 import SubmitRating from '@/app/components/SubmitRating';
 import CastComp from '@/app/components/CastComp';
+import Genres from '@/app/components/Genres';
 
 export default async function Movie({ params }: { params: { id: string } }) {
     let movieId = params.id;
@@ -77,20 +78,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
                         <p className="font-light">movie</p>
                     </div>
                     <p>{deets.tagline}</p>
-                    <ul className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <h2>Genres:</h2>
-                        {deets.genres &&
-                            deets.genres.map(
-                                (genre: { name: string }, index: Key) => (
-                                    <li
-                                        className="w-fit text-sm ring-1 rounded-lg h-min px-2 py-0 ring-slate-400"
-                                        key={index}
-                                    >
-                                        {genre.name}
-                                    </li>
-                                )
-                            )}
-                    </ul>
+                    <Genres data={deets.genres} />
                     {accountId && sessionId && (
                         <>
                             <div className="grid grid-cols-2 w-64">
@@ -124,7 +112,6 @@ export default async function Movie({ params }: { params: { id: string } }) {
             </div>
             <BackButton />
             <CastComp creds={creds} cont="movie" />
-
             <div className="w-full">
                 <h2 className="text-xl font-bold my-8">Reviews</h2>
                 <ul className="grid max-w-3xl">

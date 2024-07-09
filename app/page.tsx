@@ -2,6 +2,7 @@ import ContentList from './components/ContentList';
 import { Key, Suspense } from 'react';
 import TmdbSignIn from './components/TmdbSignIn';
 import { cookies } from 'next/headers';
+import SearchBar from './components/SearchBar';
 
 export default async function Home() {
     const sessionId = cookies().get('sessionId')?.value;
@@ -33,6 +34,7 @@ export default async function Home() {
                     <p>Hello, {username}. Please, have a look around.</p>
                 </div>
             }
+            <SearchBar />
             <ul className="grid gap-4">
                 {movieCats.map((category: string, index: Key) => (
                     <li key={index}>

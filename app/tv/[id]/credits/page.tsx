@@ -1,4 +1,6 @@
 import BackButton from '@/app/components/BackButton';
+import Card from '@/app/components/Card';
+import Genres from '@/app/components/Genres';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Key } from 'react';
@@ -16,12 +18,13 @@ export default async function Credits({ params }: { params: { id: string } }) {
     };
 
     const res = await fetch(
-        `https://api.themoviedb.org/3/tv/${params.id}/aggregate_credits?language=en-US`,
+        `https://api.themoviedb.org/3/tv/${params.id}?append_to_response=aggregate_credits&language=en-US`,
         options
     );
 
-    const credits = await res.json();
-    console.log(credits);
+    const creditsTv = await res.json();
+    const credits = creditsTv.aggregate_credits;
+    console.log(creditsTv);
 
     if (!res.ok) {
         console.error('failed to get tv credits');
@@ -29,6 +32,26 @@ export default async function Credits({ params }: { params: { id: string } }) {
 
     return (
         <div className="m-4">
+            <BackButton />
+            <div className="flex gap-4 mb-8">
+                {creditsTv.poster_path ?
+                    <Image
+                        src={`https://image.tmdb.org/t/p/w200${creditsTv.poster_path}`}
+                        alt={`${creditsTv.name} profile image`}
+                        width={200}
+                        height={300}
+                    />
+                :   <div className="w-[200px] h-[300px] grid place-items-center text-center bg-slate-300/20">
+                        {creditsTv.name} profile image unavailable
+                    </div>
+                }
+                <div className="flex flex-col gap-4">
+                    <h1 className="text-xl font-bold">{creditsTv.name}</h1>
+                    <p>Started Airing: {creditsTv.first_air_date}</p>
+                </div>
+                <Genres data={creditsTv.genres} />
+            </div>
+            <div className="w-full h-[2px] bg-slate-900 my-8"></div>
             <BackButton />
             <h1 className="text-xl font-bold my-8">Full Cast</h1>
             <ul id="scroll-cont" className="flex flex-wrap gap-4 gap-y-10">
@@ -40,30 +63,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                                 className="flex flex-col w-full justify-between h-[370px]"
                                 key={index}
                             >
-                                <div className="max-w-[200px]">
-                                    <p className="font-bold">{m.name}</p>
-                                    <p className="text-sm">
-                                        as {m.roles[0].character}
-                                    </p>
-                                </div>
-                                <div>
-                                    <Link
-                                        className="w-full h-full"
-                                        href={`/person/${m.id.toString()}`}
-                                    >
-                                        {m.profile_path ?
-                                            <Image
-                                                src={`https://image.tmdb.org/t/p/w200${m.profile_path}`}
-                                                alt={`${m.name} profile picture`}
-                                                width={200}
-                                                height={300}
-                                            />
-                                        :   <div className="w-[200px] h-[300px] grid place-items-center text-center bg-slate-300/20">
-                                                {m.name} profile unavailable
-                                            </div>
-                                        }
-                                    </Link>
-                                </div>
+                                <Card data={m} type="person" search={false} />
                             </li>
                         )
                     )}
@@ -79,28 +79,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                                 className="flex flex-col w-full justify-between h-[370px]"
                                 key={index}
                             >
-                                <div className="max-w-[200px]">
-                                    <p className="font-bold">{m.name}</p>
-                                    <p className="text-sm">{m.job}</p>
-                                </div>
-                                <div>
-                                    <Link
-                                        className="w-full h-full"
-                                        href={`/person/${m.id.toString()}`}
-                                    >
-                                        {m.profile_path ?
-                                            <Image
-                                                src={`https://image.tmdb.org/t/p/w200${m.profile_path}`}
-                                                alt={`${m.name} profile picture`}
-                                                width={184}
-                                                height={276}
-                                            />
-                                        :   <div className="w-[184px] h-[276px] grid place-items-center text-center bg-slate-300/20">
-                                                {m.name} profile unavailable
-                                            </div>
-                                        }
-                                    </Link>
-                                </div>
+                                <Card data={m} type="person" search={false} />
                             </li>
                         )
                     )}
