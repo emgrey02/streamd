@@ -45,7 +45,7 @@ export default function ContentList({
                     );
                     setCategory(cat[0]);
                     setContentList(favorites);
-                    setMessage(`Favorite some ${content}!`);
+                    setMessage(`Favorite some movies!`);
                 } else if (content === 'watchlist') {
                     let watchlist = await getFavorWatchRated(
                         sessionId,
@@ -55,7 +55,7 @@ export default function ContentList({
                     );
                     setCategory(cat[0]);
                     setContentList(watchlist);
-                    setMessage(`Add some ${content} to your Watchlist!`);
+                    setMessage(`Add some movies to your Watchlist!`);
                 } else if (content === 'rated') {
                     let rated = await getFavorWatchRated(
                         sessionId,
@@ -65,7 +65,7 @@ export default function ContentList({
                     );
                     setCategory(cat[0]);
                     setContentList(rated);
-                    setMessage(`Rate some ${cat[0]}!`);
+                    setMessage(`Rate some movies!`);
                 }
             } else {
                 let cont = await getContent(content, cat[0], 1);
@@ -94,6 +94,7 @@ export default function ContentList({
                     newCat
                 );
                 if (newCat) {
+                    setMessage(`Add some ${newCat}s to your ${content}`);
                     if (newCat === 'movies') newCat = 'movie';
                     setCategory(newCat);
                     setContentList(cont);
@@ -120,6 +121,7 @@ export default function ContentList({
         } else {
             let capLetter = cat.slice(0, 1).toUpperCase();
             capCat = `${capLetter}${cat.slice(1)}`;
+            if (capCat === 'Movie') capCat = 'Movies';
             return capCat;
         }
     }
@@ -165,14 +167,20 @@ export default function ContentList({
                 onMouseLeave={onMouseLeave}
             >
                 <h2>{capitalizeCategory(content)}</h2>
-                <ul className={`flex gap-6`}>
+                <ul
+                    className={`grid ${content === 'favorite' || content === 'watchlist' || content === 'rated' ? 'grid-cols-2 max-w-[400px]' : 'grid-cols-4 max-w-[600px]'} items-center ring-1 ring-gray-900 bg-slate-700/40 `}
+                >
                     {Array.isArray(cat) &&
                         cat.map((c: string, index: number) => (
                             <li
                                 key={index}
-                                className={`w-fit h-full px-4 py-2 ${c === category && 'bg-slate-900'}`}
+                                className={`h-full ${c === category && 'bg-slate-900'} border-s-2 ${c === category ? 'border-slate-400' : 'border-slate-600'} transition-all`}
                             >
-                                <button data-cat={c} onClick={setContent}>
+                                <button
+                                    className={`grid justify-start items-center px-3 py-2 min-w-full h-full`}
+                                    data-cat={c}
+                                    onClick={setContent}
+                                >
                                     {capitalizeCategory(c)}
                                 </button>
                             </li>
@@ -192,7 +200,7 @@ export default function ContentList({
                                 <button
                                     onClick={() =>
                                         router.push(
-                                            `/${ent.media_type || content}/${ent.id.toString()}`
+                                            `/${ent.media_type || (content === 'favorite' || content === 'watchlist' || content === 'rated' ? category : content)}/${ent.id.toString()}`
                                         )
                                     }
                                 >

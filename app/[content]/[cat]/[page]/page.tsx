@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { Key } from 'react';
 import Link from 'next/link';
+import LargeCreditsList from '@/app/components/LargeCreditsList';
 
 export default async function Page({
     params,
@@ -18,7 +19,7 @@ export default async function Page({
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/${params.content}/${params.cat}${params.content === 'trending' ? '/day' : ''}?language=en-US&page=${params.page}`,
+        `https://api.themoviedb.org/3/${params.content}/${params.cat === 'people' ? 'person' : params.cat}${params.content === 'trending' ? '/day' : ''}?language=en-US&page=${params.page}`,
         options
     );
 
@@ -56,9 +57,10 @@ export default async function Page({
     }
 
     return (
-        <>
+        <main className="mx-4 my-8">
             <h1 className="font-medium text-center">
-                {params.content} {capCat}
+                {capCat}{' '}
+                {params.content === 'movie' ? 'Movies' : params.content}
             </h1>
             <div className="grid grid-cols-2 px-4 py-8">
                 {+params.page > 1 && (
@@ -78,45 +80,7 @@ export default async function Page({
                     </Link>
                 )}
             </div>
-            {cont && cont.results.length >= 1 && (
-                <ul
-                    id="scroll-cont"
-                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 place-items-center gap-y-16"
-                >
-                    {cont.results.map(
-                        (m: any, index: Key | null | undefined) => (
-                            <li
-                                data-num={index}
-                                className="min-w-56 grid px-2 place-content-center place-items-center"
-                                key={index}
-                            >
-                                <Link
-                                    href={`/${params.content === 'trending' ? m.media_type : params.content}/${m.id.toString()}`}
-                                >
-                                    {m.poster_path ?
-                                        <Image
-                                            src={`https://image.tmdb.org/t/p/w200${m.poster_path}`}
-                                            alt={
-                                                params.content === 'tv' ?
-                                                    m.name + ' poster'
-                                                :   m.title + ' poster'
-                                            }
-                                            width={200}
-                                            height={300}
-                                        />
-                                    :   <div className="w-48 h-72 grid place-items-center text-center bg-slate-300/20">
-                                            {params.content === 'tv' ?
-                                                m.name
-                                            :   m.title}{' '}
-                                            poster unavailable
-                                        </div>
-                                    }
-                                </Link>
-                            </li>
-                        )
-                    )}
-                </ul>
-            )}
+            <LargeCreditsList credits={cont.results} type="multi" />
             <div className="grid grid-cols-2 px-4 py-8">
                 {+params.page > 1 && (
                     <Link
@@ -135,6 +99,6 @@ export default async function Page({
                     </Link>
                 )}
             </div>
-        </>
+        </main>
     );
 }

@@ -91,7 +91,7 @@ export default function CreditsHeader(props: { data: any; type: string }) {
                                     :   getDate(c.release_date)}
                                 </p>
                             </div>
-                            <Genres data={c.genres} />
+                            {c.genres.length > 0 && <Genres data={c.genres} />}
                         </>
                     }
                 </div>

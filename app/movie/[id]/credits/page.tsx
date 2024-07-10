@@ -2,6 +2,7 @@ import BackButton from '@/app/components/BackButton';
 import Card from '@/app/components/Card';
 import CreditsHeader from '@/app/components/CreditsHeader';
 import Genres from '@/app/components/Genres';
+import LargeCreditsList from '@/app/components/LargeCreditsList';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Key } from 'react';
@@ -64,25 +65,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                     Skip to Full Crew
                 </Link>
             </div>
-            <ul className="flex flex-wrap gap-4 gap-y-10 justify-center sm:justify-start">
-                {credits.cast &&
-                    credits.cast.map(
-                        (m: any, index: Key | null | undefined) => (
-                            <li
-                                data-num={index}
-                                className="flex flex-col w-full justify-between sm:h-[370px]"
-                                key={index}
-                            >
-                                <Card data={m} type="person" search={false} />
-                            </li>
-                        )
-                    )}
-                {credits.cast.length == 0 && (
-                    <p>
-                        {creditsMovie.title} doesn&apos;t have any Cast Members.
-                    </p>
-                )}
-            </ul>
+            <LargeCreditsList credits={credits.cast} type="person" />
             <BackButton />
             <div id="crew" className="flex flex-col mb-8">
                 <h2 className="text-xl font-bold">Full Crew</h2>
@@ -93,25 +76,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                     Back to Full Cast
                 </Link>
             </div>
-            <ul className="flex flex-wrap gap-4 gap-y-10 justify-center sm:justify-start">
-                {credits.crew &&
-                    credits.crew.map(
-                        (m: any, index: Key | null | undefined) => (
-                            <li
-                                data-num={index}
-                                className="flex flex-col w-full justify-between sm:h-[370px]"
-                                key={index}
-                            >
-                                <Card data={m} type="person" search={false} />
-                            </li>
-                        )
-                    )}
-                {credits.crew.length == 0 && (
-                    <p>
-                        {creditsMovie.title} doesn&apos;t have any Crew Members.
-                    </p>
-                )}
-            </ul>
+            <LargeCreditsList credits={credits.crew} type="person" />
             <BackButton />
         </div>
     );

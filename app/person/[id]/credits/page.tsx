@@ -1,11 +1,11 @@
 import BackButton from '@/app/components/BackButton';
 import Card from '@/app/components/Card';
 import CreditsHeader from '@/app/components/CreditsHeader';
+import LargeCreditsList from '@/app/components/LargeCreditsList';
 import Link from 'next/link';
 
 export default async function Credits({ params }: { params: { id: string } }) {
     const creditId = params.id;
-    console.log(creditId);
 
     const options = {
         method: 'GET',
@@ -41,23 +41,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                     Skip to Crew Credits
                 </Link>
             </div>
-            <ul className="flex flex-wrap gap-4 gap-y-10 justify-center sm:justify-start">
-                {credits.cast &&
-                    credits.cast.map((m: any, index: number) => (
-                        <li
-                            data-num={index}
-                            className="flex flex-col w-full justify-between sm:h-[370px]"
-                            key={index}
-                        >
-                            <Card data={m} type="person" search={false} />
-                        </li>
-                    ))}
-                {credits.cast.length == 0 && (
-                    <p>
-                        {creditsPerson.name} doesn&apos;t have any Cast Credits.
-                    </p>
-                )}
-            </ul>
+            <LargeCreditsList credits={credits.cast} type="multi" />
             <BackButton />
             <div id="crew" className="mb-8">
                 <h2 className="text-xl font-bold">Crew Credits</h2>
@@ -68,23 +52,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                     Back to Cast Credits
                 </Link>
             </div>
-            <ul className="flex flex-wrap gap-4 gap-y-10 justify-center sm:justify-start">
-                {credits.crew &&
-                    credits.crew.map((m: any, index: number) => (
-                        <li
-                            data-num={index}
-                            className="flex flex-col w-full justify-between sm:h-[370px]"
-                            key={index}
-                        >
-                            <Card data={m} type="person" search={false} />
-                        </li>
-                    ))}
-                {credits.crew.length == 0 && (
-                    <p>
-                        {creditsPerson.name} doesn&apos;t have any Crew Credits.
-                    </p>
-                )}
-            </ul>
+            <LargeCreditsList credits={credits.crew} type="multi" />
             <BackButton />
         </div>
     );

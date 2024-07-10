@@ -21,7 +21,7 @@ export default async function Home() {
         'top_rated',
     ];
 
-    let trendingCats: string[] = ['all', 'movies', 'tv', 'people'];
+    let trendingCats: string[] = ['all', 'movie', 'tv', 'people'];
 
     return (
         <main className="min-h-screen py-4">

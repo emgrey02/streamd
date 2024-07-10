@@ -8,10 +8,9 @@ export default function Card(props: {
     type?: string;
     search: boolean;
 }) {
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [windowWidth, setWindowWidth] = useState<number>();
     const p = props.data;
     let type = props.type;
-    console.log(type);
 
     useEffect(() => {
         function getWindowWidth() {
@@ -42,8 +41,6 @@ export default function Card(props: {
     }
     // otherwise we are searching and movie, tv, and people are what they are
 
-    console.log(type);
-
     return (
         <>
             <div className="max-w-[200px]">
@@ -65,13 +62,17 @@ export default function Card(props: {
                 <Link href={`/${type}/${p.id}`}>
                     {p.profile_path || p.poster_path ?
                         <Image
-                            src={`https://image.tmdb.org/t/p/${windowWidth < 640 ? 'w300' : 'w200'}/${p.poster_path || p.profile_path}`}
+                            src={`https://image.tmdb.org/t/p/${windowWidth && windowWidth < 640 ? 'w300' : 'w200'}/${p.poster_path || p.profile_path}`}
                             alt={`${props.type === 'tv' ? p.name : p.title} image`}
-                            width={windowWidth < 640 ? '300' : '200'}
-                            height={windowWidth < 640 ? '450' : '300'}
+                            width={
+                                windowWidth && windowWidth < 640 ? '300' : '200'
+                            }
+                            height={
+                                windowWidth && windowWidth < 640 ? '450' : '300'
+                            }
                         />
                     :   <div
-                            className={`${windowWidth < 640 ? 'w-[300px] h-[450px]' : 'w-[200px] h-[300px]'} bg-slate-900/80 text-slate-400 grid place-items-center`}
+                            className={`${windowWidth && windowWidth < 640 ? 'w-[300px] h-[450px]' : 'w-[200px] h-[300px]'} bg-slate-900/80 text-slate-400 grid place-items-center`}
                         >
                             no image available
                         </div>

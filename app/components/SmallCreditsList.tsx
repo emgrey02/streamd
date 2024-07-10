@@ -9,16 +9,12 @@ interface Credits {
     crew: Array<object>[];
 }
 
-export default function SmallCastList(props: {
+export default function SmallCreditsList(props: {
     creds: Credits;
     cont?: string;
     personId?: string;
 }) {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    console.log(windowWidth);
-    console.log(props.creds);
-    console.log(props.cont);
-    console.log(props.personId);
 
     useEffect(() => {
         let width = window.innerWidth;

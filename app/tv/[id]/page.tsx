@@ -1,13 +1,13 @@
 'use server';
 
 import Image from 'next/image';
-import { Key } from 'react';
 import FavorWatchButton from '@/app/components/FavorWatchButton';
 import BackButton from '@/app/components/BackButton';
 import { cookies } from 'next/headers';
 import SubmitRating from '@/app/components/SubmitRating';
 import Genres from '@/app/components/Genres';
-import SmallCastList from '@/app/components/SmallCastList';
+import Reviews from '@/app/components/Reviews';
+import SmallCreditsList from '@/app/components/SmallCreditsList';
 
 export default async function Show({ params }: { params: { id: string } }) {
     let showId = params.id;
@@ -140,41 +140,8 @@ export default async function Show({ params }: { params: { id: string } }) {
                 </div>
             </div>
             <BackButton />
-            <SmallCastList creds={creds} cont="tv" />
-            <div className="w-full">
-                <h2 className="text-xl font-bold my-8">Reviews</h2>
-                <ul className="grid max-w-3xl">
-                    {reviews.results.map((post: any, index: Key) => (
-                        <li key={index} className="grid gap-4">
-                            <p>
-                                user:{' '}
-                                <span className="font-bold">{post.author}</span>
-                            </p>
-                            <div className="flex flex-col gap-2">
-                                <p>
-                                    rating:{' '}
-                                    {post.author_details.rating ?
-                                        post.author_details.rating.toString() +
-                                        '/10'
-                                    :   'none'}
-                                </p>
-                                <div className="h-3 w-50 relative overflow-hidden bg-slate-900">
-                                    <div
-                                        className={`h-full bg-green-300/70 absolute`}
-                                        style={{
-                                            width: `${post.author_details.rating * 10}%`,
-                                        }}
-                                    ></div>
-                                </div>
-                            </div>
-                            <p className="w-full leading-relaxed">
-                                {post.content}
-                            </p>
-                            <div className="w-full h-[1px] bg-slate-500 my-10"></div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+            <SmallCreditsList creds={creds} cont="tv" />
+            <Reviews reviews={reviews} />
         </main>
     );
 }
