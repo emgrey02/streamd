@@ -65,7 +65,12 @@ export default async function Credits({ params }: { params: { id: string } }) {
                     Skip to Full Crew
                 </Link>
             </div>
-            <LargeCreditsList credits={credits.cast} type="person" />
+            <LargeCreditsList
+                data={credits.cast}
+                type="person"
+                search={false}
+                credits={true}
+            />
             <BackButton />
             <div id="crew" className="flex flex-col mb-8">
                 <h2 className="text-xl font-bold">Full Crew</h2>
@@ -76,7 +81,12 @@ export default async function Credits({ params }: { params: { id: string } }) {
                     Back to Full Cast
                 </Link>
             </div>
-            <LargeCreditsList credits={credits.crew} type="person" />
+            <LargeCreditsList
+                data={credits.crew}
+                type="person"
+                search={false}
+                credits={true}
+            />
             <BackButton />
         </div>
     );

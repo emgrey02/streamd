@@ -7,17 +7,17 @@ export default function Card(props: {
     data: any;
     type?: string;
     search: boolean;
+    credits: boolean;
 }) {
-    const [windowWidth, setWindowWidth] = useState<number>();
+    const [windowWidth, setWindowWidth] = useState<number>(getWindowWidth());
     const p = props.data;
     let type = props.type;
 
+    function getWindowWidth() {
+        const width = window.innerWidth;
+        return width;
+    }
     useEffect(() => {
-        function getWindowWidth() {
-            const width = window.innerWidth;
-            return width;
-        }
-
         function handleResize() {
             setWindowWidth(getWindowWidth());
         }
@@ -34,45 +34,50 @@ export default function Card(props: {
             // not searching: multi or person credits are the corresponding media type
             type = p.media_type || type;
         }
-    } else if (type === 'multi') {
+    } else {
         // searching: multi is corresponding media type
-        console.log(p.media_type);
-        type = p.media_type;
+        if (type === 'multi') {
+            console.log(p.media_type);
+            type = p.media_type;
+        }
     }
     // otherwise we are searching and movie, tv, and people are what they are
+    console.log(props.search);
+    console.log(props.credits);
 
     return (
         <>
-            <div className="max-w-[200px]">
-                <p className="font-bold text-base tracking-wide line-clamp-2">
+            <div
+                className={`${windowWidth && windowWidth < 640 ? 'w-[100px]' : 'w-[200px]'}`}
+            >
+                <p className="font-bold text-xs sm:text-base tracking-wide line-clamp-2 text-wrap">
                     {p.name || p.title}
                 </p>
-                {!props.search && (
+                {props.search || !props.credits || (
                     <p className="text-sm line-clamp-1">
                         {`as ${
                             p.character ||
                             (p.roles && p.roles[0].character) ||
-                            p.job ||
-                            'unknown'
+                            p.job
                         }`}
                     </p>
                 )}
             </div>
-            <div className="grid min-w-36 self-end">
+            <div className="grid">
                 <Link href={`/${type}/${p.id}`}>
                     {p.profile_path || p.poster_path ?
                         <Image
-                            src={`https://image.tmdb.org/t/p/${windowWidth && windowWidth < 640 ? 'w300' : 'w200'}/${p.poster_path || p.profile_path}`}
+                            src={`https://image.tmdb.org/t/p/w200/${p.poster_path || p.profile_path}`}
                             alt={`${props.type === 'tv' ? p.name : p.title} image`}
                             width={
-                                windowWidth && windowWidth < 640 ? '300' : '200'
+                                windowWidth && windowWidth < 640 ? '100' : '200'
                             }
                             height={
-                                windowWidth && windowWidth < 640 ? '450' : '300'
+                                windowWidth && windowWidth < 640 ? '150' : '300'
                             }
                         />
                     :   <div
-                            className={`${windowWidth && windowWidth < 640 ? 'w-[300px] h-[450px]' : 'w-[200px] h-[300px]'} bg-slate-900/80 text-slate-400 grid place-items-center`}
+                            className={`${windowWidth && windowWidth < 640 ? 'w-[100px] h-[150px]' : 'w-[200px] h-[300px]'} bg-slate-900/80 text-slate-400 grid place-items-center text-center`}
                         >
                             no image available
                         </div>

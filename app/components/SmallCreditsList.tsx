@@ -24,19 +24,20 @@ export default function SmallCreditsList(props: {
     return (
         <div className="flex flex-col">
             <h2 className="my-8 font-bold text-xl">Cast</h2>
-            <ul className="flex flex-wrap gap-4 gap-y-10 justify-center sm:justify-start">
+            <ul className="flex flex-wrap gap-4 gap-y-10 justify-start">
                 {props.creds.cast &&
                     props.creds.cast.map(
                         (p: any, index: number) =>
                             index < +`${windowWidth >= 1024 ? 12 : 8}` && (
                                 <li
                                     key={index}
-                                    className="flex flex-col w-full h-full justify-between sm:h-[370px]"
+                                    className="flex flex-col w-full h-full justify-between min-h-[200px] sm:h-[370px]"
                                 >
                                     <Card
                                         data={p}
                                         type={props.cont}
                                         search={false}
+                                        credits={true}
                                     />
                                 </li>
                             )

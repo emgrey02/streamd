@@ -4,6 +4,8 @@ import { useEffect, useState } from 'react';
 import Card from './Card';
 import BackButton from './BackButton';
 import Link from 'next/link';
+import Pagination from './Pagination';
+import LargeCreditsList from './LargeCreditsList';
 
 export default function SearchResults(props: {
     data: any;
@@ -26,24 +28,13 @@ export default function SearchResults(props: {
     return (
         <main>
             <BackButton />
-            <div className="grid grid-cols-2 px-4 py-8">
-                {+props.data.page > 1 && (
-                    <Link
-                        className="col-start-1"
-                        href={`/search/${props.cat}?query=${props.query}&page=${page - 1}`}
-                    >
-                        Previous
-                    </Link>
-                )}
-                {+props.data.page < +props.data.total_pages && (
-                    <Link
-                        className="col-start-2 justify-self-end"
-                        href={`/search/${props.cat}?query=${props.query}&page=${page + 1}`}
-                    >
-                        Next
-                    </Link>
-                )}
-            </div>
+            <Pagination
+                page={props.data.page}
+                totalPages={props.data.total_pages}
+                cat={props.cat}
+                query={props.query}
+                search={true}
+            />
             <div className="flex flex-col m-2 md:m-4 md:flex-row md:gap-8 ">
                 <ul className="w-[150px] h-min grid grid-rows-4 bg-slate-950">
                     <li className="grid">
@@ -97,40 +88,21 @@ export default function SearchResults(props: {
                 </ul>
 
                 {res && (
-                    <ul className="flex flex-wrap gap-x-2 gap-y-10 md:gap-x-4 md:gap-y-10 my-8 justify-center sm:justify-start">
-                        {res.map((cont: any, index: number) => (
-                            <li
-                                key={index}
-                                className="flex flex-col w-full justify-between sm:h-[340px]"
-                            >
-                                <Card
-                                    data={cont}
-                                    type={props.cat}
-                                    search={true}
-                                />
-                            </li>
-                        ))}
-                    </ul>
+                    <LargeCreditsList
+                        data={res}
+                        type={props.cat}
+                        search={true}
+                        credits={false}
+                    />
                 )}
             </div>
-            <div className="grid grid-cols-2 px-4 py-8 mx-16">
-                {+props.data.page > 1 && (
-                    <Link
-                        className="col-start-1"
-                        href={`/search/${props.cat}?query=${props.query}&page=${page - 1}`}
-                    >
-                        Previous
-                    </Link>
-                )}
-                {+props.data.page < +props.data.total_pages && (
-                    <Link
-                        className="col-start-2 justify-self-end"
-                        href={`/search/${props.cat}?query=${props.query}&page=${page + 1}`}
-                    >
-                        Next
-                    </Link>
-                )}
-            </div>
+            <Pagination
+                page={props.data.page}
+                totalPages={props.data.total_pages}
+                cat={props.cat}
+                query={props.query}
+                search={true}
+            />
         </main>
     );
 }
