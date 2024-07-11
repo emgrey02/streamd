@@ -8,6 +8,7 @@ import SubmitRating from '@/app/components/SubmitRating';
 import Genres from '@/app/components/Genres';
 import Reviews from '@/app/components/Reviews';
 import SmallCreditsList from '@/app/components/SmallCreditsList';
+import Text from '@/app/components/Text';
 
 export default async function Movie({ params }: { params: { id: string } }) {
     let movieId = params.id;
@@ -132,7 +133,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
                     </div>
                     <div>
                         <p className="font-bold text-lg">Overview</p>
-                        <p className="max-w-xl">{deets.overview}</p>
+                        <Text text={deets.overview} />
                     </div>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 import BackButton from '@/app/components/BackButton';
 import SmallCreditsList from '@/app/components/SmallCreditsList';
+import Text from '@/app/components/Text';
 import Image from 'next/image';
 
 export default async function Person({ params }: { params: { id: string } }) {
@@ -14,7 +15,7 @@ export default async function Person({ params }: { params: { id: string } }) {
     };
 
     const res = await fetch(
-        `https://api.themoviedb.org/3/person/${personId}?append_to_response=combined_credits&language=en-US`,
+        `https://api.themoviedb.org/3/person/${personId}?append_to_response=combined_credits&language=en-US&sort_by=primary_release_date.asc`,
         options
     );
 
@@ -128,9 +129,7 @@ export default async function Person({ params }: { params: { id: string } }) {
                                     <h2 className="text-lg font-bold my-2">
                                         Biography
                                     </h2>
-                                    <p className="max-w-2xl">
-                                        {details.biography}
-                                    </p>
+                                    <Text text={details.biography} />
                                 </div>
                             )}
                         </div>

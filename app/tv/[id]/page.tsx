@@ -8,6 +8,7 @@ import SubmitRating from '@/app/components/SubmitRating';
 import Genres from '@/app/components/Genres';
 import Reviews from '@/app/components/Reviews';
 import SmallCreditsList from '@/app/components/SmallCreditsList';
+import Text from '@/app/components/Text';
 
 export default async function Show({ params }: { params: { id: string } }) {
     let showId = params.id;
@@ -76,7 +77,7 @@ export default async function Show({ params }: { params: { id: string } }) {
 
     return (
         <main className="m-2 md:m-4 lg:m-8">
-            <div className="grid gap-4 md:flex">
+            <div className="grid gap-4 md:flex md:h-[600px] h-auto">
                 {deets.poster_path ?
                     <Image
                         className="max-h-600"
@@ -133,9 +134,18 @@ export default async function Show({ params }: { params: { id: string } }) {
                         <h2 className="font-bold">First Aired</h2>
                         <p> {getDate(deets.first_air_date)}</p>
                     </div>
-                    <div>
+                    <div className="flex flex-col">
                         <h2 className="font-bold text-lg">Overview</h2>
-                        <p className="max-w-2xl">{deets.overview}</p>
+                        <Text text={deets.overview} />
+                        {/* <p className="max-w-2xl line-clamp-3">
+                            {deets.overview}
+                        </p> */}
+                        {/* <button
+                            onClick={showText}
+                            className="underline underline-offset-2 w-min self-end"
+                        >
+                            read more
+                        </button> */}
                     </div>
                 </div>
             </div>

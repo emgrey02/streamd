@@ -1,20 +1,25 @@
 'use client';
 
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function SearchBar() {
     const [search, setSearch] = useState('');
+    const router = useRouter();
 
     function editQuery(event: React.ChangeEvent<HTMLInputElement>) {
         let search = event.target.value;
-        console.log(search);
         setSearch(search);
     }
 
     return (
-        <div className="w-full m-8 my-20">
+        <div className="max-w-[500px] my-10 px-2 md:px-8">
             <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    router.push(`/search/multi?query=${search}&page=1`);
+                }}
                 name="search"
                 className="flex items-end justify-center w-full gap-2"
             >
@@ -30,12 +35,12 @@ export default function SearchBar() {
                         placeholder="Search for movies, tv, people..."
                     ></input>
                 </div>
-                <Link
-                    className="w-16 h-8 grid place-items-center px-4 bg-slate-600"
-                    href={`/search/multi?query=${search}&page=1`}
+                <button
+                    className="w-16 h-8 grid place-items-center px-4 bg-slate-600 hover:bg-slate-600/60"
+                    type="submit"
                 >
                     Search
-                </Link>
+                </button>
             </form>
         </div>
     );

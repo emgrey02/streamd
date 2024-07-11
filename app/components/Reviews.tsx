@@ -1,4 +1,5 @@
 import BackButton from './BackButton';
+import Text from './Text';
 
 export default function Reviews(props: { reviews: any }) {
     const reviews = props.reviews;
@@ -10,7 +11,7 @@ export default function Reviews(props: { reviews: any }) {
             <ul className="grid max-w-3xl">
                 {reviews.results.length > 0 ?
                     reviews.results.map((post: any, index: number) => (
-                        <li key={index} className="grid gap-4">
+                        <li key={index} className="grid gap-4 max-w-2xl">
                             <p>
                                 user:{' '}
                                 <span className="font-bold">{post.author}</span>
@@ -32,9 +33,7 @@ export default function Reviews(props: { reviews: any }) {
                                     ></div>
                                 </div>
                             </div>
-                            <p className="w-full leading-relaxed">
-                                {post.content}
-                            </p>
+                            <Text text={post.content} />
                             <div className="w-full h-[1px] bg-slate-500 my-10"></div>
                         </li>
                     ))

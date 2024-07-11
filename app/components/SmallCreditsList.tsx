@@ -2,6 +2,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import Card from './Card';
+import NewCard from './NewCard';
 
 interface Credits {
     id: number;
@@ -15,6 +16,14 @@ export default function SmallCreditsList(props: {
     personId?: string;
 }) {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    let cast = props.creds.cast;
+    let c = cast;
+
+    if (props.personId) {
+        c = cast.toReversed();
+    }
+    console.log(c);
+    console.log(props.personId);
 
     useEffect(() => {
         let width = window.innerWidth;
@@ -23,17 +32,16 @@ export default function SmallCreditsList(props: {
 
     return (
         <div className="flex flex-col">
-            <h2 className="my-8 font-bold text-xl">Cast</h2>
-            <ul className="flex flex-wrap gap-4 gap-y-10 justify-start">
-                {props.creds.cast &&
-                    props.creds.cast.map(
+            <ul className="flex flex-wrap gap-4 justify-start">
+                {c &&
+                    c.map(
                         (p: any, index: number) =>
-                            index < +`${windowWidth >= 1024 ? 12 : 8}` && (
+                            index < 8 && (
                                 <li
                                     key={index}
-                                    className="flex flex-col w-full h-full justify-between min-h-[200px] sm:h-[370px]"
+                                    className="flex flex-col justify-between "
                                 >
-                                    <Card
+                                    <NewCard
                                         data={p}
                                         type={props.cont}
                                         search={false}
@@ -44,7 +52,7 @@ export default function SmallCreditsList(props: {
                     )}
             </ul>
             <Link
-                className="self-end my-8"
+                className="self-end my-8 mx-12"
                 href={
                     props.personId ?
                         `/person/${props.personId}/credits`

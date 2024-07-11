@@ -34,7 +34,9 @@ export default async function Home() {
                     <p>Hello, {username}!</p>
                 </div>
             }
-            <SearchBar />
+            <div className="">
+                <SearchBar />
+            </div>
             <ContentList content="trending" cat={trendingCats} />
             <ContentList content="movie" cat={movieCats} />
             <ContentList content="tv" cat={showCats} />

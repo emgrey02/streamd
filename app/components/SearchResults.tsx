@@ -6,6 +6,7 @@ import BackButton from './BackButton';
 import Link from 'next/link';
 import Pagination from './Pagination';
 import LargeCreditsList from './LargeCreditsList';
+import SearchBar from './SearchBar';
 
 export default function SearchResults(props: {
     data: any;
@@ -28,6 +29,7 @@ export default function SearchResults(props: {
     return (
         <main>
             <BackButton />
+            <SearchBar />
             <Pagination
                 page={props.data.page}
                 totalPages={props.data.total_pages}

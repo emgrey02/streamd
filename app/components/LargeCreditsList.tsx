@@ -1,4 +1,4 @@
-import Card from './Card';
+import NewCard from './NewCard';
 
 export default function LargeCreditsList(props: {
     data: any;
@@ -6,21 +6,23 @@ export default function LargeCreditsList(props: {
     search: boolean;
     credits: boolean;
 }) {
-    const data = props.data;
+    let data = props.data;
     const type = props.type;
     const search = props.search;
     const credits = props.credits;
 
+    if (type !== 'person') {
+        data = data.toReversed();
+    }
+    console.log(data);
+    console.log(type);
+
     return (
-        <ul className="flex flex-wrap gap-4 gap-y-10 justify-start my-8">
+        <ul className="flex flex-wrap gap-4 gap-y-6 justify-start my-8">
             {data &&
                 data.map((m: any, index: number) => (
-                    <li
-                        data-num={index}
-                        className="flex flex-col w-full justify-between min-h-[190px] sm:h-[370px]"
-                        key={index}
-                    >
-                        <Card
+                    <li data-num={index} key={index}>
+                        <NewCard
                             data={m}
                             type={type}
                             search={search}
