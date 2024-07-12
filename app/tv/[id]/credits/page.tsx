@@ -49,6 +49,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                 type="person"
                 search={false}
                 credits={true}
+                fwr={false}
             />
             <BackButton />
             <div id="crew" className="flex flex-col mb-8">
@@ -65,6 +66,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                 type="person"
                 search={false}
                 credits={true}
+                fwr={false}
             />
             <BackButton />
         </div>

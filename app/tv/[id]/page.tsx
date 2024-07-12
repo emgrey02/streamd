@@ -137,15 +137,6 @@ export default async function Show({ params }: { params: { id: string } }) {
                     <div className="flex flex-col">
                         <h2 className="font-bold text-lg">Overview</h2>
                         <Text text={deets.overview} />
-                        {/* <p className="max-w-2xl line-clamp-3">
-                            {deets.overview}
-                        </p> */}
-                        {/* <button
-                            onClick={showText}
-                            className="underline underline-offset-2 w-min self-end"
-                        >
-                            read more
-                        </button> */}
                     </div>
                 </div>
             </div>

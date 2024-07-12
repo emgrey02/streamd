@@ -46,6 +46,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                 type="multi"
                 search={false}
                 credits={true}
+                fwr={false}
             />
             <BackButton />
             <div id="crew" className="mb-8">
@@ -62,6 +63,7 @@ export default async function Credits({ params }: { params: { id: string } }) {
                 type="multi"
                 search={false}
                 credits={true}
+                fwr={false}
             />
             <BackButton />
         </div>

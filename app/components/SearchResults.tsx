@@ -95,6 +95,7 @@ export default function SearchResults(props: {
                         type={props.cat}
                         search={true}
                         credits={false}
+                        fwr={false}
                     />
                 )}
             </div>

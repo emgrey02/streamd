@@ -46,6 +46,7 @@ export default function SmallCreditsList(props: {
                                         type={props.cont}
                                         search={false}
                                         credits={true}
+                                        fwr={false}
                                     />
                                 </li>
                             )
