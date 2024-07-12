@@ -5,14 +5,16 @@ export default function LargeCreditsList(props: {
     type: string;
     search: boolean;
     credits: boolean;
+    fwr: boolean;
 }) {
     let data = props.data;
     const type = props.type;
     const search = props.search;
     const credits = props.credits;
+    const fwr = props.fwr;
 
     if (type !== 'person') {
-        data = data.toReversed();
+        data = data?.toReversed();
     }
     console.log(data);
     console.log(type);
@@ -27,6 +29,7 @@ export default function LargeCreditsList(props: {
                             type={type}
                             search={search}
                             credits={credits}
+                            fwr={fwr}
                         />
                     </li>
                 ))}

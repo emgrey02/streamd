@@ -8,11 +8,13 @@ export default function NewCard(props: {
     type?: string;
     search: boolean;
     credits: boolean;
+    fwr: boolean;
 }) {
     const [windowWidth, setWindowWidth] = useState<number>(getWindowWidth());
     const p = props.data;
     let type = props.type;
     console.log(p);
+    console.log(type);
 
     function getWindowWidth() {
         const width = window.innerWidth;
@@ -29,7 +31,7 @@ export default function NewCard(props: {
 
     if (!props.search) {
         // not searching: movie & tv credits are people
-        if (type === 'movie' || type === 'tv') {
+        if ((type === 'movie' || type === 'tv') && !props.fwr) {
             type = 'person';
         } else {
             // not searching: multi or person credits are the corresponding media type

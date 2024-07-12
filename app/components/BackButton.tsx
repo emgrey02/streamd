@@ -6,7 +6,7 @@ export default function BackButton() {
 
     return (
         <button
-            className="my-4 py-2 flex items-center h-20"
+            className="my-4 py-2 px-2 flex items-center hover:bg-slate-400/40 transition"
             onClick={() => router.back()}
         >
             <svg

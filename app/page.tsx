@@ -27,8 +27,8 @@ export default async function Home() {
         <main className="min-h-screen py-4">
             {!sessionId ?
                 <div className="px-4 text-center flex flex-col gap-4 items-center my-8">
-                    <p>Sign in to access your favorite tv shows & movies.</p>
-                    <TmdbSignIn />
+                    {/* <p>Sign in to access your favorite tv shows & movies.</p>
+                    <TmdbSignIn /> */}
                 </div>
             :   <div className="px-4 flex flex-col items-start my-8">
                     <p>Hello, {username}!</p>

@@ -115,13 +115,21 @@ export default function ContentList({
             let array = cat.split('_');
             let firstLetterCap = array[0].slice(0, 1).toUpperCase();
             let secondLetterCap = array[1].slice(0, 1).toUpperCase();
+
             array[0] = firstLetterCap + array[0].slice(1);
             array[1] = secondLetterCap + array[1].slice(1);
+
+            if (array[2]) {
+                let thirdLetterCap = array[2]?.slice(0, 1).toUpperCase();
+                array[2] = thirdLetterCap + array[2]?.slice(1);
+            }
+
             return `${array.join(' ')}`;
         } else {
             let capLetter = cat.slice(0, 1).toUpperCase();
-            capCat = `${capLetter}${cat.slice(1)}`;
+            let capCat = `${capLetter}${cat.slice(1)}`;
             if (capCat === 'Movie') capCat = 'Movies';
+            if (capCat === 'Favorite') capCat = 'Favorites';
             return capCat;
         }
     }

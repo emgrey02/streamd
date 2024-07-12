@@ -82,7 +82,7 @@ export default function SubmitRating(params: {
     return (
         <div className="grid grid-cols-2 w-full gap-8">
             <div className="flex flex-col gap-2">
-                <p className="text-sm">Average Rating: {voteAverage}</p>
+                <p className="text-sm">Average Rating: {voteAverage} / 10</p>
                 <div className="h-3 w-full relative overflow-hidden bg-slate-900">
                     <div
                         className={`h-full bg-brand-blue absolute`}
@@ -94,7 +94,9 @@ export default function SubmitRating(params: {
             <div className="w-full grid grid-rows-2 gap-4">
                 {(hasUserRated || (!hasUserRated && isRating)) && (
                     <div className="flex flex-col gap-2 h-full">
-                        <div className="text-sm">Your Rating: {userRating}</div>
+                        <div className="text-sm">
+                            Your Rating: {userRating} / 10
+                        </div>
                         <div className="h-3 w-full relative overflow-hidden bg-slate-900">
                             <div
                                 className={`h-full bg-green-300/70 absolute`}

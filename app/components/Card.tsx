@@ -24,7 +24,7 @@ export default function Card(props: {
         }
 
         window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resive', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
     }, []);
 
     if (!props.search) {

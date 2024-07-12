@@ -1,9 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
 
 export default function Text(props: { text: string }) {
     const [expandedText, setExpandedText] = useState(false);
+    const [clamped, setClamped] = useState(true);
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        function isClamped(el: HTMLParagraphElement | null) {
+            if (el) {
+                const { clientHeight, scrollHeight } = el;
+                return clientHeight !== scrollHeight;
+            } else {
+                console.log('this element is null');
+                return false;
+            }
+        }
+
+        setClamped(isClamped(containerRef.current));
+    }, [containerRef]);
 
     function showText() {
         setExpandedText(true);
@@ -15,27 +31,30 @@ export default function Text(props: { text: string }) {
     return (
         <div className="relative bg-slate-800">
             <p
-                className={`max-w-2xl leading-relaxed ${!expandedText ? 'line-clamp-3' : ''}`}
+                ref={containerRef}
+                className={`max-w-2xl leading-relaxed ${!expandedText ? 'line-clamp-3' : ''} transition`}
             >
                 {props.text}
             </p>
 
-            <div className="flex justify-end items-end">
-                {expandedText ?
-                    <button
-                        className="underline underline-offset-2 w-min "
-                        onClick={hideText}
-                    >
-                        close
-                    </button>
-                :   <button
-                        onClick={showText}
-                        className="underline underline-offset-2 w-min "
-                    >
-                        read more
-                    </button>
-                }
-            </div>
+            {clamped && (
+                <div className="flex justify-end items-end">
+                    {!expandedText ?
+                        <button
+                            onClick={showText}
+                            className="underline underline-offset-2 hover:underline-offset-4 w-min transition-all"
+                        >
+                            read more
+                        </button>
+                    :   <button
+                            className="underline underline-offset-2 hover:underline-offset-4 w-min transition-all"
+                            onClick={hideText}
+                        >
+                            close
+                        </button>
+                    }
+                </div>
+            )}
         </div>
     );
 }
