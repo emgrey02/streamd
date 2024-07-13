@@ -29,7 +29,7 @@ export default function SearchResults(props: {
     return (
         <main>
             <BackButton />
-            <SearchBar />
+            <SearchBar searchTerm={props.query} />
             <Pagination
                 page={props.data.page}
                 totalPages={props.data.total_pages}

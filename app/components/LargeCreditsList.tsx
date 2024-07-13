@@ -16,6 +16,7 @@ export default function LargeCreditsList(props: {
     if (type !== 'person') {
         data = data?.toReversed();
     }
+
     console.log(data);
     console.log(type);
 

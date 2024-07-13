@@ -15,7 +15,7 @@ export default function SmallCreditsList(props: {
     cont?: string;
     personId?: string;
 }) {
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+    const [windowWidth, setWindowWidth] = useState<number>();
     let cast = props.creds.cast;
     let c = cast;
 

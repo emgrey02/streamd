@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import Genres from './Genres';
+import Link from 'next/link';
 
 export default function CreditsHeader(props: { data: any; type: string }) {
     const c = props.data;
@@ -94,6 +95,9 @@ export default function CreditsHeader(props: { data: any; type: string }) {
                             {c.genres.length > 0 && <Genres data={c.genres} />}
                         </>
                     }
+                    <Link href={`/${type}/${props.data.id}`}>
+                        Back to {type} page
+                    </Link>
                 </div>
             </div>
             <div className="w-full h-[2px] bg-slate-900 my-8"></div>

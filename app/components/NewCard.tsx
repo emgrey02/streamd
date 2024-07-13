@@ -10,11 +10,14 @@ export default function NewCard(props: {
     credits: boolean;
     fwr: boolean;
 }) {
-    const [windowWidth, setWindowWidth] = useState<number>(getWindowWidth());
+    const [windowWidth, setWindowWidth] = useState<number>(0);
     const p = props.data;
     let type = props.type;
     console.log(p);
     console.log(type);
+    console.log(props.search);
+    console.log(props.credits);
+    console.log(props.fwr);
 
     function getWindowWidth() {
         const width = window.innerWidth;
@@ -30,9 +33,15 @@ export default function NewCard(props: {
     }, []);
 
     if (!props.search) {
-        // not searching: movie & tv credits are people
-        if ((type === 'movie' || type === 'tv') && !props.fwr) {
+        // movie & tv credits are people
+        if (
+            (type === 'movie' || type === 'tv') &&
+            !props.fwr &&
+            props.credits
+        ) {
             type = 'person';
+        } else if (props.fwr) {
+            if (type === 'movies') type = 'movie';
         } else {
             // not searching: multi or person credits are the corresponding media type
             type = p.media_type || type;
@@ -47,6 +56,7 @@ export default function NewCard(props: {
     // otherwise we are searching and movie, tv, and people are what they are
     console.log(props.search);
     console.log(props.credits);
+    console.log(type);
 
     return (
         <Link

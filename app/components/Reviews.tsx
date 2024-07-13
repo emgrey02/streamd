@@ -3,22 +3,24 @@ import Text from './Text';
 
 export default function Reviews(props: { reviews: any }) {
     const reviews = props.reviews;
+    console.log(reviews);
 
     return (
         <div className="w-full">
-            <BackButton />
             <h2 className="text-xl font-bold my-8">Reviews</h2>
             <ul className="grid max-w-3xl">
                 {reviews.results.length > 0 ?
                     reviews.results.map((post: any, index: number) => (
                         <li key={index} className="grid gap-4 max-w-2xl">
                             <p>
-                                user:{' '}
-                                <span className="font-bold">{post.author}</span>
+                                Written by{' '}
+                                <span className="font-bold">{post.author}</span>{' '}
+                                on{' '}
+                                {new Date(post.created_at).toLocaleDateString()}
                             </p>
                             <div className="flex flex-col gap-2">
                                 <p>
-                                    rating:{' '}
+                                    Rating:{' '}
                                     {post.author_details.rating ?
                                         post.author_details.rating.toString() +
                                         '/10'
@@ -42,7 +44,6 @@ export default function Reviews(props: { reviews: any }) {
                     </>
                 }
             </ul>
-            <BackButton />
         </div>
     );
 }

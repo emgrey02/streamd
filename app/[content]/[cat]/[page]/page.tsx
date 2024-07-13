@@ -31,11 +31,12 @@ export default async function Page({
         params.content === 'watchlist' ||
         params.content === 'rated'
     ) {
-        url = `https://api.themoviedb.org/3/account/${accountId}/${params.content}/${params.cat === 'movie' ? 'movies' : params.cat}?language=en-US&page=${params.page}&session_id=${sessionId}`;
-        type = params.cat;
+        type = params.cat === 'movie' ? 'movies' : params.cat;
+        url = `https://api.themoviedb.org/3/account/${accountId}/${params.content}/${type}?language=en-US&page=${params.page}&session_id=${sessionId}`;
         fwr = true;
     } else {
-        url = `https://api.themoviedb.org/3/${params.content}/${params.cat === 'people' ? 'person' : params.cat}${params.content === 'trending' ? '/day' : ''}?language=en-US&page=${params.page}`;
+        type = params.content;
+        url = `https://api.themoviedb.org/3/${type}/${params.cat === 'people' ? 'person' : params.cat}${params.content === 'trending' ? '/day' : ''}?language=en-US&page=${params.page}`;
     }
 
     let res = await fetch(url, options);
@@ -112,7 +113,7 @@ export default async function Page({
 
     return (
         <main className="mx-4 my-8">
-            <h1 className="font-medium text-center">
+            <h1 className="text-xl">
                 {(
                     params.content === 'trending' ||
                     params.cat === 'airing_today' ||

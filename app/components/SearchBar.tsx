@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function SearchBar() {
+export default function SearchBar(props: { searchTerm?: string }) {
     const [search, setSearch] = useState('');
     const router = useRouter();
 
@@ -32,7 +32,7 @@ export default function SearchBar() {
                         onChange={editQuery}
                         className="h-8 bg-slate-400 px-2 text-slate-800"
                         type="text"
-                        placeholder="Search for movies, tv, people..."
+                        defaultValue={props.searchTerm || ''}
                     ></input>
                 </div>
                 <button

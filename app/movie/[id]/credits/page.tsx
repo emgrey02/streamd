@@ -52,10 +52,9 @@ export default async function Credits({ params }: { params: { id: string } }) {
     }
 
     return (
-        <div className="m-4">
-            <BackButton />
-            <CreditsHeader data={creditsMovie} type="movie" />
-            <BackButton />
+        <div className="m-4 flex flex-col">
+            {/* <BackButton />
+            <CreditsHeader data={creditsMovie} type="movie" /> */}
             <div id="cast" className="flex flex-col mb-8">
                 <h1 className="text-xl font-bold">Full Cast</h1>
                 <Link
