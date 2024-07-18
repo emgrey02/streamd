@@ -23,7 +23,7 @@ export default function SearchBar(props: { searchTerm?: string }) {
                 name="search"
                 className="flex items-end justify-center w-full gap-2"
             >
-                <div className="w-80 flex flex-col gap-2">
+                <div className="w-full flex flex-col gap-2">
                     <label htmlFor="search">
                         Search for movies, tv, people...
                     </label>
@@ -36,7 +36,7 @@ export default function SearchBar(props: { searchTerm?: string }) {
                     ></input>
                 </div>
                 <button
-                    className="w-16 h-8 grid place-items-center px-4 bg-slate-600 hover:bg-slate-600/60"
+                    className="h-8 grid place-items-center px-4 bg-slate-600 hover:bg-slate-600/60"
                     type="submit"
                 >
                     Search

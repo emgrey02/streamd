@@ -1,148 +1,213 @@
-'use server';
+'use client';
 
 import Image from 'next/image';
-import FavorWatchButton from '@/app/components/FavorWatchButton';
 import BackButton from '@/app/components/BackButton';
-import { cookies } from 'next/headers';
-import SubmitRating from '@/app/components/SubmitRating';
-import Genres from '@/app/components/Genres';
 import Reviews from '@/app/components/Reviews';
 import SmallCreditsList from '@/app/components/SmallCreditsList';
-import Text from '@/app/components/Text';
+import { useEffect, useState } from 'react';
+import ImageSlider from '@/app/components/ImageSlider';
+import Link from 'next/link';
+import LargeCreditsList from '@/app/components/LargeCreditsList';
+import ContentPageNav from '@/app/components/ContentPageNav';
+import { getShowInfo } from '@/app/actions';
 
-export default async function Show({ params }: { params: { id: string } }) {
+export default function Show({ params }: { params: { id: string } }) {
     let showId = params.id;
+    const [content, setContent] = useState<any>();
+    const [contentTitle, setContentTitle] = useState('info');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const sessionId = cookies().get('sessionId')?.value;
-    const accountId = cookies().get('accId')?.value;
+    useEffect(() => {
+        async function retrieveContent() {
+            let result = await getShowInfo(showId);
+            setContent(result);
+        }
 
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-    };
+        retrieveContent();
+        setTimeout(() => setIsLoading(false), 500);
+    }, [contentTitle, showId]);
 
-    let res = await fetch(
-        `https://api.themoviedb.org/3/tv/${showId}?language=en-US`,
-        options
-    );
-
-    let creditsRes = await fetch(
-        `https://api.themoviedb.org/3/tv/${showId}/aggregate_credits?language=en-US`,
-        options
-    );
-
-    let reviewsRes = await fetch(
-        `https://api.themoviedb.org/3/tv/${showId}/reviews?language=en-US`,
-        options
-    );
-
-    if (!res.ok) {
-        console.error('failed to fetch show data');
+    function setIt(cont: any) {
+        setIsLoading(true);
+        console.log('setting it');
+        if (cont === 'info') {
+            setContentTitle('info');
+        } else if (cont === 'credits') {
+            setContentTitle('credits');
+        } else if (cont === 'reviews') {
+            setContentTitle('reviews');
+        } else if (cont === 'seasons') {
+            setContentTitle('seasons');
+        }
     }
 
-    if (!creditsRes.ok) {
-        console.error('failed to fetch show cast & crew data');
+    function convertQuantity(amt: number) {
+        let str = amt.toString().split('');
+        str.splice(-3, 0, ',');
+        str.splice(-7, 0, ',');
+        if (str.length >= 12) str.splice(-12, 0, ',');
+        let finalStr = str.join('');
+        return `$${finalStr}`;
     }
 
-    if (!creditsRes.ok) {
-        console.error('failed to fetch show reviews');
-    }
-
-    let deets = await res.json();
-    let creds = await creditsRes.json();
-    let reviews = await reviewsRes.json();
-
-    function getDate(birthday: string) {
-        let birthArray = birthday.split('-');
-        let months = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-        ];
-        let month = months[+birthArray[1] - 1];
-        return `${month} ${birthArray[2]}, ${birthArray[0]}`;
+    function getRuntime(min: number) {
+        let hrs = (min / 60).toFixed(0);
+        let mins = min % 60;
+        console.log(hrs);
+        return `${hrs}h ${mins}m`;
     }
 
     return (
-        <main className="m-2 md:m-4 lg:m-8">
-            <div className="grid gap-4 md:flex md:h-[600px] h-auto">
-                {deets.poster_path ?
-                    <Image
-                        className="max-h-600"
-                        src={`https://image.tmdb.org/t/p/w400${deets.poster_path}`}
-                        alt="tv poster"
-                        width={400}
-                        height={1200}
-                    />
-                :   <div className="w-96 h-auto bg-slate-300/20 grid place-items-center">
-                        {deets.name} poster unavailable
-                    </div>
-                }
-                <div className="flex flex-col gap-8">
-                    <div>
-                        <h1 className="text-2xl font-bold text-slate-200">
-                            {deets.name}
-                        </h1>
-                        <p className="font-light">tv show</p>
-                    </div>
-                    <div className="flex gap-2">
-                        <p>{deets.number_of_episodes} total episodes</p>
-                        <p>-</p>
-                        <p>{deets.number_of_seasons} seasons</p>
-                    </div>
-                    <Genres data={deets.genres} />
-                    {accountId && sessionId && (
+        <main className="flex flex-col gap-4">
+            <ContentPageNav
+                setIt={setIt}
+                currentTitle={contentTitle}
+                person={false}
+                tv={true}
+            />
+
+            {isLoading && <p>loading...</p>}
+            {contentTitle === 'reviews' && !isLoading && (
+                <Reviews reviews={content.reviews} />
+            )}
+            {contentTitle === 'credits' &&
+                content.aggregate_credits.cast &&
+                !isLoading && (
+                    <>
+                        <div id="cast" className="flex flex-col mb-8">
+                            <h1 className="text-xl font-bold">Full Cast</h1>
+                            <Link
+                                href="#crew"
+                                className="text-sm hover:underline underline-offset-2"
+                            >
+                                Skip to Full Crew
+                            </Link>
+                        </div>
+                        <LargeCreditsList
+                            data={content.aggregate_credits.cast}
+                            type="person"
+                            search={false}
+                            credits={true}
+                            fwr={false}
+                            seasons={false}
+                        />
+                        <div id="crew" className="flex flex-col mb-8">
+                            <h2 className="text-xl font-bold">Full Crew</h2>
+                            <Link
+                                href="#cast"
+                                className="text-sm hover:underline underline-offset-2"
+                            >
+                                Back to Full Cast
+                            </Link>
+                        </div>
+                        <LargeCreditsList
+                            data={content.aggregate_credits.crew}
+                            type="person"
+                            search={false}
+                            credits={true}
+                            fwr={false}
+                            seasons={false}
+                        />
+                    </>
+                )}
+            {contentTitle === 'info' && content && !isLoading && (
+                <>
+                    {content.production_companies.length > 0 && (
                         <>
-                            <div className="grid grid-cols-2 w-64">
-                                <FavorWatchButton
-                                    whichOne="favorite"
-                                    content="tv"
-                                    contentId={deets.id}
-                                    accountId={accountId}
-                                    sessionId={sessionId}
-                                />
-                                <FavorWatchButton
-                                    whichOne="watchlist"
-                                    content="tv"
-                                    contentId={deets.id}
-                                    accountId={accountId}
-                                    sessionId={sessionId}
-                                />
-                            </div>
-                            <SubmitRating
-                                content="tv"
-                                id={deets.id}
-                                sessionId={sessionId}
-                                voteAvg={deets.vote_average}
-                                totalVotes={deets.vote_count}
+                            <h2 className="my-2 font-bold text-lg">
+                                Production Companies
+                            </h2>
+                            <ul className="flex flex-wrap gap-4 ring-2 ring-slate-700 p-2 mb-8 w-fit">
+                                {content.production_companies.map(
+                                    (pc: any, index: number) => (
+                                        <li
+                                            key={index}
+                                            className="w-[120px] grid grid-rows-[100px_min-content] gap-2 p-2"
+                                        >
+                                            <div className="grid place-items-center bg-slate-600 min-w-[100px]">
+                                                {pc.logo_path ?
+                                                    <Image
+                                                        className="p-2"
+                                                        src={`https://image.tmdb.org/t/p/w200/${pc.logo_path}`}
+                                                        alt={`logo`}
+                                                        width="100"
+                                                        height="100"
+                                                    />
+                                                :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
+                                                        no logo available
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div>
+                                                <p className="text-sm">
+                                                    {pc.name}
+                                                </p>
+                                                <p className="text-xs">
+                                                    {pc.origin_country}
+                                                </p>
+                                            </div>
+                                        </li>
+                                    )
+                                )}
+                            </ul>
+                        </>
+                    )}
+
+                    {content &&
+                        contentTitle === 'info' &&
+                        content.aggregate_credits && (
+                            <SmallCreditsList
+                                setIt={setIt}
+                                creds={content.aggregate_credits}
+                                cont="tv"
+                            />
+                        )}
+                    {content && contentTitle === 'info' && content.seasons && (
+                        <>
+                            <h2 className="text-xl">Seasons</h2>
+                            <LargeCreditsList
+                                data={content.seasons}
+                                type="tv"
+                                credits={false}
+                                search={false}
+                                fwr={false}
+                                seasons={true}
+                                showId={showId}
                             />
                         </>
                     )}
-                    <div>
-                        <h2 className="font-bold">First Aired</h2>
-                        <p> {getDate(deets.first_air_date)}</p>
-                    </div>
-                    <div className="flex flex-col">
-                        <h2 className="font-bold text-lg">Overview</h2>
-                        <Text text={deets.overview} />
-                    </div>
-                </div>
-            </div>
+
+                    <ImageSlider
+                        images={content.images.backdrops}
+                        type="Backdrops"
+                    />
+
+                    <ImageSlider
+                        images={content.images.posters}
+                        type="Posters"
+                    />
+
+                    <ImageSlider images={content.images.logos} type="Logos" />
+                </>
+            )}
+            {content &&
+                contentTitle === 'seasons' &&
+                content.seasons &&
+                !isLoading && (
+                    <>
+                        <h2>Seasons</h2>
+                        <LargeCreditsList
+                            data={content.seasons}
+                            type="tv"
+                            credits={false}
+                            search={false}
+                            fwr={false}
+                            seasons={true}
+                            showId={showId.toString()}
+                        />
+                    </>
+                )}
             <BackButton />
-            <SmallCreditsList creds={creds} cont="tv" />
-            <Reviews reviews={reviews} />
         </main>
     );
 }

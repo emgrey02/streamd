@@ -1,11 +1,17 @@
 'use client';
 
-import { ReactElement, ReactNode, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 export default function Text(props: { text: string }) {
     const [expandedText, setExpandedText] = useState(false);
     const [clamped, setClamped] = useState(true);
     const containerRef = useRef(null);
+    const [windowWidth, setWindowWidth] = useState<number>(0);
+
+    function getWindowWidth() {
+        const width = window.innerWidth;
+        return width;
+    }
 
     useEffect(() => {
         function isClamped(el: HTMLParagraphElement | null) {
@@ -19,7 +25,14 @@ export default function Text(props: { text: string }) {
         }
 
         setClamped(isClamped(containerRef.current));
-    }, [containerRef]);
+
+        function handleResize() {
+            setWindowWidth(getWindowWidth());
+        }
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, [containerRef, windowWidth]);
 
     function showText() {
         setExpandedText(true);
@@ -29,10 +42,10 @@ export default function Text(props: { text: string }) {
         setExpandedText(false);
     }
     return (
-        <div className="relative bg-slate-800">
+        <div className="relative ">
             <p
                 ref={containerRef}
-                className={`max-w-2xl leading-relaxed ${!expandedText ? 'line-clamp-3' : ''} transition`}
+                className={`max-w-2xl leading-relaxed ${!expandedText ? 'line-clamp-3' : 'bg-slate-800'} transition`}
             >
                 {props.text}
             </p>
@@ -42,12 +55,12 @@ export default function Text(props: { text: string }) {
                     {!expandedText ?
                         <button
                             onClick={showText}
-                            className="underline underline-offset-2 hover:underline-offset-4 w-min transition-all"
+                            className="underline underline-offset-2 hover:underline-offset-4  transition-all"
                         >
                             read more
                         </button>
                     :   <button
-                            className="underline underline-offset-2 hover:underline-offset-4 w-min transition-all"
+                            className="underline underline-offset-2 hover:underline-offset-4  transition-all"
                             onClick={hideText}
                         >
                             close

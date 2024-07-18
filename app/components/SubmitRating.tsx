@@ -3,31 +3,47 @@
 import { useEffect, useState } from 'react';
 import { getContentAccountInfo, rateContent, deleteRating } from '../actions';
 
-export default function SubmitRating(params: {
+export default function SubmitRating(props: {
     content: string;
     id: number;
     sessionId: string;
     voteAvg: number;
     totalVotes: number;
+    seasonNum?: string;
+    episodeNum?: string;
 }) {
-    // const { data } = useFormState();
     const [isRating, setIsRating] = useState(false);
     const [userRating, setUserRating] = useState(0);
     const [hasUserRated, setHasUserRated] = useState(false);
     const [progress, setProgress] = useState({ width: '0px' });
     const [youProgress, setYouProgress] = useState({ width: '0px' });
 
-    const voteAverage = Math.round(params.voteAvg * 10) / 10;
-    console.log(voteAverage);
+    const voteAverage = Math.round(props.voteAvg * 10) / 10;
 
     function deletePrevRating() {
-        deleteRating(params.content, params.id, params.sessionId);
+        props.seasonNum && props.episodeNum ?
+            deleteRating(
+                props.content,
+                props.id,
+                props.sessionId,
+                props.seasonNum,
+                props.episodeNum
+            )
+        :   deleteRating(props.content, props.id, props.sessionId);
         setHasUserRated(false);
     }
 
     function triggerRatingForm() {
-        if (hasUserRated) {
-            deleteRating(params.content, params.id, params.sessionId).then(() =>
+        if (hasUserRated && props.seasonNum) {
+            deleteRating(
+                props.content,
+                props.id,
+                props.sessionId,
+                props.seasonNum,
+                props.episodeNum
+            ).then(() => setIsRating(true));
+        } else if (hasUserRated) {
+            deleteRating(props.content, props.id, props.sessionId).then(() =>
                 setIsRating(true)
             );
         } else {
@@ -50,7 +66,16 @@ export default function SubmitRating(params: {
     }
 
     function submitRating() {
-        rateContent(params.content, params.id, userRating, params.sessionId);
+        props.seasonNum && props.episodeNum ?
+            rateContent(
+                props.content,
+                props.id,
+                userRating,
+                props.sessionId,
+                props.seasonNum,
+                props.episodeNum
+            )
+        :   rateContent(props.content, props.id, userRating, props.sessionId);
         setUserRating(userRating);
         setYouProgress(convertRating(userRating));
         setIsRating(false);
@@ -59,11 +84,23 @@ export default function SubmitRating(params: {
 
     useEffect(() => {
         async function seeIfUserRated() {
-            let ur = await getContentAccountInfo(
-                params.sessionId,
-                params.content,
-                params.id
-            );
+            let ur;
+
+            if (props.seasonNum && props.episodeNum) {
+                ur = await getContentAccountInfo(
+                    props.sessionId,
+                    props.content,
+                    props.id,
+                    props.seasonNum,
+                    props.episodeNum
+                );
+            } else {
+                ur = await getContentAccountInfo(
+                    props.sessionId,
+                    props.content,
+                    props.id
+                );
+            }
 
             if (ur.rated) {
                 setHasUserRated(true);
@@ -77,10 +114,17 @@ export default function SubmitRating(params: {
         let convertedRating = convertRating(voteAverage);
         setProgress(convertedRating);
         seeIfUserRated();
-    }, [params.content, params.id, params.sessionId, voteAverage]);
+    }, [
+        props.content,
+        props.id,
+        props.sessionId,
+        voteAverage,
+        props.seasonNum,
+        props.episodeNum,
+    ]);
 
     return (
-        <div className="grid grid-cols-2 w-full gap-8">
+        <div className="grid grid-cols-2 w-full gap-8 items-center">
             <div className="flex flex-col gap-2">
                 <p className="text-sm">Average Rating: {voteAverage} / 10</p>
                 <div className="h-3 w-full relative overflow-hidden bg-slate-900">
@@ -89,7 +133,7 @@ export default function SubmitRating(params: {
                         style={progress}
                     ></div>
                 </div>
-                <p className="text-sm">Total votes: {params.totalVotes}</p>
+                <p className="text-sm">Total votes: {props.totalVotes}</p>
             </div>
             <div className="w-full grid grid-rows-2 gap-4">
                 {(hasUserRated || (!hasUserRated && isRating)) && (
@@ -107,7 +151,7 @@ export default function SubmitRating(params: {
                 )}
                 {!isRating && !hasUserRated && (
                     <button className="w-fit" onClick={triggerRatingForm}>
-                        Rate {params.content === 'movie' ? 'movie' : 'tv show'}
+                        Rate it
                     </button>
                 )}
                 {!isRating && hasUserRated && (

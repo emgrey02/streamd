@@ -1,11 +1,78 @@
 'use server';
 import { cookies } from 'next/headers';
 
+export async function getShowInfo(showId: string) {
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    let res = await fetch(
+        `https://api.themoviedb.org/3/tv/${showId}?append_to_response=images,aggregate_credits,keywords,recommendations,similar,videos,watch_providers,reviews&language=en-US`,
+        options
+    );
+
+    if (!res.ok) {
+        console.error('failed to fetch show data');
+    }
+
+    return await res.json();
+}
+
+export async function getPersonInfo(personId: string) {
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    const res = await fetch(
+        `https://api.themoviedb.org/3/person/${personId}?append_to_response=combined_credits&language=en-US&sort_by=primary_release_date.asc`,
+        options
+    );
+
+    if (!res.ok) {
+        console.error('failed to fetch movie data');
+    }
+
+    return await res.json();
+}
+
+export async function getMovieInfo(movieId: string) {
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    const res = await fetch(
+        `https://api.themoviedb.org/3/movie/${movieId}?append_to_response=images,credits,keywords,recommendations,similar,videos,watch_providers,reviews`,
+        options
+    );
+
+    if (!res.ok) {
+        console.error('failed to fetch movie data');
+    }
+
+    return await res.json();
+}
+
 export async function deleteRating(
     content: string,
     id: number,
-    sessionId: string
+    sessionId: string,
+    seasonNum?: string,
+    episodeNum?: string
 ) {
+    let res;
+
     const options = {
         method: 'DELETE',
         headers: {
@@ -15,10 +82,17 @@ export async function deleteRating(
         },
     };
 
-    const res = await fetch(
-        `https://api.themoviedb.org/3/${content}/${id}/rating?session_id=${sessionId}`,
-        options
-    );
+    if (seasonNum && episodeNum) {
+        res = await fetch(
+            `https://api.themoviedb.org/3/${content}/${id}/season/${seasonNum}/episode/${episodeNum}/rating?session_id=${sessionId}`,
+            options
+        );
+    } else {
+        res = await fetch(
+            `https://api.themoviedb.org/3/${content}/${id}/rating?session_id=${sessionId}`,
+            options
+        );
+    }
 
     const resJson = await res.json();
 
@@ -35,9 +109,12 @@ export async function rateContent(
     content: string,
     id: number,
     rating: number,
-    sessionId: string
+    sessionId: string,
+    seasonNum?: string,
+    episodeNum?: string
 ) {
-    console.log(rating);
+    let res;
+
     const options = {
         method: 'POST',
         headers: {
@@ -50,10 +127,17 @@ export async function rateContent(
         }),
     };
 
-    const res = await fetch(
-        `https://api.themoviedb.org/3/${content}/${id}/rating?session_id=${sessionId}`,
-        options
-    );
+    if (seasonNum && episodeNum) {
+        res = await fetch(
+            `https://api.themoviedb.org/3/${content}/${id}/season/${seasonNum}/episode/${episodeNum}/rating?session_id=${sessionId}`,
+            options
+        );
+    } else {
+        res = await fetch(
+            `https://api.themoviedb.org/3/${content}/${id}/rating?session_id=${sessionId}`,
+            options
+        );
+    }
 
     const resJson = await res.json();
 
@@ -208,8 +292,12 @@ export async function deleteCookies() {
 export async function getContentAccountInfo(
     sessionId: string,
     content: string,
-    contentId: number
+    contentId: number,
+    seasonNum?: string,
+    episodeNum?: string
 ) {
+    let res;
+
     const options = {
         method: 'GET',
         headers: {
@@ -218,10 +306,17 @@ export async function getContentAccountInfo(
         },
     };
 
-    let res = await fetch(
-        `https://api.themoviedb.org/3/${content}/${contentId}/account_states?session_id=${sessionId}`,
-        options
-    );
+    if (seasonNum && episodeNum) {
+        res = await fetch(
+            `https://api.themoviedb.org/3/${content}/${contentId}/season/${seasonNum}/episode/${episodeNum}/account_states?session_id=${sessionId}`,
+            options
+        );
+    } else {
+        res = await fetch(
+            `https://api.themoviedb.org/3/${content}/${contentId}/account_states?session_id=${sessionId}`,
+            options
+        );
+    }
 
     if (!res.ok) {
         console.error('failed to get content account info');

@@ -1,150 +1,134 @@
-import BackButton from '@/app/components/BackButton';
+'use client';
+
+import { getPersonInfo } from '@/app/actions';
+import ContentPageNav from '@/app/components/ContentPageNav';
+import LargeCreditsList from '@/app/components/LargeCreditsList';
 import SmallCreditsList from '@/app/components/SmallCreditsList';
-import Text from '@/app/components/Text';
-import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
-export default async function Person({ params }: { params: { id: string } }) {
+export default function Person({ params }: { params: { id: string } }) {
     const personId = params.id;
+    const [content, setContent] = useState<any>();
+    const [contentTitle, setContentTitle] = useState('info');
+    const [isLoading, setIsLoading] = useState(false);
 
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-    };
+    useEffect(() => {
+        async function retrieveContent() {
+            let result = await getPersonInfo(personId);
+            console.log(result);
+            setContent(result);
+        }
 
-    const res = await fetch(
-        `https://api.themoviedb.org/3/person/${personId}?append_to_response=combined_credits&language=en-US&sort_by=primary_release_date.asc`,
-        options
-    );
+        retrieveContent();
+        setTimeout(() => setIsLoading(false), 500);
+    }, [personId, contentTitle]);
 
-    const details = await res.json();
-    console.log(details);
+    // const genders = ['not specified', 'female', 'male', 'non-binary'];
 
-    if (res!.ok) {
-        console.error('failed to fetch person details');
-    }
+    // function getDate(birthday: string) {
+    //     console.log(birthday);
+    //     let birthArray = birthday.split('-');
+    //     let months = [
+    //         'January',
+    //         'February',
+    //         'March',
+    //         'April',
+    //         'May',
+    //         'June',
+    //         'July',
+    //         'August',
+    //         'September',
+    //         'October',
+    //         'November',
+    //         'December',
+    //     ];
+    //     let month = months[+birthArray[1] - 1];
+    //     return `${month} ${birthArray[2]}, ${birthArray[0]}`;
+    // }
 
-    const genders = ['not specified', 'female', 'male', 'non-binary'];
+    // function getAge(birthdate: Date) {
+    //     const today = new Date();
 
-    function getDate(birthday: string) {
-        console.log(birthday);
-        let birthArray = birthday.split('-');
-        let months = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-        ];
-        let month = months[+birthArray[1] - 1];
-        return `${month} ${birthArray[2]}, ${birthArray[0]}`;
-    }
+    //     const age =
+    //         today.getFullYear() -
+    //         birthdate.getFullYear() -
+    //         (+(today.getMonth() < birthdate.getMonth()) ||
+    //             +(
+    //                 today.getMonth() === birthdate.getMonth() &&
+    //                 today.getDate() < birthdate.getDate()
+    //             ));
+    //     return age;
+    // }
 
-    function getAge(birthdate: Date) {
-        const today = new Date();
-
-        const age =
-            today.getFullYear() -
-            birthdate.getFullYear() -
-            (+(today.getMonth() < birthdate.getMonth()) ||
-                +(
-                    today.getMonth() === birthdate.getMonth() &&
-                    today.getDate() < birthdate.getDate()
-                ));
-        return age;
+    function setIt(cont: any) {
+        setIsLoading(true);
+        console.log('setting it');
+        if (cont === 'info') {
+            setContentTitle('info');
+        } else if (cont === 'credits') {
+            setContentTitle('credits');
+        } else {
+            setContentTitle('reviews');
+        }
     }
 
     return (
-        <div className="m-4">
-            {details && (
-                <div>
-                    <div className="grid gap-4 md:flex">
-                        {details.profile_path ?
-                            <Image
-                                className="max-h-600"
-                                src={`https://image.tmdb.org/t/p/w400${details.profile_path}`}
-                                alt="person poster"
-                                width={400}
-                                height={600}
-                                priority
-                            />
-                        :   <div className="w-full sm:w-[400px] h-[600px] bg-slate-700 grid place-items-center text-center">
-                                {details.name}&apos;s profile picture
-                                unavailable
-                            </div>
-                        }
-                        <div className="flex flex-col gap-4">
-                            <div>
-                                <h1 className="font-bold text-2xl">
-                                    {details.name}
-                                </h1>
-                                <p className="font-light">
-                                    {genders[details.gender]}
-                                </p>
-                            </div>
-                            <div>
-                                {details.birthday && (
-                                    <>
-                                        <p className="font-bold">Birthday</p>
-                                        <p className="font-light">
-                                            {getDate(details.birthday)}
-                                        </p>
-                                        <p>
-                                            (
-                                            {getAge(new Date(details.birthday))}{' '}
-                                            years old)
-                                        </p>
-                                    </>
-                                )}
-                                {details.deathday && (
-                                    <>
-                                        <p className="font-bold">Death</p>
-                                        <p className="font-light">
-                                            {getDate(details.deathday)}
-                                        </p>
-                                    </>
-                                )}
-                            </div>
-                            {details.place_of_birth && (
-                                <div>
-                                    <h2 className="font-bold">Birthplace</h2>
-                                    <p>From {details.place_of_birth}</p>
-                                </div>
-                            )}
-                            <div>
-                                <h2 className="font-bold">Known For</h2>
-                                <p>{details.known_for_department}</p>
-                            </div>
-                            {details.biography && (
-                                <div>
-                                    <h2 className="text-lg font-bold my-2">
-                                        Biography
-                                    </h2>
-                                    <Text text={details.biography} />
-                                </div>
-                            )}
-                        </div>
-                    </div>
-                    <BackButton />
-                    <div className="my-8">
-                        <h2 className="text-xl font-bold my-4">Credits</h2>
-                        <SmallCreditsList
-                            creds={details.combined_credits}
-                            cont="person"
-                            personId={params.id}
-                        />
-                    </div>
-                </div>
+        <main className="m-4">
+            <ContentPageNav
+                setIt={setIt}
+                currentTitle={contentTitle}
+                person={true}
+            />
+            {isLoading && <p>loading...</p>}
+            {contentTitle === 'info' && content && !isLoading && (
+                <SmallCreditsList
+                    setIt={setIt}
+                    creds={content.combined_credits}
+                    cont="multi"
+                    personId={personId}
+                />
             )}
-        </div>
+            {contentTitle === 'credits' &&
+                content.combined_credits &&
+                !isLoading && (
+                    <>
+                        <div id="cast" className="flex flex-col mb-8">
+                            <h1 className="text-xl font-bold">Cast Credits</h1>
+                            <Link
+                                href="#crew"
+                                className="text-sm hover:underline underline-offset-2"
+                            >
+                                Skip to Crew Credits
+                            </Link>
+                        </div>
+                        <LargeCreditsList
+                            data={content.combined_credits.cast}
+                            type="multi"
+                            search={false}
+                            credits={true}
+                            fwr={false}
+                            seasons={false}
+                        />
+                        <div id="crew" className="flex flex-col mb-8">
+                            <h2 className="text-xl font-bold">Crew Credits</h2>
+                            <Link
+                                href="#cast"
+                                className="text-sm hover:underline underline-offset-2"
+                            >
+                                Back to Cast Credits
+                            </Link>
+                        </div>
+                        <LargeCreditsList
+                            data={content.combined_credits.crew}
+                            type="multi"
+                            search={false}
+                            credits={true}
+                            fwr={false}
+                            seasons={false}
+                        />
+                    </>
+                )}
+        </main>
     );
 }

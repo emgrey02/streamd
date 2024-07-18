@@ -96,6 +96,7 @@ export default function SearchResults(props: {
                         search={true}
                         credits={false}
                         fwr={false}
+                        seasons={false}
                     />
                 )}
             </div>

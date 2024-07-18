@@ -1,29 +1,24 @@
 'use client';
-import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import Card from './Card';
 import NewCard from './NewCard';
 
-interface Credits {
-    id: number;
-    cast: Array<object>[];
-    crew: Array<object>[];
-}
-
 export default function SmallCreditsList(props: {
-    creds: Credits;
+    setIt: any;
+    creds: any;
     cont?: string;
     personId?: string;
 }) {
     const [windowWidth, setWindowWidth] = useState<number>();
+    console.log(props.creds);
     let cast = props.creds.cast;
-    let c = cast;
+    let crew = props.creds.crew;
+    let ca = cast;
+    let cr = crew;
 
     if (props.personId) {
-        c = cast.toReversed();
+        ca = cast.toReversed();
+        cr = crew.toReversed();
     }
-    console.log(c);
-    console.log(props.personId);
 
     useEffect(() => {
         let width = window.innerWidth;
@@ -31,37 +26,65 @@ export default function SmallCreditsList(props: {
     }, [windowWidth]);
 
     return (
-        <div className="flex flex-col">
-            <ul className="flex flex-wrap gap-4 justify-start">
-                {c &&
-                    c.map(
-                        (p: any, index: number) =>
-                            index < 8 && (
-                                <li
-                                    key={index}
-                                    className="flex flex-col justify-between "
-                                >
-                                    <NewCard
-                                        data={p}
-                                        type={props.cont}
-                                        search={false}
-                                        credits={true}
-                                        fwr={false}
-                                    />
-                                </li>
-                            )
-                    )}
-            </ul>
-            <Link
-                className="self-end my-8 mx-12"
-                href={
-                    props.personId ?
-                        `/person/${props.personId}/credits`
-                    :   `/${props.cont}/${props.creds.id}/credits`
-                }
+        <div className="flex flex-col gap-10">
+            {ca && ca.length > 0 && (
+                <div>
+                    <h2 className="text-xl mb-2">Cast</h2>
+                    <ul className="flex flex-wrap gap-4 justify-start">
+                        {ca.map(
+                            (p: any, index: number) =>
+                                index < 4 && (
+                                    <li
+                                        key={index}
+                                        className="flex flex-col justify-between "
+                                    >
+                                        <NewCard
+                                            data={p}
+                                            type={props.cont}
+                                            search={false}
+                                            credits={true}
+                                            fwr={false}
+                                            seasons={false}
+                                        />
+                                    </li>
+                                )
+                        )}
+                    </ul>
+                </div>
+            )}
+            {cr && cr.length > 0 && (
+                <div>
+                    <h2 className="text-xl mb-2">Crew</h2>
+                    <ul className="flex flex-wrap gap-4 justify-start">
+                        {cr.map(
+                            (p: any, index: number) =>
+                                index < 4 && (
+                                    <li
+                                        key={index}
+                                        className="flex flex-col justify-between "
+                                    >
+                                        <NewCard
+                                            data={p}
+                                            type={props.cont}
+                                            search={false}
+                                            credits={true}
+                                            fwr={false}
+                                            seasons={false}
+                                        />
+                                    </li>
+                                )
+                        )}
+                    </ul>
+                </div>
+            )}
+            <button
+                className="self-end mb-10 mx-8"
+                onClick={() => {
+                    props.setIt('credits');
+                }}
             >
                 See All Credits
-            </Link>
+            </button>
         </div>
     );
 }

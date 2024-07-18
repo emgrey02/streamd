@@ -1,11 +1,11 @@
-import FavorWatchButton from '@/app/components/FavorWatchButton';
-import Genres from '@/app/components/Genres';
-import SubmitRating from '@/app/components/SubmitRating';
 import Text from '@/app/components/Text';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import { headers } from 'next/headers';
 import BackButton from '@/app/components/BackButton';
+import Genres from '@/app/components/Genres';
+import FavorWatchButton from '@/app/components/FavorWatchButton';
+import SubmitRating from '@/app/components/SubmitRating';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -13,17 +13,10 @@ interface LayoutProps {
 }
 
 export default async function Layout({ children, params }: LayoutProps) {
-    let movieId = params.id;
+    let showId = params.id;
 
     const sessionId = cookies().get('sessionId')?.value;
     const accountId = cookies().get('accId')?.value;
-
-    const headersList = headers();
-    const header_url = headersList.get('x-url') || '';
-    const pathname = headersList.get('x-pathname');
-    const origin_url = headersList.get('x-origin');
-
-    console.log(header_url, pathname, origin_url);
 
     const options = {
         method: 'GET',
@@ -34,35 +27,16 @@ export default async function Layout({ children, params }: LayoutProps) {
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`,
-        options
-    );
-
-    let creditsRes = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`,
-        options
-    );
-
-    let reviewsRes = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/reviews?language=en-US&page=1`,
+        `https://api.themoviedb.org/3/tv/${showId}?language=en-US`,
         options
     );
 
     if (!res.ok) {
-        console.error('failed to fetch movie data');
-    }
-
-    if (!creditsRes.ok) {
-        console.error('failed to fetch movie cast & crew data');
-    }
-
-    if (!reviewsRes.ok) {
-        console.error('failed to fetch movie reviews');
+        console.error('failed to fetch show data');
     }
 
     let deets = await res.json();
-    let creds = await creditsRes.json();
-    let reviews = await reviewsRes.json();
+
     function getDate(birthday: string) {
         let birthArray = birthday.split('-');
         let months = [
@@ -86,49 +60,52 @@ export default async function Layout({ children, params }: LayoutProps) {
     return (
         <main className="m-2 md:m-4 lg:m-8">
             <BackButton />
-            <div className="grid gap-4 md:flex">
+            <div className="grid gap-4 md:flex md:h-[600px] h-auto">
                 {deets.poster_path ?
                     <Image
                         className="max-h-600"
                         src={`https://image.tmdb.org/t/p/w400${deets.poster_path}`}
-                        alt="movie poster"
+                        alt="tv poster"
                         width={400}
-                        height={600}
-                        priority
+                        height={1200}
                     />
-                :   <div className="w-96 bg-slate-300/20 grid place-items-center">
-                        {deets.title} poster unavailable
+                :   <div className="w-96 h-auto bg-slate-300/20 grid place-items-center">
+                        {deets.name} poster unavailable
                     </div>
                 }
                 <div className="flex flex-col gap-8">
                     <div>
                         <h1 className="text-2xl font-bold text-slate-200">
-                            {deets.title}
+                            {deets.name}
                         </h1>
-                        <p className="font-light">movie</p>
+                        <p className="font-light">tv show</p>
                     </div>
-                    <p className="font-light italic">{deets.tagline}</p>
+                    <div className="flex gap-2">
+                        <p>{deets.number_of_episodes} total episodes</p>
+                        <p>-</p>
+                        <p>{deets.number_of_seasons} seasons</p>
+                    </div>
                     <Genres data={deets.genres} />
                     {accountId && sessionId && (
                         <>
                             <div className="grid grid-cols-2 w-64">
                                 <FavorWatchButton
                                     whichOne="favorite"
-                                    content="movie"
+                                    content="tv"
                                     contentId={deets.id}
                                     accountId={accountId}
                                     sessionId={sessionId}
                                 />
                                 <FavorWatchButton
                                     whichOne="watchlist"
-                                    content="movie"
+                                    content="tv"
                                     contentId={deets.id}
                                     accountId={accountId}
                                     sessionId={sessionId}
                                 />
                             </div>
                             <SubmitRating
-                                content="movie"
+                                content="tv"
                                 id={deets.id}
                                 sessionId={sessionId}
                                 voteAvg={deets.vote_average}
@@ -136,18 +113,14 @@ export default async function Layout({ children, params }: LayoutProps) {
                             />
                         </>
                     )}
-                    {deets.release_date && (
-                        <div>
-                            <h2 className="font-bold">Released</h2>
-                            <p>{getDate(deets.release_date)}</p>
-                        </div>
-                    )}
-                    {deets.overview ?
-                        <div>
-                            <p className="font-bold text-lg">Overview</p>
-                            <Text text={deets.overview} />
-                        </div>
-                    :   <p>no overview available.</p>}
+                    <div>
+                        <h2 className="font-bold">First Aired</h2>
+                        <p></p>
+                    </div>
+                    <div className="flex flex-col">
+                        <h2 className="font-bold text-lg">Overview</h2>
+                        <Text text={deets.overview} />
+                    </div>
                 </div>
             </div>
             {children}

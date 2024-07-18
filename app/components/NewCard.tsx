@@ -9,30 +9,15 @@ export default function NewCard(props: {
     search: boolean;
     credits: boolean;
     fwr: boolean;
+    seasons: boolean;
+    seasonNum?: number;
+    showId?: string;
 }) {
-    const [windowWidth, setWindowWidth] = useState<number>(0);
     const p = props.data;
     let type = props.type;
-    console.log(p);
-    console.log(type);
-    console.log(props.search);
-    console.log(props.credits);
-    console.log(props.fwr);
-
-    function getWindowWidth() {
-        const width = window.innerWidth;
-        return width;
-    }
-    useEffect(() => {
-        function handleResize() {
-            setWindowWidth(getWindowWidth());
-        }
-
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resive', handleResize);
-    }, []);
 
     if (!props.search) {
+        // not searching
         // movie & tv credits are people
         if (
             (type === 'movie' || type === 'tv') &&
@@ -42,6 +27,8 @@ export default function NewCard(props: {
             type = 'person';
         } else if (props.fwr) {
             if (type === 'movies') type = 'movie';
+        } else if (props.seasons) {
+            type = 'tv';
         } else {
             // not searching: multi or person credits are the corresponding media type
             type = p.media_type || type;
@@ -49,19 +36,15 @@ export default function NewCard(props: {
     } else {
         // searching: multi is corresponding media type
         if (type === 'multi') {
-            console.log(p.media_type);
             type = p.media_type;
         }
     }
     // otherwise we are searching and movie, tv, and people are what they are
-    console.log(props.search);
-    console.log(props.credits);
-    console.log(type);
 
     return (
         <Link
             className="grid grid-cols-[100px_175px] h-[150px] gap-2 bg-slate-600/40 hover:bg-slate-600/70 transition"
-            href={`/${type}/${p.id}`}
+            href={`/${type}/${props.showId ? props.showId : p.id}/${props.seasons ? `season/${props.seasonNum}/` : ''}`}
         >
             {p.profile_path || p.poster_path ?
                 <Image
@@ -88,6 +71,29 @@ export default function NewCard(props: {
                             (p.jobs && p.jobs[0].job) ||
                             'unknown'
                         }`}
+                    </p>
+                )}
+                {type == 'tv' && props.seasons && p.air_date && (
+                    <>
+                        <p></p>
+                        <p className="text-sm font-light">
+                            {p.air_date.slice(0, 4)}
+                        </p>
+                    </>
+                )}
+
+                {type == 'tv' && !props.seasons && p.first_air_date && (
+                    <>
+                        <p></p>
+                        <p className="text-sm font-light">
+                            {p.first_air_date.slice(0, 4)}
+                        </p>
+                    </>
+                )}
+
+                {type == 'movie' && (
+                    <p className="text-sm font-light">
+                        {p.release_date.slice(0, 4)}
                     </p>
                 )}
             </div>

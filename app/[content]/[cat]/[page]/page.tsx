@@ -138,6 +138,7 @@ export default async function Page({
                 search={false}
                 credits={false}
                 fwr={fwr}
+                seasons={false}
             />
             <Pagination
                 page={+params.page}

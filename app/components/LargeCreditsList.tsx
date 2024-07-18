@@ -6,22 +6,23 @@ export default function LargeCreditsList(props: {
     search: boolean;
     credits: boolean;
     fwr: boolean;
+    seasons: boolean;
+    showId?: string;
 }) {
     let data = props.data;
     const type = props.type;
     const search = props.search;
     const credits = props.credits;
     const fwr = props.fwr;
+    const seasons = props.seasons;
+    const showId = props.showId;
 
     if (type !== 'person') {
         data = data?.toReversed();
     }
 
-    console.log(data);
-    console.log(type);
-
     return (
-        <ul className="flex flex-wrap gap-4 gap-y-6 justify-start my-8">
+        <ul className="flex flex-wrap gap-4 gap-y-6 justify-start mb-8">
             {data &&
                 data.map((m: any, index: number) => (
                     <li data-num={index} key={index}>
@@ -31,6 +32,9 @@ export default function LargeCreditsList(props: {
                             search={search}
                             credits={credits}
                             fwr={fwr}
+                            seasons={seasons}
+                            seasonNum={seasons && m.season_number}
+                            showId={showId || ''}
                         />
                     </li>
                 ))}

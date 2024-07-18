@@ -64,12 +64,12 @@ export default function Pagination(props: {
 
     return (
         <div className="flex justify-center my-4">
-            <div className="w-full h-full">
-                <ul className="flex gap-6 items-center grid-cols-7 pointer">
+            <div className="w-full h-full flex justify-center">
+                <ul className="grid gap-6 items-center grid-cols-9 pointer">
                     <li key="previous" className="grid items-center">
                         {+page > 1 && (
                             <Link
-                                className="h-full  flex gap-2 justify-start items-center ps-2 py-1"
+                                className="h-full flex gap-2 justify-start items-center ps-2 py-1"
                                 href={
                                     props.search ?
                                         `/search/${props.cat}?query=${props.query}&page=${page - 1}`
