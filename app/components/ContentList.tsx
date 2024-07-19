@@ -182,10 +182,10 @@ export default function ContentList({
                         cat.map((c: string, index: number) => (
                             <li
                                 key={index}
-                                className={`h-full ${c === category && 'bg-slate-900'} border-s-2 ${c === category ? 'border-slate-400' : 'border-slate-600'} transition-all`}
+                                className={`h-full ${c === category && 'bg-slate-900'} border-s-2 ${c === category ? 'border-slate-400' : 'border-slate-600'} transition-all `}
                             >
                                 <button
-                                    className={`grid justify-start items-center px-3 py-2 min-w-full h-full`}
+                                    className={`grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue`}
                                     data-cat={c}
                                     onClick={setContent}
                                 >
@@ -202,10 +202,11 @@ export default function ContentList({
                         {contentList.map((ent: any, index: number) => (
                             <li
                                 data-num={index}
-                                className="min-w-56 grid px-2 snap-start"
+                                className="min-w-[200px] grid p-2 snap-start"
                                 key={index}
                             >
                                 <button
+                                    className="focus:outline-none focus:ring focus:ring-brand-blue"
                                     onClick={() =>
                                         router.push(
                                             `/${ent.media_type || (content === 'favorite' || content === 'watchlist' || content === 'rated' ? category : content)}/${ent.id.toString()}`

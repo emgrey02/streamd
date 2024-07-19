@@ -16,7 +16,7 @@ export default async function Page() {
                 Your Dashboard
             </h1>
             {username && <p className="text-center">Hello, {username}</p>}
-            <BackButton />
+            <BackButton main={true} />
             {sessionId ?
                 <ul className="grid gap-8">
                     <li>
@@ -55,7 +55,7 @@ export default async function Page() {
                     </Link>
                 </div>
             }
-            <BackButton />
+            <BackButton main={true} />
         </main>
     );
 }

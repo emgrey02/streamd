@@ -45,8 +45,6 @@ export default function FavorWatchButton({
         setStates();
     }, [content, contentId, sessionId]);
 
-    // React.MouseEvent<HTMLButtonElement, MouseEvent>
-
     async function handleClick(e: React.PointerEvent<HTMLButtonElement>) {
         let target = e.currentTarget as HTMLButtonElement;
         let text = target.innerText;

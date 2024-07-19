@@ -3,7 +3,6 @@ import Text from './Text';
 
 export default function Reviews(props: { reviews: any }) {
     const reviews = props.reviews;
-    console.log(reviews);
 
     return (
         <div className="w-full">

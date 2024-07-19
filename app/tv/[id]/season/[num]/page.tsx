@@ -62,7 +62,6 @@ export default async function Season({
 
     return (
         <div className="flex flex-col gap-4">
-            <BackButton />
             <div className="flex gap-4 md:h-[400px] h-auto">
                 {deets.poster_path ?
                     <div>

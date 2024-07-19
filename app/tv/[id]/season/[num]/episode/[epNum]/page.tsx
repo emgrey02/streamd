@@ -71,7 +71,6 @@ export default async function Episode({
 
     return (
         <div className="flex flex-col gap-4">
-            <BackButton />
             <div className="grid gap-4 md:flex md:h-auto h-auto bg-slate-700 p-4">
                 {deets.still_path ?
                     <div>

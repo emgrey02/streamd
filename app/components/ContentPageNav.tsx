@@ -1,77 +1,73 @@
 'use client';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { usePathname } from 'next/navigation';
 
-export default function ContentPageNav(props: {
-    setIt: any;
-    currentTitle: string;
-    person?: boolean;
-    tv?: boolean;
-}) {
+export default function ContentPageNav() {
     const [currentPage, setCurrentPage] = useState('info');
+    const pathname = usePathname();
+    const pathnameArray = pathname.slice(1).split('/');
+    const mediaType = pathnameArray[0];
+    const showId = pathnameArray[1];
 
     useEffect(() => {
-        setCurrentPage(props.currentTitle);
-    }, [props.currentTitle]);
+        const pathnameArray = pathname.slice(1).split('/');
+        const currentPage = pathnameArray[2];
+        console.log(currentPage);
+        if (!currentPage) {
+            setCurrentPage('info');
+        } else {
+            setCurrentPage(currentPage);
+        }
+    }, [pathname]);
 
     return (
         <nav className="w-fit">
             <ul
-                className={`grid ${props.person ? 'grid-cols-2' : 'grid-cols-3'} ${props.tv && 'grid-cols-4'} my-8 w-fit ring-1 ring-gray-900 bg-slate-700/40`}
+                className={`grid ${mediaType === 'person' ? 'grid-cols-2' : 'grid-cols-3'} ${mediaType === 'tv' && 'grid-cols-4'} my-8 w-fit ring-1 ring-gray-900 bg-slate-700/40`}
             >
                 <li
-                    className={`${currentPage === 'info' ? 'bg-slate-900 border-slate-400 ' : 'border-slate-600'} border-l-4 `}
+                    className={`${currentPage === 'info' ? 'bg-slate-900 border-slate-400 ' : 'border-slate-600'} border-s-2  `}
                 >
-                    <button
-                        className="py-4 ps-3 pe-4 flex w-full"
-                        onClick={() => {
-                            setCurrentPage('info');
-                            props.setIt('info');
-                        }}
+                    <Link
+                        className="py-4 ps-3 pe-4 flex w-full focus:outline-none focus:ring focus:ring-brand-blue"
+                        href={`/${mediaType}/${showId}`}
                     >
                         Info
-                    </button>
+                    </Link>
                 </li>
                 <li
-                    className={`${currentPage === 'credits' ? 'bg-slate-900 border-slate-400 ' : 'border-slate-600'} border-l-4`}
+                    className={`${currentPage === 'credits' ? 'bg-slate-900 border-slate-400 ' : 'border-slate-600'} border-s-2`}
                 >
-                    <button
-                        className="py-4 ps-3 pe-4 flex w-full"
-                        onClick={() => {
-                            setCurrentPage('credits');
-                            props.setIt('credits');
-                        }}
+                    <Link
+                        className="py-4 ps-3 pe-4 flex w-full focus:outline-none focus:ring focus:ring-brand-blue"
+                        href={`/${mediaType}/${showId}/credits`}
                     >
                         Credits
-                    </button>
+                    </Link>
                 </li>
-                {props.person || (
+                {mediaType === 'person' || (
                     <li
-                        className={`${currentPage === 'reviews' ? 'bg-slate-900 border-slate-400 ' : 'border-slate-600'} border-l-4 pe-4`}
+                        className={`${currentPage === 'reviews' ? 'bg-slate-900 border-slate-400 ' : 'border-slate-600'} border-s-2 `}
                     >
-                        <button
-                            className="py-4 ps-3 pe-4 flex w-full"
-                            onClick={() => {
-                                setCurrentPage('reviews');
-                                props.setIt('reviews');
-                            }}
+                        <Link
+                            className="py-4 ps-3 pe-4 flex w-full focus:outline-none focus:ring focus:ring-brand-blue"
+                            href={`/${mediaType}/${showId}/reviews`}
                         >
                             Reviews
-                        </button>
+                        </Link>
                     </li>
                 )}
-                {props.tv && (
+                {mediaType === 'tv' && (
                     <li
-                        className={`${currentPage === 'seasons' ? 'bg-slate-900 border-slate-400 ' : 'border-slate-600'} border-l-4 pe-4`}
+                        className={`${currentPage === 'seasons' || currentPage === 'season' ? 'bg-slate-900 border-slate-400 ' : 'border-slate-600'} border-s-2 `}
                     >
-                        <button
-                            className="py-4 ps-3 pe-4 flex w-full"
-                            onClick={() => {
-                                setCurrentPage('seasons');
-                                props.setIt('seasons');
-                            }}
+                        <Link
+                            className="py-4 ps-3 pe-4 flex w-full focus:outline-none focus:ring focus:ring-brand-blue"
+                            href={`/${mediaType}/${showId}/seasons`}
                         >
                             Seasons
-                        </button>
+                        </Link>
                     </li>
                 )}
             </ul>

@@ -1,8 +1,7 @@
 import Text from '@/app/components/Text';
-import { cookies } from 'next/headers';
 import Image from 'next/image';
-import { headers } from 'next/headers';
 import BackButton from '@/app/components/BackButton';
+import ContentPageNav from '@/app/components/ContentPageNav';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -11,16 +10,6 @@ interface LayoutProps {
 
 export default async function Layout({ children, params }: LayoutProps) {
     let personId = params.id;
-
-    const sessionId = cookies().get('sessionId')?.value;
-    const accountId = cookies().get('accId')?.value;
-
-    const headersList = headers();
-    const header_url = headersList.get('x-url') || '';
-    const pathname = headersList.get('x-pathname');
-    const origin_url = headersList.get('x-origin');
-
-    console.log(header_url, pathname, origin_url);
 
     const options = {
         method: 'GET',
@@ -40,7 +29,6 @@ export default async function Layout({ children, params }: LayoutProps) {
     }
 
     let deets = await res.json();
-    console.log(deets);
 
     function getDate(birthday: string) {
         let birthArray = birthday.split('-');
@@ -80,7 +68,7 @@ export default async function Layout({ children, params }: LayoutProps) {
 
     return (
         <main className="m-2 md:m-4 lg:m-8">
-            <BackButton />
+            <BackButton main={true} />
             <div className="grid gap-4 md:flex">
                 {deets.profile_path ?
                     <Image
@@ -142,6 +130,8 @@ export default async function Layout({ children, params }: LayoutProps) {
                     )}
                 </div>
             </div>
+            <ContentPageNav />
+            <BackButton main={false} />
             {children}
         </main>
     );

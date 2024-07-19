@@ -1,15 +1,15 @@
 'use client';
 import { useEffect, useState } from 'react';
 import NewCard from './NewCard';
+import Link from 'next/link';
 
 export default function SmallCreditsList(props: {
-    setIt: any;
     creds: any;
+    showId: string;
     cont?: string;
     personId?: string;
 }) {
     const [windowWidth, setWindowWidth] = useState<number>();
-    console.log(props.creds);
     let cast = props.creds.cast;
     let crew = props.creds.crew;
     let ca = cast;
@@ -30,14 +30,11 @@ export default function SmallCreditsList(props: {
             {ca && ca.length > 0 && (
                 <div>
                     <h2 className="text-xl mb-2">Cast</h2>
-                    <ul className="flex flex-wrap gap-4 justify-start">
+                    <ul className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6 justify-start mb-8">
                         {ca.map(
                             (p: any, index: number) =>
-                                index < 4 && (
-                                    <li
-                                        key={index}
-                                        className="flex flex-col justify-between "
-                                    >
+                                index < 6 && (
+                                    <li key={index}>
                                         <NewCard
                                             data={p}
                                             type={props.cont}
@@ -55,7 +52,7 @@ export default function SmallCreditsList(props: {
             {cr && cr.length > 0 && (
                 <div>
                     <h2 className="text-xl mb-2">Crew</h2>
-                    <ul className="flex flex-wrap gap-4 justify-start">
+                    <ul className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6 justify-start mb-8">
                         {cr.map(
                             (p: any, index: number) =>
                                 index < 4 && (
@@ -77,14 +74,12 @@ export default function SmallCreditsList(props: {
                     </ul>
                 </div>
             )}
-            <button
+            <Link
                 className="self-end mb-10 mx-8"
-                onClick={() => {
-                    props.setIt('credits');
-                }}
+                href={`${props.showId}/credits`}
             >
                 See All Credits
-            </button>
+            </Link>
         </div>
     );
 }

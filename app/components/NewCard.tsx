@@ -43,7 +43,7 @@ export default function NewCard(props: {
 
     return (
         <Link
-            className="grid grid-cols-[100px_175px] h-[150px] gap-2 bg-slate-600/40 hover:bg-slate-600/70 transition"
+            className="p-[5px] grid grid-cols-[100px_auto] h-[160px] gap-2 bg-slate-700 hover:bg-slate-700/40 hover:ring-2  hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
             href={`/${type}/${props.showId ? props.showId : p.id}/${props.seasons ? `season/${props.seasonNum}/` : ''}`}
         >
             {p.profile_path || p.poster_path ?
@@ -58,12 +58,12 @@ export default function NewCard(props: {
                     no image available
                 </div>
             }
-            <div className="flex flex-col gap-2">
-                <p className="text-sm text-wrap mt-4 font-light">
+            <div className="flex flex-col gap-2 overflow-scroll">
+                <p className="text-sm text-wrap mt-4 font-light w-fit">
                     {p.name || p.title}
                 </p>
                 {props.search || !props.credits || (
-                    <p className="text-sm text-slate-300/80">
+                    <p className="text-sm text-wrap text-slate-300/80 w-fit">
                         {`as ${
                             p.character ||
                             (p.roles && p.roles[0].character) ||

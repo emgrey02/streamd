@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import Image from 'next/image';
 import { headers } from 'next/headers';
 import BackButton from '@/app/components/BackButton';
+import ContentPageNav from '@/app/components/ContentPageNav';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -85,7 +86,6 @@ export default async function Layout({ children, params }: LayoutProps) {
 
     return (
         <main className="m-2 md:m-4 lg:m-8">
-            <BackButton />
             <div className="grid gap-4 md:flex">
                 {deets.poster_path ?
                     <Image
@@ -150,6 +150,8 @@ export default async function Layout({ children, params }: LayoutProps) {
                     :   <p>no overview available.</p>}
                 </div>
             </div>
+            <ContentPageNav />
+            <BackButton main={true} />
             {children}
         </main>
     );
