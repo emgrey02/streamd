@@ -28,7 +28,7 @@ export default function SearchResults(props: {
 
     return (
         <main>
-            <BackButton />
+            <BackButton main={true} />
             <SearchBar searchTerm={props.query} />
             <Pagination
                 page={props.data.page}

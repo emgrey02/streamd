@@ -124,7 +124,7 @@ export default async function Page({
                 :   `${capitalizeCategory(params.cat)} ${renameContent(params.content)}`
                 }
             </h1>
-            <BackButton />
+            <BackButton main={true} />
             <Pagination
                 page={+params.page}
                 totalPages={totalPages}
