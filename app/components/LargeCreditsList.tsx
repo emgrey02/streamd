@@ -24,7 +24,7 @@ export default function LargeCreditsList(props: {
     }
 
     return (
-        <ul className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-7 gap-4 gap-y-6 justify-start mb-8">
+        <ul className="grid grid-cols-1 @lg:grid-cols-2 @2xl:grid-cols-3 gap-4 gap-y-6 justify-start mb-8">
             {data &&
                 data.map((m: any, index: number) => (
                     <li data-num={index} key={index}>

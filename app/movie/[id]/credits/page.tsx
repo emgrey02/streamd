@@ -21,34 +21,38 @@ export default async function MovieCredits({
     );
 
     if (!res.ok) {
-        console.error('failed to fetch show data');
+        console.error('failed to fetch movie credits');
     }
 
     let deets = await res.json();
 
     return (
-        <div id="credits" className="my-8 flex flex-col gap-4">
+        <div id="credits" className="grid md:grid-cols-2 gap-10">
             <div>
                 <h2 className="text-xl mb-4 font-medium">Cast</h2>
-                <LargeCreditsList
-                    data={deets.cast}
-                    type="tv"
-                    search={false}
-                    credits={true}
-                    fwr={false}
-                    seasons={false}
-                />
+                <div className="@container">
+                    <LargeCreditsList
+                        data={deets.cast}
+                        type="tv"
+                        search={false}
+                        credits={true}
+                        fwr={false}
+                        seasons={false}
+                    />
+                </div>
             </div>
             <div>
                 <h2 className="text-xl mb-4 font-medium">Crew</h2>
-                <LargeCreditsList
-                    data={deets.crew}
-                    type="tv"
-                    search={false}
-                    credits={true}
-                    fwr={false}
-                    seasons={false}
-                />
+                <div className="@container">
+                    <LargeCreditsList
+                        data={deets.crew}
+                        type="tv"
+                        search={false}
+                        credits={true}
+                        fwr={false}
+                        seasons={false}
+                    />
+                </div>
             </div>
         </div>
     );

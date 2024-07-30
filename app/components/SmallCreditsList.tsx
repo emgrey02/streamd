@@ -10,30 +10,25 @@ export default function SmallCreditsList(props: {
     personId?: string;
 }) {
     const [windowWidth, setWindowWidth] = useState<number>();
-    let cast = props.creds.cast;
-    let crew = props.creds.crew;
-    let ca = cast;
-    let cr = crew;
-
-    if (props.personId) {
-        ca = cast.toReversed();
-        cr = crew.toReversed();
-    }
+    let creds = props.creds;
 
     useEffect(() => {
         let width = window.innerWidth;
         setWindowWidth(width);
     }, [windowWidth]);
 
+    console.log(creds.length);
+
     return (
-        <div className="flex flex-col gap-10">
-            {ca && ca.length > 0 && (
-                <div>
-                    <h2 className="text-xl mb-2">Cast</h2>
-                    <ul className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6 justify-start mb-8">
-                        {ca.map(
+        <div className={`flex flex-col`}>
+            {creds && creds.length > 0 ?
+                <div className="@container">
+                    <ul
+                        className={`grid ${creds.length == 1 && '@lg:grid-cols-1 @2xl:grid-cols-1'} ${creds.length == 2 && `@lg:grid-cols-2 @2xl:grid-cols-2`} ${creds.length > 2 && 'grid-cols-1 @lg:grid-cols-2 @2xl:grid-cols-3'} gap-4 gap-y-6 justify-start`}
+                    >
+                        {creds.map(
                             (p: any, index: number) =>
-                                index < 6 && (
+                                index < 4 && (
                                     <li key={index}>
                                         <NewCard
                                             data={p}
@@ -48,36 +43,8 @@ export default function SmallCreditsList(props: {
                         )}
                     </ul>
                 </div>
-            )}
-            {cr && cr.length > 0 && (
-                <div>
-                    <h2 className="text-xl mb-2">Crew</h2>
-                    <ul className="grid grid-cols-1 min-[420px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 gap-y-6 justify-start mb-8">
-                        {cr.map(
-                            (p: any, index: number) =>
-                                index < 4 && (
-                                    <li
-                                        key={index}
-                                        className="flex flex-col justify-between "
-                                    >
-                                        <NewCard
-                                            data={p}
-                                            type={props.cont}
-                                            search={false}
-                                            credits={true}
-                                            fwr={false}
-                                            seasons={false}
-                                        />
-                                    </li>
-                                )
-                        )}
-                    </ul>
-                </div>
-            )}
-            <Link
-                className="self-end mb-10 mx-8"
-                href={`${props.showId}/credits`}
-            >
+            :   <div>no credits available...</div>}
+            <Link className="self-end my-2" href={`${props.showId}/credits`}>
                 See All Credits
             </Link>
         </div>

@@ -25,7 +25,7 @@ export default async function Layout({ children, params }: LayoutProps) {
     );
 
     if (!res.ok) {
-        console.error('failed to fetch movie data');
+        console.error('failed to fetch person data');
     }
 
     let deets = await res.json();

@@ -100,7 +100,7 @@ export default async function Season({
             </div>
             <div>
                 {deets.credits && (
-                    <>
+                    <div className="@container">
                         <h3 className="mb-2 text-xl">Cast</h3>
                         <LargeCreditsList
                             data={deets.credits.cast}
@@ -110,7 +110,7 @@ export default async function Season({
                             fwr={false}
                             seasons={false}
                         />
-                    </>
+                    </div>
                 )}
             </div>
             <div>

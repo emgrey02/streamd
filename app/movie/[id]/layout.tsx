@@ -4,7 +4,6 @@ import SubmitRating from '@/app/components/SubmitRating';
 import Text from '@/app/components/Text';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
-import { headers } from 'next/headers';
 import BackButton from '@/app/components/BackButton';
 import ContentPageNav from '@/app/components/ContentPageNav';
 
@@ -19,13 +18,6 @@ export default async function Layout({ children, params }: LayoutProps) {
     const sessionId = cookies().get('sessionId')?.value;
     const accountId = cookies().get('accId')?.value;
 
-    const headersList = headers();
-    const header_url = headersList.get('x-url') || '';
-    const pathname = headersList.get('x-pathname');
-    const origin_url = headersList.get('x-origin');
-
-    console.log(header_url, pathname, origin_url);
-
     const options = {
         method: 'GET',
         headers: {
@@ -39,31 +31,12 @@ export default async function Layout({ children, params }: LayoutProps) {
         options
     );
 
-    let creditsRes = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`,
-        options
-    );
-
-    let reviewsRes = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/reviews?language=en-US&page=1`,
-        options
-    );
-
     if (!res.ok) {
         console.error('failed to fetch movie data');
     }
 
-    if (!creditsRes.ok) {
-        console.error('failed to fetch movie cast & crew data');
-    }
-
-    if (!reviewsRes.ok) {
-        console.error('failed to fetch movie reviews');
-    }
-
     let deets = await res.json();
-    let creds = await creditsRes.json();
-    let reviews = await reviewsRes.json();
+
     function getDate(birthday: string) {
         let birthArray = birthday.split('-');
         let months = [
@@ -86,7 +59,8 @@ export default async function Layout({ children, params }: LayoutProps) {
 
     return (
         <main className="m-2 md:m-4 lg:m-8">
-            <div className="grid gap-4 md:flex">
+            <BackButton main={true} />
+            <div className="grid gap-4 md:flex md:h-min">
                 {deets.poster_path ?
                     <Image
                         className="max-h-600"
@@ -100,7 +74,7 @@ export default async function Layout({ children, params }: LayoutProps) {
                         {deets.title} poster unavailable
                     </div>
                 }
-                <div className="flex flex-col gap-8">
+                <div className="flex flex-col gap-4">
                     <div>
                         <h1 className="text-2xl font-bold text-slate-200">
                             {deets.title}
@@ -108,10 +82,10 @@ export default async function Layout({ children, params }: LayoutProps) {
                         <p className="font-light">movie</p>
                     </div>
                     <p className="font-light italic">{deets.tagline}</p>
-                    <Genres data={deets.genres} />
+                    <Genres data={deets.genres} content="movie" />
                     {accountId && sessionId && (
                         <>
-                            <div className="grid grid-cols-2 w-64">
+                            <div className="grid grid-cols-2 w-fit">
                                 <FavorWatchButton
                                     whichOne="favorite"
                                     content="movie"
@@ -151,7 +125,7 @@ export default async function Layout({ children, params }: LayoutProps) {
                 </div>
             </div>
             <ContentPageNav />
-            <BackButton main={true} />
+            <BackButton main={false} />
             {children}
         </main>
     );

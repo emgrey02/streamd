@@ -77,8 +77,8 @@ export default function ImageSlider(props: {
     return (
         <>
             {images.length > 0 && (
-                <>
-                    <h2 className="text-lg">{props.type}</h2>
+                <div className="col-span-2">
+                    <h2 className="text-lg mb-2 font-medium">{props.type}</h2>
                     <div className="bg-slate-950/80 px-4 py-6 md:py-10 md:px-8">
                         <ul
                             id={props.type}
@@ -101,19 +101,19 @@ export default function ImageSlider(props: {
                                 </li>
                             ))}
                         </ul>
-                        <div className="flex justify-center">
+                        <div className="flex justify-center mt-4">
                             <button
-                                className="text-xl md:text-3xl lg:text-6xl disabled:text-slate-700"
+                                className="text-xl md:text-3xl lg:text-6xl disabled:text-slate-700 bg-slate-900/70 my-4 px-4"
                                 onClick={() => setSlideNum(slideNum - 1)}
                                 disabled={!images[`${slideNum - 1}`]}
                             >
                                 &#171;
                             </button>
-                            <ul className="grid place-items-center mx-8 my-4 lg:mx-20 lg:my-10">
+                            <ul className="grid place-items-center">
                                 {images && images[`${slideNum}`] && (
-                                    <li className="">
+                                    <li className="w-full h-full">
                                         <Image
-                                            className="max-h-dvh w-full px-8"
+                                            className="w-full px-8"
                                             src={`https://image.tmdb.org/t/p/w1280/${images[`${slideNum}`].file_path}`}
                                             alt={`backdrop image`}
                                             width="1280"
@@ -123,7 +123,7 @@ export default function ImageSlider(props: {
                                 )}
                             </ul>
                             <button
-                                className="text-xl md:text-3xl lg:text-6xl disabled:text-slate-700"
+                                className="text-xl md:text-3xl lg:text-6xl disabled:text-slate-700 bg-slate-900/70 my-4 px-4"
                                 onClick={() => setSlideNum(slideNum + 1)}
                                 disabled={!images[`${slideNum + 1}`]}
                             >
@@ -131,7 +131,7 @@ export default function ImageSlider(props: {
                             </button>
                         </div>
                     </div>
-                </>
+                </div>
             )}
         </>
     );

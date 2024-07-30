@@ -113,7 +113,7 @@ export default async function Page({
 
     return (
         <main className="mx-4 my-8">
-            <h1 className="text-xl">
+            <h1 className="text-xl text-center">
                 {(
                     params.content === 'trending' ||
                     params.cat === 'airing_today' ||
@@ -131,21 +131,27 @@ export default async function Page({
                 cat={params.cat}
                 content={params.content}
                 search={false}
+                keyword={false}
+                genre={false}
             />
-            <LargeCreditsList
-                data={content.results}
-                type={type}
-                search={false}
-                credits={false}
-                fwr={fwr}
-                seasons={false}
-            />
+            <div className="@container">
+                <LargeCreditsList
+                    data={content.results}
+                    type={type}
+                    search={false}
+                    credits={false}
+                    fwr={fwr}
+                    seasons={false}
+                />
+            </div>
             <Pagination
                 page={+params.page}
                 totalPages={totalPages}
                 cat={params.cat}
                 content={params.content}
                 search={false}
+                keyword={false}
+                genre={false}
             />
         </main>
     );

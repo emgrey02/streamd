@@ -21,13 +21,13 @@ export default async function ReviewsArea({
     );
 
     if (!res.ok) {
-        console.error('failed to fetch show data');
+        console.error('failed to fetch show reviews');
     }
 
     let r = await res.json();
 
     return (
-        <div id="reviews" className="my-8 flex flex-col gap-4">
+        <div id="reviews" className="flex flex-col gap-4">
             <Reviews reviews={r} />
         </div>
     );

@@ -2,6 +2,8 @@ import SmallCreditsList from '@/app/components/SmallCreditsList';
 import ContentPageNav from '@/app/components/ContentPageNav';
 import Image from 'next/image';
 import ImageSlider from '@/app/components/ImageSlider';
+import Genres from '@/app/components/Genres';
+import { Ultra } from 'next/font/google';
 
 export default async function Movie({ params }: { params: { id: string } }) {
     let movieId = params.id;
@@ -15,7 +17,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
     };
 
     const res = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}?append_to_response=images,credits,keywords,recommendations,similar,videos,watch_providers,reviews`,
+        `https://api.themoviedb.org/3/movie/${movieId}?append_to_response=images,credits,keywords,recommendations,similar,videos,watch/providers,reviews`,
         options
     );
 
@@ -24,12 +26,15 @@ export default async function Movie({ params }: { params: { id: string } }) {
     }
 
     const content = await res.json();
+    console.log(content);
+    console.log(content.revenue);
 
     function convertQuantity(amt: number) {
         let str = amt.toString().split('');
         str.splice(-3, 0, ',');
         str.splice(-7, 0, ',');
         if (str.length >= 12) str.splice(-12, 0, ',');
+        if (str.length === 8) str.splice(0, 1);
         let finalStr = str.join('');
         return `$${finalStr}`;
     }
@@ -42,74 +47,118 @@ export default async function Movie({ params }: { params: { id: string } }) {
     }
 
     return (
-        <main className="flex flex-col gap-4">
-            {content.budget !== 0 ||
-                content.revenue !== 0 ||
-                (content.runtime !== 0 && (
-                    <div className="flex flex-wrap gap-x-8 gap-y-4 p-4 ring-2 ring-slate-700 w-fit mb-8">
-                        {content.budget !== 0 && (
-                            <div className="">
-                                <p className="font-bold tracking-wider">
-                                    Budget
-                                </p>
-                                <p className="tracking-wide ">
-                                    {convertQuantity(content.budget)}
-                                </p>
-                            </div>
-                        )}
-                        {content.origin_country.length !== 0 && (
-                            <div className="">
-                                <p className="font-bold tracking-wider">
-                                    Origin Country
-                                </p>
-                                <p className="tracking-wide ">
-                                    {new Intl.DisplayNames(['en'], {
-                                        type: 'region',
-                                    }).of(content.origin_country[0])}
-                                </p>
-                            </div>
-                        )}
-                        {content.revenue !== 0 && (
-                            <div className=" ">
-                                <p className="font-bold tracking-wider">
-                                    Revenue
-                                </p>
-                                <p className="tracking-wide ">
-                                    {convertQuantity(content.revenue)}
-                                </p>
-                            </div>
-                        )}
-                        {content.runtime !== 0 && (
-                            <div className="">
-                                <p className="font-bold tracking-wider">
-                                    Runtime
-                                </p>
-                                <p className="tracking-wide ">
-                                    {getRuntime(content.runtime)}
-                                </p>
-                            </div>
-                        )}
+        <main className="flex flex-col md:grid md:grid-cols-2 md:gap-10 w-full gap-4">
+            <div className="grid grid-cols-2 gap-10 w-fit h-min mb-2">
+                {content.budget !== 0 && (
+                    <div className="">
+                        <p className="font-medium text-lg mb-2">Budget</p>
+                        <p className="tracking-wide font-light">
+                            {convertQuantity(content.budget)}
+                        </p>
                     </div>
-                ))}
+                )}
+                {content.origin_country.length !== 0 && (
+                    <div className="">
+                        <p className="font-medium text-lg mb-2">
+                            Origin Country
+                        </p>
+                        <p className="tracking-wide font-light">
+                            {new Intl.DisplayNames(['en'], {
+                                type: 'region',
+                            }).of(content.origin_country[0])}
+                        </p>
+                    </div>
+                )}
+                {content.origin_country.length !== 0 && (
+                    <div className="">
+                        <p className="font-medium text-lg mb-2">
+                            Original Language
+                        </p>
+                        <p className="tracking-wide font-light">
+                            {new Intl.DisplayNames(['en'], {
+                                type: 'language',
+                            }).of(content.original_language)}
+                        </p>
+                    </div>
+                )}
+                {content.revenue !== 0 && (
+                    <div className=" ">
+                        <p className="font-medium text-lg mb-2">Revenue</p>
+                        <p className="tracking-wide font-light">
+                            {convertQuantity(content.revenue)}
+                        </p>
+                    </div>
+                )}
+                {content.original_title && (
+                    <div>
+                        <h2 className="mb-2 font-medium text-lg">
+                            Original Title
+                        </h2>
+                        <p className="tracking-wide font-light">
+                            {content.original_title}
+                        </p>
+                    </div>
+                )}
+                {content.runtime !== 0 && (
+                    <div className="">
+                        <p className="font-medium text-lg mb-2">Runtime</p>
+                        <p className="tracking-wide font-light">
+                            {getRuntime(content.runtime)}
+                        </p>
+                    </div>
+                )}
+                {content.status && (
+                    <div>
+                        <h2 className="mb-2 font-medium text-lg">Status</h2>
+                        <p className="tracking-wide font-light">
+                            {content.status}
+                        </p>
+                    </div>
+                )}
+                {content.production_countries &&
+                    content.production_countries.length > 0 && (
+                        <div>
+                            <h2 className="mb-2 font-medium text-lg">
+                                Production Countries
+                            </h2>
+                            <ul className="tracking-wide font-light">
+                                {content.production_countries.map(
+                                    (c: any, index: number) => (
+                                        <li key={index}>{c.name}</li>
+                                    )
+                                )}
+                            </ul>
+                        </div>
+                    )}
+                {content.spoken_languages && (
+                    <div>
+                        <h2 className="mb-2 font-medium text-lg">
+                            Spoken Languages
+                        </h2>
+                        <ul className="tracking-wide font-light">
+                            {content.spoken_languages.map(
+                                (l: any, index: number) => (
+                                    <li key={index}>{l.name}</li>
+                                )
+                            )}
+                        </ul>
+                    </div>
+                )}
+            </div>
 
-            <SmallCreditsList
-                showId={movieId}
-                creds={content.credits}
-                cont="movie"
-            />
             {content.production_companies.length > 0 && (
-                <>
-                    <h2 className="my-2 font-bold text-lg">
+                <div className="my-2 ring-2 ring-slate-700 h-full">
+                    <h2 className="mb-2 font-medium text-lg px-4 pt-3">
                         Production Companies
                     </h2>
-                    <ul className="flex flex-wrap gap-4 ring-2 ring-slate-700 p-2 mb-8 w-fit">
+                    <ul className="flex flex-wrap gap-4 px-2 w-full">
                         {content.production_companies.map(
                             (pc: any, index: number) => (
                                 <li
                                     key={index}
-                                    className="w-[120px] grid grid-rows-[100px_min-content] gap-2 p-2"
+                                    className="w-[120px] grid grid-rows-[min_content_min-content] gap-2 p-2"
                                 >
-                                    <div className="grid place-items-center bg-slate-600 min-w-[100px]">
+                                    <div className="grid place-items-center bg-slate-600 min-w-[100px] min-h-[100px]">
                                         {pc.logo_path ?
                                             <Image
                                                 className="p-2"
@@ -126,15 +175,153 @@ export default async function Movie({ params }: { params: { id: string } }) {
                                     <div>
                                         <p className="text-sm">{pc.name}</p>
                                         <p className="text-xs">
-                                            {pc.origin_country}
+                                            {new Intl.DisplayNames(['en'], {
+                                                type: 'region',
+                                            }).of(content.origin_country[0])}
                                         </p>
                                     </div>
                                 </li>
                             )
                         )}
                     </ul>
+                </div>
+            )}
+
+            {content.keywords && (
+                <div className="col-span-2">
+                    <h2 className="mb-2 font-medium text-lg">Keywords</h2>
+                    <Genres data={content.keywords} content="movie" />
+                </div>
+            )}
+
+            {content['watch/providers'].results.US && (
+                <>
+                    {content['watch/providers'].results.US.rent && (
+                        <div className="ring-2 ring-slate-700 h-full">
+                            <h2 className="mb-2 px-4 pt-3">Rent it</h2>
+                            <ul className="flex flex-wrap gap-4 px-2 w-full">
+                                {content[`watch/providers`].results.US.rent.map(
+                                    (wp: any, index: number) => (
+                                        <li
+                                            key={index}
+                                            className="w-[120px] grid grid-rows-[min_content_min-content] gap-2 p-2"
+                                        >
+                                            <div className="grid place-items-center bg-slate-600 min-w-[100px] min-h-[100px]">
+                                                {wp.logo_path ?
+                                                    <Image
+                                                        className="p-2"
+                                                        src={`https://image.tmdb.org/t/p/w200/${wp.logo_path}`}
+                                                        alt={`logo`}
+                                                        width="100"
+                                                        height="100"
+                                                    />
+                                                :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
+                                                        no logo available
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div>
+                                                <p className="text-sm">
+                                                    {wp.provider_name}
+                                                </p>
+                                            </div>
+                                        </li>
+                                    )
+                                )}
+                            </ul>
+                        </div>
+                    )}
+                    {content['watch/providers'].results.US.buy && (
+                        <div className="ring-2 ring-slate-700 h-full">
+                            <h2 className="mb-2 px-4 pt-3">Buy it</h2>
+                            <ul className="flex flex-wrap gap-4 px-2 w-full">
+                                {content[`watch/providers`].results.US.buy.map(
+                                    (wp: any, index: number) => (
+                                        <li
+                                            key={index}
+                                            className="w-[120px] grid grid-rows-[min_content_min-content] gap-2 p-2"
+                                        >
+                                            <div className="grid place-items-center bg-slate-600 min-w-[100px] min-h-[100px]">
+                                                {wp.logo_path ?
+                                                    <Image
+                                                        className="p-2"
+                                                        src={`https://image.tmdb.org/t/p/w200/${wp.logo_path}`}
+                                                        alt={`logo`}
+                                                        width="100"
+                                                        height="100"
+                                                    />
+                                                :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
+                                                        no logo available
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div>
+                                                <p className="text-sm">
+                                                    {wp.provider_name}
+                                                </p>
+                                            </div>
+                                        </li>
+                                    )
+                                )}
+                            </ul>
+                        </div>
+                    )}
+                    {content['watch/providers'].results.US.flatrate && (
+                        <div className="ring-2 ring-slate-700 h-full">
+                            <h2 className="mb-2 px-4 pt-3">Stream it</h2>
+                            <ul className="flex flex-wrap gap-4 px-2 pb-2 w-fit">
+                                {content[
+                                    `watch/providers`
+                                ].results.US.flatrate.map(
+                                    (wp: any, index: number) => (
+                                        <li
+                                            key={index}
+                                            className="w-[120px] grid grid-rows-[min_content_min-content] gap-2 p-2"
+                                        >
+                                            <div className="grid place-items-center bg-slate-600 min-w-[100px] min-h-[100px]">
+                                                {wp.logo_path ?
+                                                    <Image
+                                                        className="p-2"
+                                                        src={`https://image.tmdb.org/t/p/w200/${wp.logo_path}`}
+                                                        alt={`logo`}
+                                                        width="100"
+                                                        height="100"
+                                                    />
+                                                :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
+                                                        no logo available
+                                                    </div>
+                                                }
+                                            </div>
+                                            <div>
+                                                <p className="text-sm">
+                                                    {wp.provider_name}
+                                                </p>
+                                            </div>
+                                        </li>
+                                    )
+                                )}
+                            </ul>
+                        </div>
+                    )}
                 </>
             )}
+
+            <div className="col-start-1">
+                <h2 className="mb-2 font-medium text-lg">Cast</h2>
+                <SmallCreditsList
+                    showId={movieId}
+                    creds={content.credits.cast}
+                    cont="movie"
+                />
+            </div>
+            <div>
+                <h2 className="mb-2 font-medium text-lg">Crew</h2>
+                <SmallCreditsList
+                    showId={movieId}
+                    creds={content.credits.crew}
+                    cont="movie"
+                />
+            </div>
 
             <ImageSlider images={content.images.backdrops} type="Backdrops" />
 

@@ -25,11 +25,10 @@ export default async function SeasonsArea({
     }
 
     let content = await res.json();
-    console.log(content);
 
     return (
-        <div id="seasons">
-            <h2>Seasons</h2>
+        <div className="@container" id="seasons">
+            <h2 className="font-medium text-lg mb-2">Seasons</h2>
             <LargeCreditsList
                 data={content.seasons}
                 type="tv"

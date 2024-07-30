@@ -1,12 +1,10 @@
 import Text from '@/app/components/Text';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
-import { headers } from 'next/headers';
 import BackButton from '@/app/components/BackButton';
 import Genres from '@/app/components/Genres';
 import FavorWatchButton from '@/app/components/FavorWatchButton';
 import SubmitRating from '@/app/components/SubmitRating';
-import Link from 'next/link';
 import ContentPageNav from '@/app/components/ContentPageNav';
 
 interface LayoutProps {
@@ -60,10 +58,10 @@ export default async function Layout({ children, params }: LayoutProps) {
     }
 
     return (
-        <main className="m-2 md:m-4 lg:m-8 2xl:flex gap-4">
+        <main className="m-2 md:m-4 lg:m-8 grid gap-4">
             <div>
                 <BackButton main={true} />
-                <div className="grid gap-4 md:flex md:h-[600px] h-auto">
+                <div className="grid gap-4 md:flex md:h-min h-auto">
                     {deets.poster_path ?
                         <div>
                             <Image
@@ -78,19 +76,22 @@ export default async function Layout({ children, params }: LayoutProps) {
                             {deets.name} poster unavailable
                         </div>
                     }
-                    <div className="flex flex-col gap-8">
+                    <div className="flex flex-col gap-4">
                         <div>
                             <h1 className="text-2xl font-bold text-slate-200">
                                 {deets.name}
                             </h1>
                             <p className="font-light">tv show</p>
                         </div>
-                        <div className="flex gap-2">
+                        <div className="flex gap-2 text-sm">
                             <p>{deets.number_of_episodes} total episodes</p>
                             <p>-</p>
                             <p>{deets.number_of_seasons} seasons</p>
                         </div>
-                        <Genres data={deets.genres} />
+                        <div className="">
+                            <p className="italic">{deets.tagline}</p>
+                        </div>
+                        <Genres data={deets.genres} content="tv" />
                         {accountId && sessionId && (
                             <>
                                 <div className="grid grid-cols-2 w-fit">

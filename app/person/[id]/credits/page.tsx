@@ -22,47 +22,43 @@ export default async function PersonCredits({
     );
 
     if (!res.ok) {
-        console.error('failed to fetch movie data');
+        console.error('failed to fetch person data');
     }
 
     const content = await res.json();
 
     return (
-        <>
-            <div id="cast" className="flex flex-col mb-8">
-                <h1 className="text-xl font-bold">Cast Credits</h1>
-                <Link
-                    href="#crew"
-                    className="text-sm hover:underline underline-offset-2"
-                >
-                    Skip to Crew Credits
-                </Link>
+        <div className="grid md:grid-cols-2 gap-10">
+            <div>
+                <div id="cast" className="flex flex-col mb-2">
+                    <h1 className="text-lg font-medium">Cast Credits</h1>
+                </div>
+                <div className="@container">
+                    <LargeCreditsList
+                        data={content.combined_credits.cast}
+                        type="multi"
+                        search={false}
+                        credits={true}
+                        fwr={false}
+                        seasons={false}
+                    />
+                </div>
             </div>
-            <LargeCreditsList
-                data={content.combined_credits.cast}
-                type="multi"
-                search={false}
-                credits={true}
-                fwr={false}
-                seasons={false}
-            />
-            <div id="crew" className="flex flex-col mb-8">
-                <h2 className="text-xl font-bold">Crew Credits</h2>
-                <Link
-                    href="#cast"
-                    className="text-sm hover:underline underline-offset-2"
-                >
-                    Back to Cast Credits
-                </Link>
+            <div>
+                <div id="crew" className="flex flex-col mb-2">
+                    <h2 className="text-lg font-medium">Crew Credits</h2>
+                </div>
+                <div className="@container">
+                    <LargeCreditsList
+                        data={content.combined_credits.crew}
+                        type="multi"
+                        search={false}
+                        credits={true}
+                        fwr={false}
+                        seasons={false}
+                    />
+                </div>
             </div>
-            <LargeCreditsList
-                data={content.combined_credits.crew}
-                type="multi"
-                search={false}
-                credits={true}
-                fwr={false}
-                seasons={false}
-            />
-        </>
+        </div>
     );
 }

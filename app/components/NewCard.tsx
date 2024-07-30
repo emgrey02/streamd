@@ -43,7 +43,7 @@ export default function NewCard(props: {
 
     return (
         <Link
-            className="p-[5px] grid grid-cols-[100px_auto] h-[160px] gap-2 bg-slate-700 hover:bg-slate-700/40 hover:ring-2  hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
+            className="p-[5px] grid grid-cols-[100px_auto] h-[160px] gap-2 bg-slate-700 hover:bg-slate-700/40 hover:ring-2 hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
             href={`/${type}/${props.showId ? props.showId : p.id}/${props.seasons ? `season/${props.seasonNum}/` : ''}`}
         >
             {p.profile_path || p.poster_path ?
@@ -63,15 +63,21 @@ export default function NewCard(props: {
                     {p.name || p.title}
                 </p>
                 {props.search || !props.credits || (
-                    <p className="text-sm text-wrap text-slate-300/80 w-fit">
-                        {`as ${
-                            p.character ||
+                    <>
+                        {p.character ||
                             (p.roles && p.roles[0].character) ||
                             p.job ||
-                            (p.jobs && p.jobs[0].job) ||
-                            'unknown'
-                        }`}
-                    </p>
+                            (p.jobs && p.jobs[0].job && (
+                                <p className="text-sm text-wrap text-slate-300/80 w-fit">
+                                    {`as ${
+                                        p.character ||
+                                        (p.roles && p.roles[0].character) ||
+                                        p.job ||
+                                        (p.jobs && p.jobs[0].job)
+                                    }`}
+                                </p>
+                            ))}
+                    </>
                 )}
                 {type == 'tv' && props.seasons && p.air_date && (
                     <>

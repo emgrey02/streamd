@@ -10,19 +10,53 @@ export default function Pagination(props: {
     query?: string;
     content?: string;
     search: boolean;
+    keyword: boolean;
+    genre: boolean;
 }) {
     const page = props.page;
     const [paginationRange, setPaginationRange] = useState<any[]>();
-    const router = useRouter();
+    const [backUrl, setBackUrl] = useState('');
+    const [nextUrl, setNextUrl] = useState('');
 
     function range(start: number, end: number) {
         let length = end - start + 1;
         return Array.from({ length }, (v: unknown, idx: number) => idx + start);
     }
 
+    console.log(props.cat);
+    console.log(props.keyword);
+    console.log(props.content);
+
     useMemo(() => {
         if (6 >= props.totalPages) {
             setPaginationRange(range(1, props.totalPages));
+        }
+
+        if (props.search && !props.keyword && !props.genre) {
+            setBackUrl(
+                `/search/${props.cat}?query=${props.query}&page=${page - 1}`
+            );
+            setNextUrl(
+                `/search/${props.cat}?query=${props.query}&page=${props.page + 1}`
+            );
+        }
+        if (props.keyword) {
+            setBackUrl(
+                `/search/keyword-${props.cat}?query=${props.query}&page=${page - 1}`
+            );
+            setNextUrl(
+                `/search/keyword-${props.cat}?query=${props.query}&page=${props.page + 1}`
+            );
+        } else if (props.genre && props.query) {
+            setBackUrl(
+                `/search/genre-${props.cat}?query=${encodeURIComponent(props.query)}&page=${page - 1}`
+            );
+            setNextUrl(
+                `/search/genre-${props.cat}?query=${encodeURIComponent(props.query)}&page=${props.page + 1}`
+            );
+        } else {
+            setBackUrl(`/${props.content}/${props.cat}/${+page - 1}`);
+            setNextUrl(`/${props.content}/${props.cat}/${+page + 1}`);
         }
 
         const leftSiblingIndex = Math.max(props.page - 1, 1);
@@ -65,16 +99,12 @@ export default function Pagination(props: {
     return (
         <div className="flex justify-center my-4">
             <div className="w-full h-full flex justify-center">
-                <ul className="grid gap-6 items-center grid-cols-9 pointer">
+                <ul className="flex gap-6 items-center  pointer">
                     <li key="previous" className="grid items-center">
                         {+page > 1 && (
                             <Link
                                 className="h-full flex gap-2 justify-start items-center ps-2 py-1"
-                                href={
-                                    props.search ?
-                                        `/search/${props.cat}?query=${props.query}&page=${page - 1}`
-                                    :   `/${props.content}/${props.cat}/${+page - 1}`
-                                }
+                                href={backUrl}
                             >
                                 <p className="text-3xl font-bold mb-1">
                                     &#171;
@@ -89,9 +119,14 @@ export default function Pagination(props: {
                             :   <li key={index}>
                                     <Link
                                         href={
-                                            props.search ?
+                                            props.keyword ?
+                                                `/search/keyword-${props.cat}?query=${props.query}&page=${num}`
+                                            : props.genre ?
+                                                `/search/genre-${props.cat}?query=${props.query}&page=${num}`
+                                            : props.search ?
                                                 `/search/${props.cat}?query=${props.query}&page=${num}`
                                             :   `/${props.content}/${props.cat}/${num}`
+
                                         }
                                         className={`${num === page && 'underline underline-offset-2'}`}
                                     >
@@ -107,12 +142,8 @@ export default function Pagination(props: {
                     >
                         {+page < +props.totalPages && (
                             <Link
-                                className=" h-full flex gap-2 justify-end items-center pe-2 py-1"
-                                href={
-                                    props.search ?
-                                        `/search/${props.cat}?query=${props.query}&page=${props.page + 1}`
-                                    :   `/${props.content}/${props.cat}/${+page + 1}`
-                                }
+                                className="h-full flex gap-2 justify-end items-center pe-2 py-1"
+                                href={nextUrl}
                             >
                                 <p className="text-3xl font-bold mb-1">
                                     &#187;

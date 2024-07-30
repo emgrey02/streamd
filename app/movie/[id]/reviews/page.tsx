@@ -21,7 +21,7 @@ export default async function ReviewsArea({
     );
 
     if (!res.ok) {
-        console.error('failed to fetch show data');
+        console.error('failed to fetch movie reviews');
     }
 
     let r = await res.json();

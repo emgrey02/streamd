@@ -30,8 +30,6 @@ export default function ContentList({
     const onMouseLeave = () => setIsHovered(false);
 
     let capCat: string;
-    console.log(content);
-    console.log(cat);
 
     useEffect(() => {
         async function retrieveContent() {

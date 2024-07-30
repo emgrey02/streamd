@@ -42,7 +42,7 @@ export default function Text(props: { text: string }) {
         setExpandedText(false);
     }
     return (
-        <div className="relative ">
+        <div className="relative w-fit">
             <p
                 ref={containerRef}
                 className={`max-w-2xl leading-relaxed ${!expandedText ? 'line-clamp-3' : 'bg-slate-800'} transition`}

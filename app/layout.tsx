@@ -25,9 +25,9 @@ export default async function RootLayout({
     const sessionId = cookieStore.get('sessionId')?.value;
 
     return (
-        <html lang="en">
+        <html className="flex justify-center" lang="en">
             <body
-                className={`${inter.className} p-2 w-full h-full relative flex flex-col justify-between bg-slate-800 text-gray-300 min-h-svh`}
+                className={`${inter.className} p-2 w-full h-full relative flex flex-col justify-between bg-slate-800 text-gray-300 min-h-svh max-w-7xl`}
             >
                 <main>
                     <nav className="flex justify-between w-full py-2 px-4 my-2">

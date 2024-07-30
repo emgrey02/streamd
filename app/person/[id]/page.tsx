@@ -26,18 +26,29 @@ export default async function PersonPage({
     );
 
     if (!res.ok) {
-        console.error('failed to fetch movie data');
+        console.error('failed to fetch person data');
     }
 
     const content = await res.json();
 
     return (
         <main className="my-4">
-            <SmallCreditsList
-                creds={content.combined_credits}
-                showId={personId}
-                personId={personId}
-            />
+            <div>
+                <h2 className="font-medium text-lg mb-2">Cast Credits</h2>
+                <SmallCreditsList
+                    creds={content.combined_credits.cast}
+                    showId={personId}
+                    personId={personId}
+                />
+            </div>
+            <div>
+                <h2 className="font-medium text-lg mb-2">Crew Credits</h2>
+                <SmallCreditsList
+                    creds={content.combined_credits.crew}
+                    showId={personId}
+                    personId={personId}
+                />
+            </div>
         </main>
     );
 }

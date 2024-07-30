@@ -11,6 +11,7 @@ export default function EpisodeList(props: {
     console.log(data);
     console.log(props.showId);
     console.log(props.seasonNum);
+    console.log(data.length);
 
     function getDate(birthday: string) {
         let birthArray = birthday.split('-');
@@ -48,7 +49,7 @@ export default function EpisodeList(props: {
                     {data.map((e: any, index: number) => (
                         <li key={index}>
                             <Link
-                                className="flex gap-4 bg-slate-700 p-2"
+                                className="flex gap-4 bg-slate-700 p-2 hover:bg-slate-700/40 hover:ring-2 hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
                                 href={`/tv/${props.showId}/season/${props.seasonNum}/episode/${e.episode_number}`}
                             >
                                 <div className="flex items-center">
@@ -83,15 +84,15 @@ export default function EpisodeList(props: {
                         </li>
                     ))}
                 </ul>
-            :   <div className="my-2">
+            :   <div className={`@container my-2`}>
                     <Link
-                        className="flex gap-4 bg-slate-700 p-2 hover:bg-slate-700/40 hover:ring-2 focus:outline-none focus:ring focus:ring-brand-blue hover:ring-brand-blue/20"
+                        className="flex flex-col @md:grid @md:grid-cols-[min-content_auto] gap-4 bg-slate-700 p-2 hover:bg-slate-700/40 hover:ring-2 focus:outline-none focus:ring focus:ring-brand-blue hover:ring-brand-blue/20 "
                         href={`/tv/${props.showId}/season/${props.seasonNum}/episode/${data.episode_number}`}
                     >
-                        <div className="flex items-center">
+                        <div className="w-[150px] md:w-[250px]">
                             {data.still_path ?
                                 <Image
-                                    className="h-auto w-[150px] md:w-[250px]"
+                                    className=""
                                     src={`https://image.tmdb.org/t/p/w400${data.still_path}`}
                                     alt="tv poster"
                                     width={250}

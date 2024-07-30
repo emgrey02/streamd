@@ -104,19 +104,19 @@ export default async function Episode({
                         <h2 className="font-bold">Air Date</h2>
                         <p>{getDate(deets.air_date)}</p>
                     </div>
+                    {sessionId && (
+                        <SubmitRating
+                            content="tv"
+                            id={+showId}
+                            sessionId={sessionId}
+                            voteAvg={deets.vote_average}
+                            totalVotes={deets.vote_count}
+                            seasonNum={seasonNum}
+                            episodeNum={episodeNum}
+                        />
+                    )}
                 </div>
             </div>
-            {sessionId && (
-                <SubmitRating
-                    content="tv"
-                    id={+showId}
-                    sessionId={sessionId}
-                    voteAvg={deets.vote_average}
-                    totalVotes={deets.vote_count}
-                    seasonNum={seasonNum}
-                    episodeNum={episodeNum}
-                />
-            )}
 
             {deets.overview && (
                 <div className="flex flex-col">
@@ -125,7 +125,7 @@ export default async function Episode({
                 </div>
             )}
             {deets.crew.length > 0 && (
-                <>
+                <div className="@container">
                     <p className="text-xl">Crew</p>
                     <LargeCreditsList
                         data={deets.crew}
@@ -135,10 +135,10 @@ export default async function Episode({
                         fwr={false}
                         seasons={false}
                     />
-                </>
+                </div>
             )}
             {deets.guest_stars.length > 0 && (
-                <>
+                <div className="@container">
                     <p className="text-xl">Guest Stars</p>
                     <LargeCreditsList
                         data={deets.guest_stars}
@@ -148,7 +148,7 @@ export default async function Episode({
                         fwr={false}
                         seasons={false}
                     />
-                </>
+                </div>
             )}
         </div>
     );
