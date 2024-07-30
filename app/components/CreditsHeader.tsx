@@ -92,7 +92,9 @@ export default function CreditsHeader(props: { data: any; type: string }) {
                                     :   getDate(c.release_date)}
                                 </p>
                             </div>
-                            {c.genres.length > 0 && <Genres data={c.genres} />}
+                            {c.genres.length > 0 && (
+                                <Genres data={c.genres} content={props.type} />
+                            )}
                         </>
                     }
                     <Link href={`/${type}/${props.data.id}`}>
