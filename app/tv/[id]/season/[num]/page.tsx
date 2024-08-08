@@ -99,6 +99,15 @@ export default async function Season({
                 </div>
             </div>
             <div>
+                {deets.episodes && (
+                    <EpisodeList
+                        data={deets.episodes}
+                        showId={showId}
+                        seasonNum={seasonNum}
+                    />
+                )}
+            </div>
+            <div>
                 {deets.credits && (
                     <div className="@container">
                         <h3 className="mb-2 text-xl">Cast</h3>
@@ -111,15 +120,6 @@ export default async function Season({
                             seasons={false}
                         />
                     </div>
-                )}
-            </div>
-            <div>
-                {deets.episodes && (
-                    <EpisodeList
-                        data={deets.episodes}
-                        showId={showId}
-                        seasonNum={seasonNum}
-                    />
                 )}
             </div>
         </div>

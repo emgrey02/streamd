@@ -47,7 +47,6 @@ export default async function Search({
     console.log(search);
 
     if (genre) {
-        console.log('yes genre');
         movieRes = await fetch(
             `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${search.split('--')[0]}'`,
             options
@@ -68,20 +67,20 @@ export default async function Search({
         );
     } else {
         movieRes = await fetch(
-            `https://api.themoviedb.org/3/search/movie?query=${search}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
+            `https://api.themoviedb.org/3/search/movie?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
             options
         );
         tvRes = await fetch(
-            `https://api.themoviedb.org/3/search/tv?query=${search}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
+            `https://api.themoviedb.org/3/search/tv?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
             options
         );
         peopleRes = await fetch(
-            `https://api.themoviedb.org/3/search/person?query=${search}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
+            `https://api.themoviedb.org/3/search/person?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
             options
         );
 
         allRes = await fetch(
-            `https://api.themoviedb.org/3/search/multi?query=${search}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
+            `https://api.themoviedb.org/3/search/multi?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
             options
         );
     }

@@ -29,29 +29,24 @@ export default async function RootLayout({
             <body
                 className={`${inter.className} p-2 w-full h-full relative flex flex-col justify-between bg-slate-800 text-gray-300 min-h-svh max-w-7xl`}
             >
-                <main>
-                    <nav className="flex justify-between w-full py-2 px-4 my-2">
-                        <h1 className="font-bold text-lg text-brand-blue tracking-widest">
-                            <Link href="/">streamie</Link>
-                        </h1>
-                        <ul className="grid grid-cols-2 gap-4">
-                            <li className="w-fit">
-                                <Link
-                                    className="tracking-widest"
-                                    href="/dashboard"
-                                >
-                                    dashboard
-                                </Link>
-                            </li>
-                            <li>
-                                {sessionId ?
-                                    <TmdbSignOut />
-                                :   <TmdbSignIn />}
-                            </li>
-                        </ul>
-                    </nav>
-                    {children}
-                </main>
+                <nav className="flex justify-between w-full py-2 px-4 my-2">
+                    <h1 className="font-bold text-lg text-brand-blue tracking-widest">
+                        <Link href="/">streamie</Link>
+                    </h1>
+                    <ul className="grid grid-cols-2 gap-4">
+                        <li className="w-fit">
+                            <Link className="tracking-widest" href="/dashboard">
+                                dashboard
+                            </Link>
+                        </li>
+                        <li>
+                            {sessionId ?
+                                <TmdbSignOut />
+                            :   <TmdbSignIn />}
+                        </li>
+                    </ul>
+                </nav>
+                {children}
 
                 <footer className="flex flex-col items-center gap-4 mt-2 pt-8 pb-2 bg-slate-900/80">
                     <svg

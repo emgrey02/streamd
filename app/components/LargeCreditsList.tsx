@@ -19,10 +19,6 @@ export default function LargeCreditsList(props: {
 
     console.log(data);
 
-    if (type !== 'person' && type !== 'tv') {
-        data = data?.toReversed();
-    }
-
     return (
         <ul className="grid grid-cols-1 @lg:grid-cols-2 @2xl:grid-cols-3 gap-4 gap-y-6 justify-start mb-8">
             {data &&

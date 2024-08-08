@@ -27,7 +27,7 @@ export default async function MovieCredits({
     let deets = await res.json();
 
     return (
-        <div id="credits" className="grid md:grid-cols-2 gap-10">
+        <div id="credits" className="grid grid-cols-2 gap-10">
             <div>
                 <h2 className="text-xl mb-4 font-medium">Cast</h2>
                 <div className="@container">

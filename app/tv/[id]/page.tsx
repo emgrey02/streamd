@@ -302,7 +302,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                         ) ?
                             'col-span-1'
                         :   'col-span-2'
-                    }`}
+                    } col-start-1`}
                 >
                     <h2 className="font-medium text-lg mb-2">
                         Last Episode to Air

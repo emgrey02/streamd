@@ -187,7 +187,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
                 </div>
             )}
 
-            {content.keywords && (
+            {content.keywords && content.keywords.length > 1 && (
                 <div className="col-span-2">
                     <h2 className="mb-2 font-medium text-lg">Keywords</h2>
                     <Genres data={content.keywords} content="movie" />
