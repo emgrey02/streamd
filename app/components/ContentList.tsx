@@ -147,12 +147,12 @@ export default function ContentList({
 
             if (direction === 'forward') {
                 scrollCont?.scrollBy({
-                    left: window.innerWidth - 120,
+                    left: scrollCont.clientWidth - 120,
                     behavior: 'smooth',
                 });
             } else if (direction === 'back') {
                 scrollCont?.scrollBy({
-                    left: -window.innerWidth + 120,
+                    left: -scrollCont.clientWidth + 120,
                     behavior: 'smooth',
                 });
             }

@@ -1,5 +1,4 @@
 import ContentList from './components/ContentList';
-import TmdbSignIn from './components/TmdbSignIn';
 import { cookies } from 'next/headers';
 import SearchBar from './components/SearchBar';
 
@@ -25,15 +24,11 @@ export default async function Home() {
 
     return (
         <main className="min-h-screen py-4">
-            {!sessionId ?
-                <div className="px-4 text-center flex flex-col gap-4 items-center my-8">
-                    {/* <p>Sign in to access your favorite tv shows & movies.</p>
-                    <TmdbSignIn /> */}
-                </div>
-            :   <div className="px-4 flex flex-col items-start my-8">
+            {!sessionId && (
+                <div className="px-4 flex flex-col items-start my-8">
                     <p>Hello, {username}!</p>
                 </div>
-            }
+            )}
             <div className="">
                 <SearchBar />
             </div>
