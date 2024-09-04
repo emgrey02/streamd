@@ -4,6 +4,7 @@ import Image from 'next/image';
 import ImageSlider from '@/app/components/ImageSlider';
 import Genres from '@/app/components/Genres';
 import { Ultra } from 'next/font/google';
+import StreamRentBuy from '@/app/components/StreamRentBuy';
 
 export default async function Movie({ params }: { params: { id: string } }) {
     let movieId = params.id;
@@ -28,6 +29,9 @@ export default async function Movie({ params }: { params: { id: string } }) {
     const content = await res.json();
     console.log(content);
     console.log(content.revenue);
+    console.log(content.keywords.keywords);
+    console.log(content.keywords.length);
+    console.log(content['watch/providers']);
 
     function convertQuantity(amt: number) {
         let str = amt.toString().split('');
@@ -187,124 +191,14 @@ export default async function Movie({ params }: { params: { id: string } }) {
                 </div>
             )}
 
-            {content.keywords && content.keywords.length > 1 && (
+            {content.keywords && content.keywords.keywords.length > 0 && (
                 <div className="col-span-2">
                     <h2 className="mb-2 font-medium text-lg">Keywords</h2>
                     <Genres data={content.keywords} content="movie" />
                 </div>
             )}
 
-            {content['watch/providers'].results.US && (
-                <>
-                    {content['watch/providers'].results.US.rent && (
-                        <div className="ring-2 ring-slate-700 h-full">
-                            <h2 className="mb-2 px-4 pt-3">Rent it</h2>
-                            <ul className="flex flex-wrap gap-4 px-2 w-full">
-                                {content[`watch/providers`].results.US.rent.map(
-                                    (wp: any, index: number) => (
-                                        <li
-                                            key={index}
-                                            className="w-[120px] grid grid-rows-[min_content_min-content] gap-2 p-2"
-                                        >
-                                            <div className="grid place-items-center bg-slate-600 min-w-[100px] min-h-[100px]">
-                                                {wp.logo_path ?
-                                                    <Image
-                                                        className="p-2"
-                                                        src={`https://image.tmdb.org/t/p/w200/${wp.logo_path}`}
-                                                        alt={`logo`}
-                                                        width="100"
-                                                        height="100"
-                                                    />
-                                                :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
-                                                        no logo available
-                                                    </div>
-                                                }
-                                            </div>
-                                            <div>
-                                                <p className="text-sm">
-                                                    {wp.provider_name}
-                                                </p>
-                                            </div>
-                                        </li>
-                                    )
-                                )}
-                            </ul>
-                        </div>
-                    )}
-                    {content['watch/providers'].results.US.buy && (
-                        <div className="ring-2 ring-slate-700 h-full">
-                            <h2 className="mb-2 px-4 pt-3">Buy it</h2>
-                            <ul className="flex flex-wrap gap-4 px-2 w-full">
-                                {content[`watch/providers`].results.US.buy.map(
-                                    (wp: any, index: number) => (
-                                        <li
-                                            key={index}
-                                            className="w-[120px] grid grid-rows-[min_content_min-content] gap-2 p-2"
-                                        >
-                                            <div className="grid place-items-center bg-slate-600 min-w-[100px] min-h-[100px]">
-                                                {wp.logo_path ?
-                                                    <Image
-                                                        className="p-2"
-                                                        src={`https://image.tmdb.org/t/p/w200/${wp.logo_path}`}
-                                                        alt={`logo`}
-                                                        width="100"
-                                                        height="100"
-                                                    />
-                                                :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
-                                                        no logo available
-                                                    </div>
-                                                }
-                                            </div>
-                                            <div>
-                                                <p className="text-sm">
-                                                    {wp.provider_name}
-                                                </p>
-                                            </div>
-                                        </li>
-                                    )
-                                )}
-                            </ul>
-                        </div>
-                    )}
-                    {content['watch/providers'].results.US.flatrate && (
-                        <div className="ring-2 ring-slate-700 h-full">
-                            <h2 className="mb-2 px-4 pt-3">Stream it</h2>
-                            <ul className="flex flex-wrap gap-4 px-2 pb-2 w-fit">
-                                {content[
-                                    `watch/providers`
-                                ].results.US.flatrate.map(
-                                    (wp: any, index: number) => (
-                                        <li
-                                            key={index}
-                                            className="w-[120px] grid grid-rows-[min_content_min-content] gap-2 p-2"
-                                        >
-                                            <div className="grid place-items-center bg-slate-600 min-w-[100px] min-h-[100px]">
-                                                {wp.logo_path ?
-                                                    <Image
-                                                        className="p-2"
-                                                        src={`https://image.tmdb.org/t/p/w200/${wp.logo_path}`}
-                                                        alt={`logo`}
-                                                        width="100"
-                                                        height="100"
-                                                    />
-                                                :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
-                                                        no logo available
-                                                    </div>
-                                                }
-                                            </div>
-                                            <div>
-                                                <p className="text-sm">
-                                                    {wp.provider_name}
-                                                </p>
-                                            </div>
-                                        </li>
-                                    )
-                                )}
-                            </ul>
-                        </div>
-                    )}
-                </>
-            )}
+            <StreamRentBuy content={content['watch/providers'].results.US} />
 
             <div className="col-start-1">
                 <h2 className="mb-2 font-medium text-lg">Cast</h2>

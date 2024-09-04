@@ -50,7 +50,7 @@ export default function NewCard(props: {
                 <Image
                     className="overflow-y-clip"
                     src={`https://image.tmdb.org/t/p/w200/${p.poster_path || p.profile_path}`}
-                    alt={`${props.type === 'tv' ? p.name : p.title} image`}
+                    alt={`${p.profile_path ? 'Profile of' : 'Poster for'} ${p.name || p.title}`}
                     width="100"
                     height="150"
                 />

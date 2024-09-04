@@ -111,9 +111,9 @@ export default function ImageSlider(props: {
                             </button>
                             <ul className="grid place-items-center">
                                 {images && images[`${slideNum}`] && (
-                                    <li className="w-full h-full">
+                                    <li className="w-full">
                                         <Image
-                                            className="w-full px-8"
+                                            className="w-full px-8 max-h-[calc(100vh-200px)]"
                                             src={`https://image.tmdb.org/t/p/w1280/${images[`${slideNum}`].file_path}`}
                                             alt={`backdrop image`}
                                             width="1280"

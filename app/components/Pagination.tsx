@@ -26,6 +26,8 @@ export default function Pagination(props: {
     console.log(props.cat);
     console.log(props.keyword);
     console.log(props.content);
+    console.log(props.genre);
+    console.log(props.search);
 
     useMemo(() => {
         if (6 >= props.totalPages) {
@@ -39,8 +41,7 @@ export default function Pagination(props: {
             setNextUrl(
                 `/search/${props.cat}?query=${props.query}&page=${props.page + 1}`
             );
-        }
-        if (props.keyword) {
+        } else if (props.keyword) {
             setBackUrl(
                 `/search/keyword-${props.cat}?query=${props.query}&page=${page - 1}`
             );

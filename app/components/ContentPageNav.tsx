@@ -24,13 +24,13 @@ export default function ContentPageNav() {
     return (
         <nav className="w-fit">
             <ul
-                className={`grid ${mediaType === 'person' ? 'grid-cols-2' : 'grid-cols-3'} ${mediaType === 'tv' && 'grid-cols-4'} my-8 w-fit ring-1 ring-gray-900 bg-slate-700/40`}
+                className={`grid ${mediaType === 'person' ? 'grid-cols-2 max-w-[400px]' : 'grid-cols-3 max-w-[600px]'} ${mediaType === 'tv' && 'grid-cols-4 max-w-[600px]'} items-center my-8 ring-1 ring-gray-900 bg-slate-700/40`}
             >
                 <li
-                    className={`${currentPage === 'info' ? 'bg-slate-900 border-slate-400 ' : 'border-slate-600'} border-s-2  `}
+                    className={`${currentPage === 'info' ? 'bg-slate-900 border-slate-400' : 'border-slate-600'} border-s-2`}
                 >
                     <Link
-                        className="py-4 ps-3 pe-4 flex w-full focus:outline-none focus:ring focus:ring-brand-blue"
+                        className="grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue"
                         href={`/${mediaType}/${showId}`}
                     >
                         Info
@@ -40,7 +40,7 @@ export default function ContentPageNav() {
                     className={`${currentPage === 'credits' ? 'bg-slate-900 border-slate-400 ' : 'border-slate-600'} border-s-2`}
                 >
                     <Link
-                        className="py-4 ps-3 pe-4 flex w-full focus:outline-none focus:ring focus:ring-brand-blue"
+                        className="grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue"
                         href={`/${mediaType}/${showId}/credits`}
                     >
                         Credits
@@ -51,7 +51,7 @@ export default function ContentPageNav() {
                         className={`${currentPage === 'reviews' ? 'bg-slate-900 border-slate-400 ' : 'border-slate-600'} border-s-2 `}
                     >
                         <Link
-                            className="py-4 ps-3 pe-4 flex w-full focus:outline-none focus:ring focus:ring-brand-blue"
+                            className="grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue"
                             href={`/${mediaType}/${showId}/reviews`}
                         >
                             Reviews
@@ -63,7 +63,7 @@ export default function ContentPageNav() {
                         className={`${currentPage === 'seasons' || currentPage === 'season' ? 'bg-slate-900 border-slate-400 ' : 'border-slate-600'} border-s-2 `}
                     >
                         <Link
-                            className="py-4 ps-3 pe-4 flex w-full focus:outline-none focus:ring focus:ring-brand-blue"
+                            className="grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue"
                             href={`/${mediaType}/${showId}/seasons`}
                         >
                             Seasons

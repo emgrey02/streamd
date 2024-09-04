@@ -23,9 +23,9 @@ export default async function Home() {
     let trendingCats: string[] = ['all', 'movie', 'tv', 'people'];
 
     return (
-        <main className="min-h-screen py-4">
-            {!sessionId && (
-                <div className="px-4 flex flex-col items-start my-8">
+        <main className="min-h-screen px-4">
+            {sessionId && username && (
+                <div className="flex flex-col items-start my-4">
                     <p>Hello, {username}!</p>
                 </div>
             )}

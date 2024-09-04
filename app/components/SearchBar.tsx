@@ -14,7 +14,7 @@ export default function SearchBar(props: { searchTerm?: string }) {
     }
 
     return (
-        <div className="max-w-[500px] my-10 px-2 md:px-8">
+        <div className="max-w-[500px] my-10">
             <form
                 onSubmit={(e) => {
                     e.preventDefault();

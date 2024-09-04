@@ -102,42 +102,44 @@ export default async function Show({ params }: { params: { id: string } }) {
                         </ul>
                     </div>
                 )}
-                <div className="col-span-2 h-full ring-2 ring-slate-700">
-                    <h2 className="font-medium text-lg mb-2 px-4 pt-3">
-                        Networks
-                    </h2>
-                    <ul className="flex flex-wrap gap-4 px-2 pb-2 w-full">
-                        {content.networks.map((n: any, index: number) => (
-                            <li
-                                key={index}
-                                className="w-[120px] grid grid-rows-[100px_min-content] gap-2 p-2"
-                            >
-                                <div className="grid place-items-center bg-slate-600 min-w-[100px]">
-                                    {n.logo_path ?
-                                        <Image
-                                            className="p-2"
-                                            src={`https://image.tmdb.org/t/p/w200/${n.logo_path}`}
-                                            alt={`logo`}
-                                            width="100"
-                                            height="100"
-                                        />
-                                    :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
-                                            no logo available
-                                        </div>
-                                    }
-                                </div>
-                                <div>
-                                    <p className="text-sm">{n.name}</p>
-                                    <p className="text-xs">
-                                        {new Intl.DisplayNames(['en'], {
-                                            type: 'region',
-                                        }).of(content.origin_country[0])}
-                                    </p>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
+                {content.networks && content.networks.length > 0 && (
+                    <div className="col-span-2 h-full ring-2 ring-slate-700">
+                        <h2 className="font-medium text-lg mb-2 px-4 pt-3">
+                            Networks
+                        </h2>
+                        <ul className="flex flex-wrap gap-4 px-2 pb-2 w-full">
+                            {content.networks.map((n: any, index: number) => (
+                                <li
+                                    key={index}
+                                    className="w-[120px] grid grid-rows-[100px_min-content] gap-2 p-2"
+                                >
+                                    <div className="grid place-items-center bg-slate-600 min-w-[100px]">
+                                        {n.logo_path ?
+                                            <Image
+                                                className="p-2"
+                                                src={`https://image.tmdb.org/t/p/w200/${n.logo_path}`}
+                                                alt={`logo`}
+                                                width="100"
+                                                height="100"
+                                            />
+                                        :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
+                                                no logo available
+                                            </div>
+                                        }
+                                    </div>
+                                    <div>
+                                        <p className="text-sm">{n.name}</p>
+                                        <p className="text-xs">
+                                            {new Intl.DisplayNames(['en'], {
+                                                type: 'region',
+                                            }).of(content.origin_country[0])}
+                                        </p>
+                                    </div>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                )}
             </div>
 
             <div className="h-full ring-2 ring-slate-700">

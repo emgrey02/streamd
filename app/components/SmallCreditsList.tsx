@@ -10,18 +10,6 @@ export default function SmallCreditsList(props: {
     personId?: string;
 }) {
     let creds = props.creds;
-    console.log(creds[0]);
-
-    console.log(creds.length);
-    console.log(props.cont);
-
-    if (
-        props.cont !== 'person' &&
-        props.cont !== 'tv' &&
-        props.cont !== 'movie'
-    ) {
-        creds = props.creds?.toReversed();
-    }
 
     return (
         <div className={`flex flex-col`}>
