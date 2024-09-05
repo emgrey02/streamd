@@ -22,9 +22,9 @@ export default function ContentPageNav() {
     }, [pathname]);
 
     return (
-        <nav className="w-fit">
+        <nav>
             <ul
-                className={`grid ${mediaType === 'person' ? 'grid-cols-2 max-w-[400px]' : 'grid-cols-3 max-w-[600px]'} ${mediaType === 'tv' && 'grid-cols-4 max-w-[600px]'} items-center my-8 ring-1 ring-gray-900 bg-slate-700/40`}
+                className={`grid ${mediaType === 'person' ? 'grid-cols-2 max-w-[400px]' : 'grid-cols-3 max-w-[400px]'} ${mediaType === 'tv' && 'grid-cols-4 max-w-[600px]'} items-center my-8 ring-1 ring-gray-900 bg-slate-700/40`}
             >
                 <li
                     className={`${currentPage === 'info' ? 'bg-slate-900 border-slate-400' : 'border-slate-600'} border-s-2`}

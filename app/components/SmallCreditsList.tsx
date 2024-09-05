@@ -16,7 +16,7 @@ export default function SmallCreditsList(props: {
             {creds && creds.length > 0 ?
                 <div className="@container">
                     <ul
-                        className={`grid ${creds.length == 1 && '@lg:grid-cols-1 @2xl:grid-cols-1'} ${creds.length == 2 && `@lg:grid-cols-2 @2xl:grid-cols-2`} ${creds.length > 2 && 'grid-cols-1 @lg:grid-cols-2 @2xl:grid-cols-3'} gap-4 gap-y-6 justify-start`}
+                        className={`grid ${creds.length == 1 && '@lg:grid-cols-1 @2xl:grid-cols-1'} ${creds.length == 2 && `@lg:grid-cols-2 @2xl:grid-cols-2`} ${creds.length > 2 && 'grid-cols-1 @lg:grid-cols-2 @4xl:grid-cols-4'} gap-4 gap-y-6 justify-start`}
                     >
                         {creds.map(
                             (p: any, index: number) =>

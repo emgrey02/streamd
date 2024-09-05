@@ -14,7 +14,7 @@ export default function SearchBar(props: { searchTerm?: string }) {
     }
 
     return (
-        <div className="max-w-[500px] my-10">
+        <div className="max-w-[500px] mb-6">
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
@@ -25,7 +25,7 @@ export default function SearchBar(props: { searchTerm?: string }) {
             >
                 <div className="w-full flex flex-col gap-2">
                     <label htmlFor="search">
-                        Search for movies, tv, people...
+                        Search for movies, shows, people...
                     </label>
                     <input
                         id="search"

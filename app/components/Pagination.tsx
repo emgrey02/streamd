@@ -98,16 +98,16 @@ export default function Pagination(props: {
     }, [props.totalPages, props.page]);
 
     return (
-        <div className="flex justify-center my-4">
+        <div className="flex justify-center my-4 bg-slate-900 text-slate-400 text-xl">
             <div className="w-full h-full flex justify-center">
-                <ul className="flex gap-6 items-center  pointer">
-                    <li key="previous" className="grid items-center">
+                <ul className="flex sm:grid grid-cols-9 gap-6 items-center pointer max-w-[600px]">
+                    <li key="previous" className="grid place-items-center">
                         {+page > 1 && (
                             <Link
-                                className="h-full flex gap-2 justify-start items-center ps-2 py-1"
+                                className="h-full flex gap-2 items-center justify-center ps-2 py-1"
                                 href={backUrl}
                             >
-                                <p className="text-3xl font-bold mb-1">
+                                <p className="text-5xl mb-1 text-center">
                                     &#171;
                                 </p>
                             </Link>
@@ -116,8 +116,16 @@ export default function Pagination(props: {
                     {paginationRange?.map((num: any, index: number) => (
                         <>
                             {num === '...' ?
-                                <li key={index}>...</li>
-                            :   <li key={index}>
+                                <li
+                                    key={index}
+                                    className="grid place-items-center"
+                                >
+                                    ...
+                                </li>
+                            :   <li
+                                    key={index}
+                                    className="grid place-items-center"
+                                >
                                     <Link
                                         href={
                                             props.keyword ?
@@ -146,9 +154,7 @@ export default function Pagination(props: {
                                 className="h-full flex gap-2 justify-end items-center pe-2 py-1"
                                 href={nextUrl}
                             >
-                                <p className="text-3xl font-bold mb-1">
-                                    &#187;
-                                </p>
+                                <p className="text-5xl mb-1">&#187;</p>
                             </Link>
                         )}
                     </li>

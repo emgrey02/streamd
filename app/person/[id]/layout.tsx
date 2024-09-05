@@ -68,7 +68,7 @@ export default async function Layout({ children, params }: LayoutProps) {
 
     return (
         <main className="m-2 md:m-4 lg:m-8">
-            <BackButton main={true} />
+            <BackButton main={false} />
             <div className="grid gap-4 md:flex">
                 {deets.profile_path ?
                     <Image
@@ -131,7 +131,6 @@ export default async function Layout({ children, params }: LayoutProps) {
                 </div>
             </div>
             <ContentPageNav />
-            <BackButton main={false} />
             {children}
         </main>
     );

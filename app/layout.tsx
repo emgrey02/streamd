@@ -25,30 +25,60 @@ export default async function RootLayout({
     const sessionId = cookieStore.get('sessionId')?.value;
 
     return (
-        <html className="flex justify-center" lang="en">
+        <html lang="en">
             <body
-                className={`${inter.className} p-2 w-full h-full relative flex flex-col justify-between bg-slate-800 text-gray-300 min-h-svh max-w-7xl`}
+                className={`${inter.className} w-full h-full relative bg-slate-800 text-gray-300 flex flex-col items-center`}
             >
-                <nav className="flex justify-between w-full py-2 px-4 my-2">
-                    <h1 className="font-bold text-lg text-brand-blue tracking-widest">
-                        <Link href="/">streamie</Link>
-                    </h1>
-                    <ul className="grid grid-cols-2 gap-4">
-                        <li className="w-fit">
-                            <Link className="tracking-widest" href="/dashboard">
-                                dashboard
-                            </Link>
-                        </li>
-                        <li>
-                            {sessionId ?
-                                <TmdbSignOut />
-                            :   <TmdbSignIn />}
-                        </li>
-                    </ul>
-                </nav>
-                {children}
-
-                <footer className="flex flex-col items-center gap-4 mt-2 pt-8 pb-2 bg-slate-900/80">
+                <div
+                    className={`min-h-svh max-w-7xl flex flex-col w-full h-full`}
+                >
+                    <nav className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full py-2 px-4 mb-10">
+                        <h1 className="font-bold text-lg text-brand-blue tracking-widest">
+                            <Link href="/">streamie</Link>
+                        </h1>
+                        <ul className="flex flex-wrap gap-y-6 m-4 w-full py-4 sm:w-fit justify-center sm:m-0 sm:grid grid-cols-5 gap-2 text-center bg-slate-700/50 sm:bg-slate-800">
+                            <li>
+                                <Link
+                                    className="underline underline-offset-1 hover:underline-offset-4 transition-all"
+                                    href="/movie/now_playing/1"
+                                >
+                                    movies
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    className="underline underline-offset-1 hover:underline-offset-4 transition-all"
+                                    href="/tv/airing_today/1"
+                                >
+                                    shows
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    className="underline underline-offset-1 hover:underline-offset-4 transition-all"
+                                    href="/trending/people/1"
+                                >
+                                    people
+                                </Link>
+                            </li>
+                            <li>
+                                <Link
+                                    className="hover:bg-slate-900 bg-slate-700/40 ring-1 ring-gray-900 px-2 py-2 text-brand-blue transition"
+                                    href="/dashboard"
+                                >
+                                    dashboard
+                                </Link>
+                            </li>
+                            <li>
+                                {sessionId ?
+                                    <TmdbSignOut />
+                                :   <TmdbSignIn />}
+                            </li>
+                        </ul>
+                    </nav>
+                    {children}
+                </div>
+                <footer className="flex flex-col self-stretch left-0 bottom-0 right-0 text-slate-300 items-center gap-4 mt-2 pt-20 pb-20 bg-slate-900/80">
                     <svg
                         width="150"
                         xmlns="http://www.w3.org/2000/svg"

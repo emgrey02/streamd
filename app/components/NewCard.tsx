@@ -59,42 +59,38 @@ export default function NewCard(props: {
                 </div>
             }
             <div className="flex flex-col gap-2 overflow-scroll">
-                <p className="text-sm text-wrap mt-4 font-light w-fit">
+                <p className="text-wrap mt-4 font-medium text-[17px] w-fit text-brand-blue">
                     {p.name || p.title}
                 </p>
                 {props.search || !props.credits || (
                     <>
-                        {p.character ||
+                        {(p.character ||
                             (p.roles && p.roles[0].character) ||
                             p.job ||
-                            (p.jobs && p.jobs[0].job && (
-                                <p className="text-sm text-wrap text-slate-300/80 w-fit">
-                                    {`as ${
-                                        p.character ||
+                            (p.jobs && p.jobs[0].job)) && (
+                            <div className="flex items-end gap-1">
+                                <p className="font-light">as</p>
+                                <p className="text-wrap w-fit">
+                                    {p.character ||
                                         (p.roles && p.roles[0].character) ||
                                         p.job ||
-                                        (p.jobs && p.jobs[0].job)
-                                    }`}
+                                        (p.jobs && p.jobs[0].job)}
                                 </p>
-                            ))}
-                    </>
-                )}
-                {type == 'tv' && props.seasons && p.air_date && (
-                    <>
-                        <p></p>
-                        <p className="text-sm font-light">
-                            {p.air_date.slice(0, 4)}
-                        </p>
+                            </div>
+                        )}
                     </>
                 )}
 
+                {type == 'tv' && props.seasons && p.air_date && (
+                    <p className="text-sm font-light">
+                        {p.air_date.slice(0, 4)}
+                    </p>
+                )}
+
                 {type == 'tv' && !props.seasons && p.first_air_date && (
-                    <>
-                        <p></p>
-                        <p className="text-sm font-light">
-                            {p.first_air_date.slice(0, 4)}
-                        </p>
-                    </>
+                    <p className="text-sm font-light">
+                        {p.first_air_date.slice(0, 4)}
+                    </p>
                 )}
 
                 {type == 'movie' && (

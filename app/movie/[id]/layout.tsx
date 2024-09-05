@@ -59,7 +59,7 @@ export default async function Layout({ children, params }: LayoutProps) {
 
     return (
         <main className="m-2 md:m-4 lg:m-8">
-            <BackButton main={true} />
+            <BackButton main={false} />
             <div className="grid gap-4 md:flex md:h-min">
                 {deets.poster_path ?
                     <Image
@@ -76,7 +76,7 @@ export default async function Layout({ children, params }: LayoutProps) {
                 }
                 <div className="flex flex-col gap-4">
                     <div>
-                        <h1 className="text-2xl font-bold text-slate-200">
+                        <h1 className="text-2xl font-bold text-brand-blue">
                             {deets.title}
                         </h1>
                         <p className="font-light">movie</p>
@@ -125,7 +125,6 @@ export default async function Layout({ children, params }: LayoutProps) {
                 </div>
             </div>
             <ContentPageNav />
-            <BackButton main={false} />
             {children}
         </main>
     );

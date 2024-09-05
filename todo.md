@@ -24,3 +24,14 @@
 -   [ ] delete unused components
 -   [ ] scroll to top of page when link pressed
 -   [ ] remove adult content - places i see it: trending ppl
+
+### plan navigation
+
+-   [] go over some user flows, what options should users have at what time
+-   [] create more components, separate large docs into smaller chunks
+-   [] think about breadcrumbs...?
+-   [] create separate pages for movies/tv/people, add them to nav at top
+
+## credit cards
+
+-   [] use container to change font size based on width of element

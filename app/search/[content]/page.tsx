@@ -135,7 +135,7 @@ export default async function Search({
     };
 
     return (
-        <>
+        <main className="m-2 md:m-4 lg:m-8">
             <h1 className="mx-4 mt-8 text-lg text-center">
                 {keyword && (
                     <>
@@ -161,6 +161,6 @@ export default async function Search({
                     genre={genre}
                 />
             </div>
-        </>
+        </main>
     );
 }

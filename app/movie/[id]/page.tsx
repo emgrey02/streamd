@@ -32,6 +32,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
     console.log(content.keywords.keywords);
     console.log(content.keywords.length);
     console.log(content['watch/providers']);
+    console.log(content.original_title);
 
     function convertQuantity(amt: number) {
         let str = amt.toString().split('');

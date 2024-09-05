@@ -26,6 +26,7 @@ export default function ContentList({
     const [progress, setProgress] = useState(0);
     const [message, setMessage] = useState('Loading...');
     const scrollCont = useRef<HTMLUListElement>(null);
+    console.log(content);
 
     useEffect(() => {
         async function retrieveContent() {
@@ -89,7 +90,6 @@ export default function ContentList({
                 );
                 if (newCat) {
                     setMessage(`Add some ${newCat}s to your ${content}`);
-                    if (newCat === 'movies') newCat = 'movie';
                     setCategory(newCat);
                     setContentList(cont);
                     scrollToBeginning();
@@ -98,7 +98,6 @@ export default function ContentList({
         } else {
             cont = await getContent(content, newCat, 1);
             if (newCat) {
-                if (newCat === 'movies') newCat = 'movie';
                 setCategory(newCat);
                 setContentList(cont.results);
                 scrollToBeginning();
@@ -188,7 +187,9 @@ export default function ContentList({
     return (
         <div className="flex flex-col">
             <div className="relative h-min grid gap-y-4">
-                <h2>{capitalizeCategory(content)}</h2>
+                <h2 className="text-xl font-medium tracking-wider">
+                    {capitalizeCategory(content)}
+                </h2>
                 <ul
                     className={`grid ${content === 'favorite' || content === 'watchlist' || content === 'rated' ? 'grid-cols-2 max-w-[400px]' : 'grid-cols-4 max-w-[600px]'} items-center ring-1 ring-gray-900 bg-slate-700/40`}
                 >
@@ -216,17 +217,6 @@ export default function ContentList({
                         className={`h-full bg-slate-900 disabled:bg-slate-800 disabled:ring-1 disabled:ring-slate-900 hover:bg-slate-950 hidden sm:block p-1 transition text-4xl text-slate-400 ${scrollPx == 0 && 'text-slate-700'}`}
                     >
                         &#171;
-                        {/* <svg
-                            className={`fill-slate-400 ${scrollPx == 0 && 'fill-slate-700'}`}
-                            width="30px"
-                            height="30px"
-                            viewBox="-8.5 0 32 32"
-                            version="1.1"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <title>back</title>
-                            <path d="M15.281 7.188v17.594l-15.281-8.781z"></path>
-                        </svg> */}
                     </button>
                     {contentList && contentList.length > 0 ?
                         <ul
@@ -277,17 +267,6 @@ export default function ContentList({
                         className={`h-full bg-slate-900 disabled:bg-slate-800 disabled:ring-1 disabled:ring-slate-900 hover:bg-slate-950 hidden sm:block p-1 transition text-4xl text-slate-400 ${progress == scrollWidth && 'text-slate-700'}`}
                     >
                         &#187;
-                        {/* <svg
-                            className={`fill-slate-400 ${progress == scrollWidth && 'fill-slate-700'}`}
-                            width="30px"
-                            height="30px"
-                            viewBox="-8.5 0 32 32"
-                            version="1.1"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <title>next</title>
-                            <path d="M0 24.781v-17.594l15.281 8.813z"></path>
-                        </svg> */}
                     </button>
                 </div>
             </div>
