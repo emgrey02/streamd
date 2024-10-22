@@ -33,7 +33,7 @@ export default async function PersonPage({
     console.log(content.combined_credits.cast);
 
     return (
-        <main className="my-4">
+        <>
             <div>
                 <h2 className="font-medium text-lg mb-2">Cast Credits</h2>
                 <SmallCreditsList
@@ -50,6 +50,6 @@ export default async function PersonPage({
                     personId={personId}
                 />
             </div>
-        </main>
+        </>
     );
 }

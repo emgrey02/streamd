@@ -1,5 +1,5 @@
 'use server';
-import ContentList from '../components/ContentList';
+import DashContent from '../components/DashContent';
 import BackButton from '../components/BackButton';
 import { cookies } from 'next/headers';
 import TmdbSignIn from '../components/TmdbSignIn';
@@ -11,45 +11,21 @@ export default async function Page() {
     const username: string | undefined = cookies().get('username')?.value;
 
     return (
-        <main className="px-4 mb-8">
+        <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">
             <BackButton main={false} />
-            <h1 className="text-5xl tracking-wider font-light mt-8 mb-2">
-                Dashboard
-            </h1>
-            <div className="w-[80%] max-w-full h-[1px] bg-brand-blue mb-4"></div>
-            {username ?
-                <p className="mb-8">Hello, {username}!</p>
-            :   <p className="mb-8 italic text-brand-blue">
+            <div>
+                <h1 className="text-5xl tracking-wider font-light mb-2">
+                    Your Dashboard
+                </h1>
+                <div className="w-[80%] max-w-full h-[1px] bg-brand-blue"></div>
+            </div>
+            {!username && (
+                <p className="mb-8 italic text-brand-blue">
                     You aren&apos;t logged in!
                 </p>
-            }
+            )}
             {sessionId ?
-                <ul className="grid gap-8">
-                    <li>
-                        <ContentList
-                            sessionId={sessionId}
-                            accountId={accountId}
-                            content="favorite"
-                            cat={['movie', 'tv']}
-                        />
-                    </li>
-                    <li>
-                        <ContentList
-                            sessionId={sessionId}
-                            accountId={accountId}
-                            content="watchlist"
-                            cat={['movie', 'tv']}
-                        />
-                    </li>
-                    <li>
-                        <ContentList
-                            sessionId={sessionId}
-                            accountId={accountId}
-                            content="rated"
-                            cat={['movie', 'tv']}
-                        />
-                    </li>
-                </ul>
+                <DashContent sessionId={sessionId} accountId={accountId} />
             :   <div className="text-center flex flex-col items-center justify-center gap-4 h-96">
                     <p>Sign in to see your dashboard.</p>
                     <TmdbSignIn />

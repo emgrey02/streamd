@@ -1,3 +1,4 @@
+import BackButton from '@/app/components/BackButton';
 import SearchResults from '../../components/SearchResults';
 
 export default async function Search({
@@ -135,22 +136,28 @@ export default async function Search({
     };
 
     return (
-        <main className="m-2 md:m-4 lg:m-8">
-            <h1 className="mx-4 mt-8 text-lg text-center">
-                {keyword && (
-                    <>
-                        <div className="font-light">Keyword</div>{' '}
-                        <div className="text-xl font-medium">{theKeyword}</div>
-                    </>
-                )}
-                {genre && (
-                    <>
-                        <div className="font-light">Genre</div>
-                        <div className="text-xl font-medium">{theGenre}</div>
-                    </>
-                )}
-                {!keyword && !genre && `Search results for: ${search}`}
-            </h1>
+        <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">
+            <BackButton main={false} />
+            <div>
+                <h1 className="text-2xl sm:text-5xl flex tracking-wider items-end font-light mb-2 gap-2">
+                    {keyword && (
+                        <>
+                            <div className="font-light">Keyword:</div>{' '}
+                            <div className="text-xl sm:text-4xl italic">
+                                {theKeyword}
+                            </div>
+                        </>
+                    )}
+                    {genre && (
+                        <>
+                            <div className="font-light">Genre:</div>
+                            <div className="text-4xl italic">{theGenre}</div>
+                        </>
+                    )}
+                    {!keyword && !genre && `Search results for: ${search}`}
+                </h1>
+                <div className="w-[80%] max-w-full h-[1px] bg-brand-blue"></div>
+            </div>
             <div className="w-full">
                 <SearchResults
                     data={data}

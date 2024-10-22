@@ -7,10 +7,10 @@ export default function Reviews(props: { reviews: any }) {
     return (
         <div className="w-full">
             <h2 className="text-lg font-medium mb-2">Reviews</h2>
-            <ul className="grid max-w-3xl">
+            <div className="grid max-w-3xl">
                 {reviews.results.length > 0 ?
                     reviews.results.map((post: any, index: number) => (
-                        <li key={index} className="grid gap-4 max-w-2xl">
+                        <div key={index} className="grid gap-4 max-w-2xl">
                             <p>
                                 Written by{' '}
                                 <span className="font-bold">{post.author}</span>{' '}
@@ -36,10 +36,10 @@ export default function Reviews(props: { reviews: any }) {
                             </div>
                             <Text text={post.content} />
                             <div className="w-full h-[1px] bg-slate-500 my-10"></div>
-                        </li>
+                        </div>
                     ))
                 :   <p className="font-light">There are no reviews!</p>}
-            </ul>
+            </div>
         </div>
     );
 }

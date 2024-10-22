@@ -1,9 +1,7 @@
 import SmallCreditsList from '@/app/components/SmallCreditsList';
-import ContentPageNav from '@/app/components/ContentPageNav';
 import Image from 'next/image';
 import ImageSlider from '@/app/components/ImageSlider';
 import Genres from '@/app/components/Genres';
-import { Ultra } from 'next/font/google';
 import StreamRentBuy from '@/app/components/StreamRentBuy';
 
 export default async function Movie({ params }: { params: { id: string } }) {
@@ -33,6 +31,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
     console.log(content.keywords.length);
     console.log(content['watch/providers']);
     console.log(content.original_title);
+    console.log(content.spoken_languages);
 
     function convertQuantity(amt: number) {
         let str = amt.toString().split('');
@@ -52,80 +51,87 @@ export default async function Movie({ params }: { params: { id: string } }) {
     }
 
     return (
-        <main className="flex flex-col md:grid md:grid-cols-2 md:gap-10 w-full gap-4">
-            <div className="grid grid-cols-2 gap-10 w-fit h-min mb-2">
+        <div className="flex flex-col md:grid md:grid-cols-2 gap-10 max-w-vw @container">
+            <div className="grid grid-cols-2 gap-2 w-full h-fit mb-2">
+                {content.runtime !== 0 && (
+                    <>
+                        <h3 className="font-medium text-lg mb-2">Runtime</h3>
+                        <p className="tracking-wide font-light">
+                            {getRuntime(content.runtime)}
+                        </p>
+                        <hr className="border-slate-600 col-span-2"></hr>
+                    </>
+                )}
                 {content.budget !== 0 && (
-                    <div className="">
-                        <p className="font-medium text-lg mb-2">Budget</p>
+                    <>
+                        <h3 className="font-medium text-lg mb-2">Budget</h3>
                         <p className="tracking-wide font-light">
                             {convertQuantity(content.budget)}
                         </p>
-                    </div>
+                        <hr className="border-slate-600 col-span-2"></hr>
+                    </>
+                )}
+                {content.revenue !== 0 && (
+                    <>
+                        <h3 className="font-medium text-lg mb-2">Revenue</h3>
+                        <p className="tracking-wide font-light">
+                            {convertQuantity(content.revenue)}
+                        </p>
+                        <hr className="border-slate-600 col-span-2"></hr>
+                    </>
                 )}
                 {content.origin_country.length !== 0 && (
-                    <div className="">
-                        <p className="font-medium text-lg mb-2">
+                    <>
+                        <h3 className="font-medium text-lg mb-2">
                             Origin Country
-                        </p>
+                        </h3>
                         <p className="tracking-wide font-light">
                             {new Intl.DisplayNames(['en'], {
                                 type: 'region',
                             }).of(content.origin_country[0])}
                         </p>
-                    </div>
+                        <hr className="border-slate-600 col-span-2"></hr>
+                    </>
                 )}
                 {content.origin_country.length !== 0 && (
-                    <div className="">
-                        <p className="font-medium text-lg mb-2">
+                    <>
+                        <h3 className="font-medium text-lg mb-2">
                             Original Language
-                        </p>
+                        </h3>
                         <p className="tracking-wide font-light">
                             {new Intl.DisplayNames(['en'], {
                                 type: 'language',
                             }).of(content.original_language)}
                         </p>
-                    </div>
-                )}
-                {content.revenue !== 0 && (
-                    <div className=" ">
-                        <p className="font-medium text-lg mb-2">Revenue</p>
-                        <p className="tracking-wide font-light">
-                            {convertQuantity(content.revenue)}
-                        </p>
-                    </div>
+                        <hr className="border-slate-600 col-span-2"></hr>
+                    </>
                 )}
                 {content.original_title && (
-                    <div>
-                        <h2 className="mb-2 font-medium text-lg">
+                    <>
+                        <h3 className="mb-2 font-medium text-lg">
                             Original Title
-                        </h2>
+                        </h3>
                         <p className="tracking-wide font-light">
                             {content.original_title}
                         </p>
-                    </div>
-                )}
-                {content.runtime !== 0 && (
-                    <div className="">
-                        <p className="font-medium text-lg mb-2">Runtime</p>
-                        <p className="tracking-wide font-light">
-                            {getRuntime(content.runtime)}
-                        </p>
-                    </div>
+                        <hr className="border-slate-600 col-span-2"></hr>
+                    </>
                 )}
                 {content.status && (
-                    <div>
-                        <h2 className="mb-2 font-medium text-lg">Status</h2>
+                    <>
+                        <h3 className="mb-2 font-medium text-lg">Status</h3>
                         <p className="tracking-wide font-light">
                             {content.status}
                         </p>
-                    </div>
+                        <hr className="border-slate-600 col-span-2"></hr>
+                    </>
                 )}
                 {content.production_countries &&
                     content.production_countries.length > 0 && (
-                        <div>
-                            <h2 className="mb-2 font-medium text-lg">
+                        <>
+                            <h3 className="mb-2 font-medium text-lg">
                                 Production Countries
-                            </h2>
+                            </h3>
                             <ul className="tracking-wide font-light">
                                 {content.production_countries.map(
                                     (c: any, index: number) => (
@@ -133,76 +139,91 @@ export default async function Movie({ params }: { params: { id: string } }) {
                                     )
                                 )}
                             </ul>
-                        </div>
+                            <hr className="border-slate-600 col-span-2"></hr>
+                        </>
                     )}
                 {content.spoken_languages && (
-                    <div>
-                        <h2 className="mb-2 font-medium text-lg">
+                    <>
+                        <h3 className="mb-2 font-medium text-lg">
                             Spoken Languages
-                        </h2>
+                        </h3>
                         <ul className="tracking-wide font-light">
                             {content.spoken_languages.map(
                                 (l: any, index: number) => (
-                                    <li key={index}>{l.name}</li>
+                                    <li key={index}>
+                                        {l.name}{' '}
+                                        {l.iso_639_1 !== 'en' &&
+                                            `(${l.english_name})`}
+                                    </li>
                                 )
                             )}
                         </ul>
-                    </div>
+                    </>
                 )}
             </div>
 
-            {content.production_companies.length > 0 && (
-                <div className="my-2 ring-2 ring-slate-700 h-full">
-                    <h2 className="mb-2 font-medium text-lg px-4 pt-3">
-                        Production Companies
-                    </h2>
-                    <ul className="flex flex-wrap gap-4 px-2 w-full">
-                        {content.production_companies.map(
-                            (pc: any, index: number) => (
-                                <li
-                                    key={index}
-                                    className="w-[120px] grid grid-rows-[min_content_min-content] gap-2 p-2"
-                                >
-                                    <div className="grid place-items-center bg-slate-600 min-w-[100px] min-h-[100px]">
-                                        {pc.logo_path ?
-                                            <Image
-                                                className="p-2"
-                                                src={`https://image.tmdb.org/t/p/w200/${pc.logo_path}`}
-                                                alt={`logo`}
-                                                width="100"
-                                                height="100"
-                                            />
-                                        :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
-                                                no logo available
+            <div className="@container">
+                <div className="grid @lg:grid-cols-2 gap-4 h-full">
+                    {content.production_companies.length > 0 && (
+                        <div className="ring-2 ring-slate-700 h-full w-full">
+                            <h3 className="mb-2 font-medium text-lg px-4 pt-3">
+                                Production Companies
+                            </h3>
+                            <ul className="flex flex-col gap-4 px-2 pb-2 w-full">
+                                {content.production_companies
+                                    .filter((item: any, idx: number) => idx < 4)
+                                    .map((pc: any, index: number) => (
+                                        <li
+                                            key={index}
+                                            className="grid grid-cols-[80px_auto] items-center gap-2 p-2"
+                                        >
+                                            <div className="grid place-items-center bg-slate-600 min-w-[60px] min-h-[60px]">
+                                                {pc.logo_path ?
+                                                    <Image
+                                                        className="mx-2"
+                                                        src={`https://image.tmdb.org/t/p/w200/${pc.logo_path}`}
+                                                        alt={`logo for ${pc.name}`}
+                                                        width="60"
+                                                        height="60"
+                                                    />
+                                                :   <div className="w-[60px] h-[60px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400 text-xs">
+                                                        no logo available
+                                                    </div>
+                                                }
                                             </div>
-                                        }
-                                    </div>
-                                    <div>
-                                        <p className="text-sm">{pc.name}</p>
-                                        <p className="text-xs">
-                                            {new Intl.DisplayNames(['en'], {
-                                                type: 'region',
-                                            }).of(content.origin_country[0])}
-                                        </p>
-                                    </div>
-                                </li>
-                            )
-                        )}
-                    </ul>
-                </div>
-            )}
+                                            <div>
+                                                <p className="text-sm">
+                                                    {pc.name}
+                                                </p>
+                                                <p className="text-xs">
+                                                    {new Intl.DisplayNames(
+                                                        ['en'],
+                                                        {
+                                                            type: 'region',
+                                                        }
+                                                    ).of(
+                                                        content
+                                                            .origin_country[0]
+                                                    )}
+                                                </p>
+                                            </div>
+                                        </li>
+                                    ))}
+                            </ul>
+                        </div>
+                    )}
 
-            {content.keywords && content.keywords.keywords.length > 0 && (
-                <div className="col-span-2">
-                    <h2 className="mb-2 font-medium text-lg">Keywords</h2>
-                    <Genres data={content.keywords} content="movie" />
+                    {content.keywords &&
+                        content.keywords.keywords.length > 0 && (
+                            <Genres data={content.keywords} content="movie" />
+                        )}
                 </div>
-            )}
+            </div>
 
             <StreamRentBuy content={content['watch/providers'].results.US} />
 
             <div className="col-start-1">
-                <h2 className="mb-2 font-medium text-lg">Cast</h2>
+                <h3 className="mb-2 font-medium text-lg">Cast</h3>
                 <SmallCreditsList
                     showId={movieId}
                     creds={content.credits.cast}
@@ -210,7 +231,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
                 />
             </div>
             <div>
-                <h2 className="mb-2 font-medium text-lg">Crew</h2>
+                <h3 className="mb-2 font-medium text-lg">Crew</h3>
                 <SmallCreditsList
                     showId={movieId}
                     creds={content.credits.crew}
@@ -223,6 +244,6 @@ export default async function Movie({ params }: { params: { id: string } }) {
             <ImageSlider images={content.images.posters} type="Posters" />
 
             <ImageSlider images={content.images.logos} type="Logos" />
-        </main>
+        </div>
     );
 }

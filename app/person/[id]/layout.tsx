@@ -67,7 +67,7 @@ export default async function Layout({ children, params }: LayoutProps) {
     const genders = ['not specified', 'female', 'male', 'non-binary'];
 
     return (
-        <main className="m-2 md:m-4 lg:m-8">
+        <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">
             <BackButton main={false} />
             <div className="grid gap-4 md:flex">
                 {deets.profile_path ?

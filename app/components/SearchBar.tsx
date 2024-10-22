@@ -14,12 +14,13 @@ export default function SearchBar(props: { searchTerm?: string }) {
     }
 
     return (
-        <div className="max-w-[500px] mb-6">
+        <div className="max-w-[500px]">
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
                     router.push(`/search/multi?query=${search}&page=1`);
                 }}
+                aria-label="search bar"
                 name="search"
                 className="flex items-end justify-center w-full gap-2"
             >

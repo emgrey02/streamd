@@ -58,70 +58,79 @@ export default async function Layout({ children, params }: LayoutProps) {
     }
 
     return (
-        <main className="m-2 md:m-4 lg:m-8">
+        <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10 ">
             <BackButton main={false} />
-            <div className="grid gap-4 md:flex md:h-min">
+            <div>
+                <h1 className="text-2xl sm:text-4xl tracking-wider">
+                    {deets.title}
+                </h1>
+                <div className="w-full max-w-full h-[2px] bg-brand-blue mt-1"></div>
+                <p className="font-light">movie</p>
+            </div>
+            <div className="flex flex-col gap-6 sm:flex-row @container w-full">
                 {deets.poster_path ?
                     <Image
-                        className="max-h-600"
+                        className="self-center sm:self-start"
                         src={`https://image.tmdb.org/t/p/w400${deets.poster_path}`}
-                        alt="movie poster"
-                        width={400}
-                        height={600}
+                        alt={`movie poster for ${deets.title}`}
+                        width={200}
+                        height={300}
                         priority
                     />
                 :   <div className="w-96 bg-slate-300/20 grid place-items-center">
                         {deets.title} poster unavailable
                     </div>
                 }
-                <div className="flex flex-col gap-4">
-                    <div>
-                        <h1 className="text-2xl font-bold text-brand-blue">
-                            {deets.title}
-                        </h1>
-                        <p className="font-light">movie</p>
+                <div className="flex flex-col gap-6 @4xl:flex-row w-full">
+                    <div className="flex flex-col gap-4 @container w-full flex-shring-1">
+                        {deets.tagline && (
+                            <p className="font-light italic text-xl">
+                                {deets.tagline}
+                            </p>
+                        )}
+
+                        {deets.release_date && (
+                            <div>
+                                <p>Released {getDate(deets.release_date)}</p>
+                            </div>
+                        )}
+                        <Genres data={deets.genres} content="movie" />
+                        {deets.overview ?
+                            <div className="col-span-2">
+                                <h2 className="font-bold text-lg">Overview</h2>
+                                <Text text={deets.overview} />
+                            </div>
+                        :   <p>no overview available.</p>}
                     </div>
-                    <p className="font-light italic">{deets.tagline}</p>
-                    <Genres data={deets.genres} content="movie" />
-                    {accountId && sessionId && (
-                        <>
-                            <div className="grid grid-cols-2 w-fit">
-                                <FavorWatchButton
-                                    whichOne="favorite"
+                    <div className="flex flex-col gap-4 self-end w-full flex-grow bg-slate-900/60 p-4">
+                        {accountId && sessionId && (
+                            <div className="flex flex-col gap-6">
+                                <div className="grid grid-cols-1 gap-2 @sm:flex @sm:flex-row @sm:gap-4 w-full">
+                                    <FavorWatchButton
+                                        whichOne="favorite"
+                                        content="movie"
+                                        contentId={deets.id}
+                                        accountId={accountId}
+                                        sessionId={sessionId}
+                                    />
+                                    <FavorWatchButton
+                                        whichOne="watchlist"
+                                        content="movie"
+                                        contentId={deets.id}
+                                        accountId={accountId}
+                                        sessionId={sessionId}
+                                    />
+                                </div>
+                                <SubmitRating
                                     content="movie"
-                                    contentId={deets.id}
-                                    accountId={accountId}
+                                    id={deets.id}
                                     sessionId={sessionId}
-                                />
-                                <FavorWatchButton
-                                    whichOne="watchlist"
-                                    content="movie"
-                                    contentId={deets.id}
-                                    accountId={accountId}
-                                    sessionId={sessionId}
+                                    voteAvg={deets.vote_average}
+                                    totalVotes={deets.vote_count}
                                 />
                             </div>
-                            <SubmitRating
-                                content="movie"
-                                id={deets.id}
-                                sessionId={sessionId}
-                                voteAvg={deets.vote_average}
-                                totalVotes={deets.vote_count}
-                            />
-                        </>
-                    )}
-                    {deets.release_date && (
-                        <div>
-                            <h2 className="font-bold">Released</h2>
-                            <p>{getDate(deets.release_date)}</p>
-                        </div>
-                    )}
-                    {deets.overview ?
-                        <div>
-                            <p className="font-bold text-lg">Overview</p>
-                            <Text text={deets.overview} />
-                        </div>
-                    :   <p>no overview available.</p>}
+                        )}
+                    </div>
                 </div>
             </div>
             <ContentPageNav />

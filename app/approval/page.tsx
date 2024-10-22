@@ -46,9 +46,9 @@ export default function Page() {
     }, [router]);
 
     return (
-        <>
-            <p className="text-center my-8">you are now signed in!</p>
-            <p className="text-center">taking you home...</p>
-        </>
+        <div className="text-center my-8">
+            <p>you are now signed in!</p>
+            <p>taking you home...</p>
+        </div>
     );
 }

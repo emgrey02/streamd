@@ -22,7 +22,7 @@ export default function ContentPageNav() {
     }, [pathname]);
 
     return (
-        <nav>
+        <nav aria-label="secondary navigation">
             <ul
                 className={`grid ${mediaType === 'person' ? 'grid-cols-2 max-w-[400px]' : 'grid-cols-3 max-w-[400px]'} ${mediaType === 'tv' && 'grid-cols-4 max-w-[600px]'} items-center my-8 ring-1 ring-gray-900 bg-slate-700/40`}
             >
@@ -32,6 +32,7 @@ export default function ContentPageNav() {
                     <Link
                         className="grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue"
                         href={`/${mediaType}/${showId}`}
+                        replace
                     >
                         Info
                     </Link>
@@ -42,6 +43,7 @@ export default function ContentPageNav() {
                     <Link
                         className="grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue"
                         href={`/${mediaType}/${showId}/credits`}
+                        replace
                     >
                         Credits
                     </Link>
@@ -53,6 +55,7 @@ export default function ContentPageNav() {
                         <Link
                             className="grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue"
                             href={`/${mediaType}/${showId}/reviews`}
+                            replace
                         >
                             Reviews
                         </Link>
@@ -65,6 +68,7 @@ export default function ContentPageNav() {
                         <Link
                             className="grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue"
                             href={`/${mediaType}/${showId}/seasons`}
+                            replace
                         >
                             Seasons
                         </Link>

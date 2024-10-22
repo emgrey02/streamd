@@ -7,9 +7,9 @@ export default function Genres(props: { data: any; content: string }) {
     return (
         <>
             {deets.length > 0 && (
-                <div>
+                <div className="flex gap-2">
+                    <h2>Genres:</h2>
                     <ul className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <h2>Genres:</h2>
                         {deets.map(
                             (
                                 genre: { id: number; name: string },
@@ -31,8 +31,11 @@ export default function Genres(props: { data: any; content: string }) {
                 </div>
             )}
             {deets.keywords && deets.keywords.length > 0 && (
-                <div>
-                    <ul className="flex flex-wrap items-center gap-4">
+                <div className="w-full ring-2 ring-slate-700">
+                    <h3 className="mb-2 font-medium text-lg px-4 pt-3">
+                        Keywords
+                    </h3>
+                    <ul className="flex flex-wrap w-full items-center gap-2 px-4 pb-4">
                         {deets.keywords.map(
                             (
                                 k: { id: number; name: string },

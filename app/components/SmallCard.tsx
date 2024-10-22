@@ -43,7 +43,7 @@ export default function NewCard(props: {
 
     return (
         <Link
-            className="p-[5px] grid grid-cols-[100px_auto] h-[160px] gap-2 bg-slate-700 hover:bg-slate-700/40 hover:ring-2 hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
+            className="p-[5px] grid grid-cols-[40px_auto] h-[70px] gap-2 bg-slate-700 hover:bg-slate-700/40 hover:ring-2 hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
             href={`/${type}/${props.showId ? props.showId : p.id}/${props.seasons ? `season/${props.seasonNum}/` : '/'}`}
         >
             {p.profile_path || p.poster_path ?
@@ -51,15 +51,15 @@ export default function NewCard(props: {
                     className="overflow-y-clip"
                     src={`https://image.tmdb.org/t/p/w200/${p.poster_path || p.profile_path}`}
                     alt={`${p.profile_path ? 'Profile of' : 'Poster for'} ${p.name || p.title}`}
-                    width="100"
-                    height="150"
+                    width="40"
+                    height="60"
                 />
-            :   <div className="w-[100px] h-[150px] bg-slate-900/80 text-slate-400 grid place-items-center text-center">
-                    no image available
+            :   <div className="w-[40px] h-[60px] bg-slate-900/80 text-slate-400 grid place-items-center text-center text-xs">
+                    no image
                 </div>
             }
-            <div className="flex flex-col gap-2 overflow-scroll">
-                <h4 className="text-wrap mt-4 font-medium text-[17px] w-fit text-brand-blue">
+            <div className="flex flex-col overflow-scroll">
+                <h4 className="text-wrap font-medium text-[16px] w-fit text-brand-blue">
                     {p.name || p.title}
                 </h4>
                 {props.search || !props.credits || (
@@ -68,9 +68,9 @@ export default function NewCard(props: {
                             (p.roles && p.roles[0].character) ||
                             p.job ||
                             (p.jobs && p.jobs[0].job)) && (
-                            <div className="flex items-center gap-1">
-                                <p className="font-light">as</p>
-                                <p className="text-wrap w-fit">
+                            <div className="flex gap-1">
+                                <p className="text-sm">as</p>
+                                <p className=" text-sm italic">
                                     {p.character ||
                                         (p.roles && p.roles[0].character) ||
                                         p.job ||

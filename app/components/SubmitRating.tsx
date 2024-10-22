@@ -124,77 +124,91 @@ export default function SubmitRating(props: {
     ]);
 
     return (
-        <div className="grid grid-cols-2 w-full gap-8 items-center">
-            <div className="flex flex-col gap-2">
-                <p className="text-sm">Average Rating: {voteAverage} / 10</p>
-                <div className="h-3 w-full relative overflow-hidden bg-slate-900">
-                    <div
-                        className={`h-full bg-brand-blue absolute`}
-                        style={progress}
-                    ></div>
+        <div className="@container">
+            <div className="grid @md:grid-cols-2 w-full gap-8 items-center">
+                <div className="flex flex-col gap-2">
+                    <p className="text-sm">
+                        Average Rating: {voteAverage} / 10
+                    </p>
+                    <div className="h-3 w-full relative overflow-hidden bg-slate-900">
+                        <div
+                            className={`h-full bg-brand-blue absolute`}
+                            style={progress}
+                        ></div>
+                    </div>
+                    <p className="text-sm">Total votes: {props.totalVotes}</p>
                 </div>
-                <p className="text-sm">Total votes: {props.totalVotes}</p>
-            </div>
-            <div className="w-full grid grid-rows-2 gap-4">
-                {(hasUserRated || (!hasUserRated && isRating)) && (
-                    <div className="flex flex-col gap-2 h-full">
-                        <div className="text-sm">
-                            Your Rating: {userRating} / 10
-                        </div>
-                        <div className="h-3 w-full relative overflow-hidden bg-slate-900">
-                            <div
-                                className={`h-full bg-green-300/70 absolute`}
-                                style={youProgress}
-                            ></div>
-                        </div>
-                    </div>
-                )}
-                {!isRating && !hasUserRated && (
-                    <button className="w-fit" onClick={triggerRatingForm}>
-                        Rate it
-                    </button>
-                )}
-                {!isRating && hasUserRated && (
-                    <div className="text-sm grid grid-cols-2 h-full w-100 gap-4 font-semibold">
-                        <button
-                            className="bg-brand-blue text-slate-950 h-full w-full py-2 hover:bg-brand-blue/70 transition"
-                            onClick={triggerRatingForm}
-                        >
-                            Edit
-                        </button>
-                        <button
-                            className="bg-slate-900 h-full w-full py-2 hover:bg-slate-900/70 transition"
-                            onClick={deletePrevRating}
-                        >
-                            Delete
-                        </button>
-                    </div>
-                )}
-                {isRating && (
-                    <form className="flex flex-col">
-                        <div className="flex flex-col gap-2">
-                            <input
-                                className="accent-slate-500 cursor-pointer"
-                                type="range"
-                                id="rating"
-                                name="rating"
-                                min="1"
-                                max="10"
-                                step="0.5"
-                                defaultValue={userRating}
-                                onChange={changeRating}
-                            ></input>
-                            <div className="flex justify-between">
-                                <button onClick={() => setIsRating(false)}>
-                                    cancel
-                                </button>
-                                <button type="submit" onClick={submitRating}>
-                                    submit
-                                </button>
+                <div className="w-full gap-4">
+                    {(hasUserRated || (!hasUserRated && isRating)) && (
+                        <div className="flex flex-col gap-2 h-full">
+                            <div className="text-sm">
+                                Your Rating: {userRating} / 10
+                            </div>
+                            <div className="h-3 w-full relative overflow-hidden bg-slate-900">
+                                <div
+                                    className={`h-full bg-green-300/70 absolute`}
+                                    style={youProgress}
+                                ></div>
                             </div>
                         </div>
-                    </form>
-                )}
+                    )}
+                    {!isRating && !hasUserRated && (
+                        <button
+                            className="w-fit border-2 px-2 py-1 border-slate-500 hover:border-brand-blue"
+                            onClick={triggerRatingForm}
+                        >
+                            Rate it
+                        </button>
+                    )}
+                    {!isRating && hasUserRated && (
+                        <div className="text-sm grid grid-cols-2 h-full w-100 gap-4 font-semibold mt-4">
+                            <button
+                                className="bg-brand-blue text-slate-950 h-full w-full py-2 hover:bg-brand-blue/70 transition"
+                                onClick={triggerRatingForm}
+                            >
+                                Edit
+                            </button>
+                            <button
+                                className="bg-slate-900 h-full w-full py-2 hover:bg-red-800 transition"
+                                onClick={deletePrevRating}
+                            >
+                                Delete
+                            </button>
+                        </div>
+                    )}
+                    {isRating && (
+                        <form className="flex flex-col mt-4">
+                            <div className="flex flex-col">
+                                <input
+                                    className="accent-slate-500 cursor-pointer"
+                                    type="range"
+                                    id="rating"
+                                    name="rating"
+                                    min="1"
+                                    max="10"
+                                    step="0.5"
+                                    defaultValue={userRating}
+                                    onChange={changeRating}
+                                ></input>
+                                <div className="text-sm grid grid-cols-2 h-full w-100 gap-4 font-semibold mt-4">
+                                    <button
+                                        className="bg-brand-blue text-slate-950 h-full w-full py-2 hover:bg-brand-blue/70 transition"
+                                        onClick={() => setIsRating(false)}
+                                    >
+                                        cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="bg-slate-900 h-full w-full py-2 hover:bg-green-300/70 hover:text-slate-900 transition"
+                                        onClick={submitRating}
+                                    >
+                                        submit
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    )}
+                </div>
             </div>
         </div>
     );

@@ -77,7 +77,7 @@ export default function ImageSlider(props: {
     return (
         <>
             {images.length > 0 && (
-                <div className="col-span-2">
+                <div className="md:col-span-2">
                     <h2 className="text-lg mb-2 font-medium">{props.type}</h2>
                     <div className="bg-slate-950/80 px-4 py-6 md:py-10 md:px-8">
                         <ul
@@ -93,7 +93,7 @@ export default function ImageSlider(props: {
                                         <Image
                                             className={`${slideNum === index && 'bg-slate-100/70'} p-1`}
                                             src={`https://image.tmdb.org/t/p/w200/${i.file_path}`}
-                                            alt={`backdrop image`}
+                                            alt={`${props.type.slice(0, -1)} ${index}`}
                                             width="150"
                                             height="1080"
                                         />
@@ -115,7 +115,7 @@ export default function ImageSlider(props: {
                                         <Image
                                             className="w-full px-8 max-h-[calc(100vh-200px)]"
                                             src={`https://image.tmdb.org/t/p/w1280/${images[`${slideNum}`].file_path}`}
-                                            alt={`backdrop image`}
+                                            alt={`enlarged ${props.type.slice(0, -1)} ${slideNum}`}
                                             width="1280"
                                             height="1080"
                                         />

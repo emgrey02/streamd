@@ -119,10 +119,10 @@ export default function FavorWatchButton({
     }
 
     return (
-        <div className="my-2">
+        <>
             {whichOne === 'favorite' ?
                 <button
-                    className="w-fit h-min flex items-center justify-center gap-2"
+                    className="flex items-center justify-start gap-2"
                     onClick={handleClick}
                 >
                     {canFavorite ?
@@ -159,13 +159,13 @@ export default function FavorWatchButton({
                     }
                 </button>
             :   <button
-                    className="w-fit h-min flex items-center justify-center gap-2"
+                    className="flex items-center justify-start gap-2"
                     onClick={handleClick}
                 >
                     {canAddToWatchlist ?
                         <>
                             <svg
-                                className="fill-brand-blue"
+                                className="fill-brand-blue shrink-0"
                                 width="30px"
                                 height="30px"
                                 viewBox="0 0 20 20"
@@ -174,7 +174,7 @@ export default function FavorWatchButton({
                                 <title>Add to watchlist</title>
                                 <path d="M16 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4H9v-4H5V9h4V5h2v4h4v2z" />
                             </svg>
-                            <p>Add to Watchlist</p>
+                            <p className="shrink-0">Add to Watchlist</p>
                         </>
                     :   <>
                             <svg
@@ -192,6 +192,6 @@ export default function FavorWatchButton({
                     }
                 </button>
             }
-        </div>
+        </>
     );
 }

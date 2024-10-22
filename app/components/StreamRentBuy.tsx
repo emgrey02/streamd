@@ -27,9 +27,9 @@ export default function StreamRentBuy(props: { content: any }) {
         <>
             {content && (
                 <>
-                    <div className="ring-2 ring-slate-700 h-full">
-                        <ul className="mb-4 px-4 pt-4 flex">
-                            <li className="">
+                    <div className="ring-2 ring-slate-700 h-full pt-4 px-4 flex flex-col pb-2">
+                        <ul className="mb-4 flex ring-1 ring-slate-900 w-fit">
+                            <li className="border-e-2 border-slate-600">
                                 <button
                                     className={`pe-6 py-2 px-2 hover:bg-slate-600 ${currentTab === 'Stream it' ? 'bg-slate-900' : 'bg-slate-700'}`}
                                     onClick={() => setCurrentTab('Stream it')}
@@ -37,7 +37,7 @@ export default function StreamRentBuy(props: { content: any }) {
                                     Stream it
                                 </button>
                             </li>
-                            <li className="">
+                            <li className="border-e-2 border-slate-600">
                                 <button
                                     className={`pe-6 py-2 px-2 hover:bg-slate-600 ${currentTab === 'Buy it' ? 'bg-slate-900' : 'bg-slate-700'}`}
                                     onClick={() => setCurrentTab('Buy it')}
@@ -55,29 +55,29 @@ export default function StreamRentBuy(props: { content: any }) {
                             </li>
                         </ul>
 
-                        <ul className="flex flex-wrap gap-4 px-2 w-full">
+                        <ul className="flex flex-wrap gap-4 w-full pb-4">
                             {currentContent ?
                                 currentContent.map((wp: any, index: number) => (
                                     <li
                                         key={index}
-                                        className="w-[120px] grid grid-rows-[min_content_min-content] gap-2 p-2"
+                                        className="w-fit flex items-center gap-2"
                                     >
-                                        <div className="grid place-items-center bg-slate-600 min-w-[100px] min-h-[100px]">
+                                        <div className="grid place-items-center bg-slate-600 min-w-[60px] min-h-[60px]">
                                             {wp.logo_path ?
                                                 <Image
                                                     className="p-2"
                                                     src={`https://image.tmdb.org/t/p/w200/${wp.logo_path}`}
                                                     alt={`logo`}
-                                                    width="100"
-                                                    height="100"
+                                                    width="60"
+                                                    height="60"
                                                 />
-                                            :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
+                                            :   <div className="w-[60px] h-[60px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
                                                     no logo available
                                                 </div>
                                             }
                                         </div>
-                                        <div>
-                                            <p className="text-sm">
+                                        <div className="w-fit max-w-28">
+                                            <p className="text-sm w-fit">
                                                 {wp.provider_name}
                                             </p>
                                         </div>
@@ -88,75 +88,13 @@ export default function StreamRentBuy(props: { content: any }) {
                                 </p>
                             }
                         </ul>
+                        <a
+                            className="text-sm text-end text-slate-500"
+                            href={content.link}
+                        >
+                            JustWatch
+                        </a>
                     </div>
-                    {/* {content.buy && (
-                        <div className="ring-2 ring-slate-700 h-full">
-                            <h2 className="mb-2 px-4 pt-3">Buy it</h2>
-                            <ul className="flex flex-wrap gap-4 px-2 w-full">
-                                {content.buy.map((wp: any, index: number) => (
-                                    <li
-                                        key={index}
-                                        className="w-[120px] grid grid-rows-[min_content_min-content] gap-2 p-2"
-                                    >
-                                        <div className="grid place-items-center bg-slate-600 min-w-[100px] min-h-[100px]">
-                                            {wp.logo_path ?
-                                                <Image
-                                                    className="p-2"
-                                                    src={`https://image.tmdb.org/t/p/w200/${wp.logo_path}`}
-                                                    alt={`logo`}
-                                                    width="100"
-                                                    height="100"
-                                                />
-                                            :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
-                                                    no logo available
-                                                </div>
-                                            }
-                                        </div>
-                                        <div>
-                                            <p className="text-sm">
-                                                {wp.provider_name}
-                                            </p>
-                                        </div>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
-                    {content.flatrate && (
-                        <div className="ring-2 ring-slate-700 h-full">
-                            <h2 className="mb-2 px-4 pt-3">Stream it</h2>
-                            <ul className="flex flex-wrap gap-4 px-2 pb-2 w-fit">
-                                {content.flatrate.map(
-                                    (wp: any, index: number) => (
-                                        <li
-                                            key={index}
-                                            className="w-[120px] grid grid-rows-[min_content_min-content] gap-2 p-2"
-                                        >
-                                            <div className="grid place-items-center bg-slate-600 min-w-[100px] min-h-[100px]">
-                                                {wp.logo_path ?
-                                                    <Image
-                                                        className="p-2"
-                                                        src={`https://image.tmdb.org/t/p/w200/${wp.logo_path}`}
-                                                        alt={`logo`}
-                                                        width="100"
-                                                        height="100"
-                                                    />
-                                                :   <div className="w-[90px] h-[90px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
-                                                        no logo available
-                                                    </div>
-                                                }
-                                            </div>
-                                            <div>
-                                                <p className="text-sm">
-                                                    {wp.provider_name}
-                                                </p>
-                                            </div>
-                                        </li>
-                                    )
-                                )}
-                            </ul>
-                        </div>
-                    )} */}
                 </>
             )}
         </>

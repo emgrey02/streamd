@@ -31,8 +31,7 @@ export default function SearchResults(props: {
     }, [props.data.results, props.data.page]);
 
     return (
-        <main>
-            <BackButton main={true} />
+        <div className="flex flex-col gap-8 my-8">
             <SearchBar
                 searchTerm={
                     props.keyword || props.genre ?
@@ -141,6 +140,6 @@ export default function SearchResults(props: {
                 keyword={props.keyword}
                 genre={props.genre}
             />
-        </main>
+        </div>
     );
 }

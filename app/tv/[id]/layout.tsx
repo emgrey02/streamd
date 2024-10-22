@@ -58,78 +58,78 @@ export default async function Layout({ children, params }: LayoutProps) {
     }
 
     return (
-        <main className="m-2 md:m-4 lg:m-8 grid gap-4">
-            <div>
-                <BackButton main={false} />
-                <div className="grid gap-4 md:flex md:h-min h-auto">
-                    {deets.poster_path ?
-                        <div>
-                            <Image
-                                className="max-h-600"
-                                src={`https://image.tmdb.org/t/p/w400${deets.poster_path}`}
-                                alt="tv poster"
-                                width={400}
-                                height={1200}
-                            />
-                        </div>
-                    :   <div className="w-96 h-auto bg-slate-300/20 grid place-items-center">
-                            {deets.name} poster unavailable
-                        </div>
-                    }
-                    <div className="flex flex-col gap-4">
-                        <div>
-                            <h1 className="text-2xl font-bold text-slate-200">
-                                {deets.name}
-                            </h1>
-                            <p className="font-light">tv show</p>
-                        </div>
-                        <div className="flex gap-2 text-sm">
-                            <p>{deets.number_of_episodes} total episodes</p>
-                            <p>-</p>
-                            <p>{deets.number_of_seasons} seasons</p>
-                        </div>
-                        <div className="">
-                            <p className="italic">{deets.tagline}</p>
-                        </div>
-                        <Genres data={deets.genres} content="tv" />
-                        {accountId && sessionId && (
-                            <>
-                                <div className="grid grid-cols-2 w-fit">
-                                    <FavorWatchButton
-                                        whichOne="favorite"
-                                        content="tv"
-                                        contentId={deets.id}
-                                        accountId={accountId}
-                                        sessionId={sessionId}
-                                    />
-                                    <FavorWatchButton
-                                        whichOne="watchlist"
-                                        content="tv"
-                                        contentId={deets.id}
-                                        accountId={accountId}
-                                        sessionId={sessionId}
-                                    />
-                                </div>
-                                <SubmitRating
+        <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">
+            <BackButton main={false} />
+            <div className="grid gap-4 md:flex md:h-min h-auto">
+                {deets.poster_path ?
+                    <div>
+                        <Image
+                            className="max-h-200 sm:max-h-600"
+                            src={`https://image.tmdb.org/t/p/w400${deets.poster_path}`}
+                            alt={`poster for ${deets.name}`}
+                            width={400}
+                            height={1200}
+                        />
+                    </div>
+                :   <div className="w-96 h-auto bg-slate-300/20 grid place-items-center">
+                        {deets.name} poster unavailable
+                    </div>
+                }
+                <div className="flex flex-col gap-4">
+                    <div>
+                        <h1 className="text-5xl tracking-wider text-slate-200">
+                            {deets.name}
+                        </h1>
+                        <div className="w-full max-w-full h-[2px] bg-brand-blue mt-1"></div>
+                        <p className="font-light">tv show</p>
+                    </div>
+                    <div className="flex gap-2 text-sm">
+                        <p>{deets.number_of_episodes} total episodes</p>
+                        <p>-</p>
+                        <p>{deets.number_of_seasons} seasons</p>
+                    </div>
+                    <div className="">
+                        <p className="italic">{deets.tagline}</p>
+                    </div>
+                    <Genres data={deets.genres} content="tv" />
+                    {accountId && sessionId && (
+                        <>
+                            <div className="grid grid-cols-2 w-fit">
+                                <FavorWatchButton
+                                    whichOne="favorite"
                                     content="tv"
-                                    id={deets.id}
+                                    contentId={deets.id}
+                                    accountId={accountId}
                                     sessionId={sessionId}
-                                    voteAvg={deets.vote_average}
-                                    totalVotes={deets.vote_count}
                                 />
-                            </>
-                        )}
-                        <div>
-                            <h2 className="font-bold">First Aired</h2>
-                            <p>{getDate(deets.first_air_date)}</p>
-                        </div>
-                        <div className="flex flex-col">
-                            <h2 className="font-bold text-lg">Overview</h2>
-                            <Text text={deets.overview} />
-                        </div>
+                                <FavorWatchButton
+                                    whichOne="watchlist"
+                                    content="tv"
+                                    contentId={deets.id}
+                                    accountId={accountId}
+                                    sessionId={sessionId}
+                                />
+                            </div>
+                            <SubmitRating
+                                content="tv"
+                                id={deets.id}
+                                sessionId={sessionId}
+                                voteAvg={deets.vote_average}
+                                totalVotes={deets.vote_count}
+                            />
+                        </>
+                    )}
+                    <div>
+                        <h2 className="font-bold">First Aired</h2>
+                        <p>{getDate(deets.first_air_date)}</p>
+                    </div>
+                    <div className="flex flex-col">
+                        <h2 className="font-bold text-lg">Overview</h2>
+                        <Text text={deets.overview} />
                     </div>
                 </div>
             </div>
+
             <ContentPageNav />
             {children}
         </main>

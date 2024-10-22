@@ -64,14 +64,14 @@ export default async function Layout({ children, params }: LayoutProps) {
     }
 
     return (
-        <main className="flex flex-col gap-8 mx-4 my-8">
+        <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">
             <BackButton main={false} />
             <SearchBar />
             <div>
-                <h1 className="text-5xl tracking-wider font-light mt-8 mb-2">
+                <h1 className="text-5xl tracking-wider font-light mb-2">
                     {renameContent(params.content)}
                 </h1>
-                <div className="w-[80%] max-w-full h-[1px] bg-brand-blue mb-4"></div>
+                <div className="w-[80%] max-w-full h-[1px] bg-brand-blue"></div>
             </div>
             <ListNav />
             <Pagination

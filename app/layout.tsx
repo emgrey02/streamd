@@ -23,24 +23,28 @@ export default async function RootLayout({
 }>) {
     const cookieStore = cookies();
     const sessionId = cookieStore.get('sessionId')?.value;
+    const username = cookieStore.get('username')?.value;
 
     return (
-        <html lang="en">
+        <html lang="en scroll-auto">
             <body
                 className={`${inter.className} w-full h-full relative bg-slate-800 text-gray-300 flex flex-col items-center`}
             >
                 <div
                     className={`min-h-svh max-w-7xl flex flex-col w-full h-full`}
                 >
-                    <nav className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full py-2 px-4 mb-10">
+                    <nav
+                        aria-label="primary navigation"
+                        className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full py-2 px-4 "
+                    >
                         <h1 className="font-bold text-lg text-brand-blue tracking-widest">
                             <Link href="/">streamie</Link>
                         </h1>
-                        <ul className="flex flex-wrap gap-y-6 m-4 w-full py-4 sm:w-fit justify-center sm:m-0 sm:grid grid-cols-5 gap-2 text-center bg-slate-700/50 sm:bg-slate-800">
+                        <ul className="flex flex-wrap gap-y-6 m-4 w-full py-4 sm:w-fit justify-center sm:m-0 gap-4 text-center">
                             <li>
                                 <Link
                                     className="underline underline-offset-1 hover:underline-offset-4 transition-all"
-                                    href="/movie/now_playing/1"
+                                    href="/movie/now_playing/1/"
                                 >
                                     movies
                                 </Link>
@@ -48,7 +52,7 @@ export default async function RootLayout({
                             <li>
                                 <Link
                                     className="underline underline-offset-1 hover:underline-offset-4 transition-all"
-                                    href="/tv/airing_today/1"
+                                    href="/tv/airing_today/1/"
                                 >
                                     shows
                                 </Link>
@@ -56,15 +60,37 @@ export default async function RootLayout({
                             <li>
                                 <Link
                                     className="underline underline-offset-1 hover:underline-offset-4 transition-all"
-                                    href="/trending/people/1"
+                                    href="/trending/people/1/"
                                 >
                                     people
                                 </Link>
                             </li>
+                        </ul>
+                    </nav>
+                    <nav
+                        aria-label="secondary navigation"
+                        className={`flex justify-between items-center w-full h-fit mb-8 sm:py-4 px-4 bg-slate-700/50`}
+                    >
+                        <div>
+                            {sessionId && username ?
+                                <div>
+                                    <p>hello {username}!</p>
+                                </div>
+                            :   <div>
+                                    <p>
+                                        Sign in to save content to your
+                                        favorites or watchlist.
+                                    </p>
+                                </div>
+                            }
+                        </div>
+                        <ul
+                            className={`flex flex-wrap gap-y-6 m-4 w-fit sm:m-0 gap-4`}
+                        >
                             <li>
                                 <Link
                                     className="hover:bg-slate-900 bg-slate-700/40 ring-1 ring-gray-900 px-2 py-2 text-brand-blue transition"
-                                    href="/dashboard"
+                                    href="/dashboard/"
                                 >
                                     dashboard
                                 </Link>
