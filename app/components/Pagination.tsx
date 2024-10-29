@@ -1,6 +1,5 @@
 'use client';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
 
 export default function Pagination(props: {
@@ -95,7 +94,7 @@ export default function Pagination(props: {
                 lastPageIndex,
             ]);
         }
-    }, [props.totalPages, props.page]);
+    }, []);
 
     return (
         <div className="flex justify-center my-4 bg-slate-900 text-slate-400 text-xl">
@@ -106,6 +105,7 @@ export default function Pagination(props: {
                             <Link
                                 className="h-full flex gap-2 items-center justify-center ps-2 py-1"
                                 href={backUrl}
+                                replace
                             >
                                 <p className="text-5xl mb-1 text-center">
                                     &#171;
@@ -138,6 +138,7 @@ export default function Pagination(props: {
 
                                         }
                                         className={`${num === page && 'underline underline-offset-2'}`}
+                                        replace
                                     >
                                         {num}
                                     </Link>
@@ -153,6 +154,7 @@ export default function Pagination(props: {
                             <Link
                                 className="h-full flex gap-2 justify-end items-center pe-2 py-1"
                                 href={nextUrl}
+                                replace
                             >
                                 <p className="text-5xl mb-1">&#187;</p>
                             </Link>

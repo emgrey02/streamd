@@ -1,21 +1,26 @@
 import BackButton from '@/app/components/BackButton';
+import ContentPage from '@/app/components/ContentPage';
+import LargeCreditsList from '@/app/components/LargeCreditsList';
 import ListNav from '@/app/components/ListNav';
 import Pagination from '@/app/components/Pagination';
 import SearchBar from '@/app/components/SearchBar';
 import { cookies } from 'next/headers';
 
-interface LayoutProps {
+interface Props {
     children: React.ReactNode;
-    params: { content: string; cat: string; page: string };
+    params: { content: string; cat: string };
 }
 
-export default async function Layout({ children, params }: LayoutProps) {
+export default async function Page({ params }: Props) {
     const sessionId: string | undefined = cookies().get('sessionId')?.value;
     const accountId: string | undefined = cookies().get('accId')?.value;
+    let pageNum = 1;
 
-    let url;
-    let type = 'multi';
-    let fwr = false;
+    if (params.content === 'movies') params.content = 'movie';
+
+    if (params.content === 'shows') params.content = 'tv';
+
+    let allContent: any = [];
 
     const options = {
         method: 'GET',
@@ -25,27 +30,16 @@ export default async function Layout({ children, params }: LayoutProps) {
         },
     };
 
-    if (
-        params.content === 'favorite' ||
-        params.content === 'watchlist' ||
-        params.content === 'rated'
-    ) {
-        type = params.cat === 'movie' ? 'movies' : params.cat;
-        url = `https://api.themoviedb.org/3/account/${accountId}/${params.content}/${type}?language=en-US&page=${params.page}&session_id=${sessionId}`;
-        fwr = true;
-    } else {
-        type = params.content;
-        url = `https://api.themoviedb.org/3/${type}/${params.cat === 'people' ? 'person' : params.cat}${params.content === 'trending' ? '/day' : ''}?language=en-US&page=${params.page}`;
-    }
+    const type = params.content;
+    const url = `https://api.themoviedb.org/3/${type}/${params.cat === 'people' ? 'person' : params.cat}${params.content === 'trending' ? '/day' : ''}?language=en-US&page=1`;
 
     let res = await fetch(url, options);
 
     if (!res.ok) {
         console.error('failed to fetch movie/show category');
     }
-
     const content = await res.json();
-    const totalPages = content.total_pages;
+    console.log(content);
 
     function renameContent(cont: string) {
         if (cont === 'movie') {
@@ -54,12 +48,6 @@ export default async function Layout({ children, params }: LayoutProps) {
             return 'Shows';
         } else if (cont === 'trending') {
             return 'Trending';
-        } else if (cont === 'favorite') {
-            return 'Favorite';
-        } else if (cont === 'watchlist') {
-            return 'Watchlist';
-        } else if (cont === 'rated') {
-            return 'Rated';
         }
     }
 
@@ -74,24 +62,12 @@ export default async function Layout({ children, params }: LayoutProps) {
                 <div className="w-[80%] max-w-full h-[1px] bg-brand-blue"></div>
             </div>
             <ListNav />
-            <Pagination
-                page={+params.page}
-                totalPages={totalPages}
+            <ContentPage
+                data={content.results}
+                pageNum={pageNum}
+                type={type}
                 cat={params.cat}
                 content={params.content}
-                search={false}
-                keyword={false}
-                genre={false}
-            />
-            {children}
-            <Pagination
-                page={+params.page}
-                totalPages={totalPages}
-                cat={params.cat}
-                content={params.content}
-                search={false}
-                keyword={false}
-                genre={false}
             />
         </main>
     );
