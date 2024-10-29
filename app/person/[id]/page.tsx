@@ -30,22 +30,15 @@ export default async function PersonPage({
     }
 
     const content = await res.json();
+    console.log(content.known_for);
     console.log(content.combined_credits.cast);
 
     return (
         <>
             <div>
-                <h2 className="font-medium text-lg mb-2">Cast Credits</h2>
+                <h2 className="font-medium text-lg mb-2">Known For</h2>
                 <SmallCreditsList
                     creds={content.combined_credits.cast}
-                    showId={personId}
-                    personId={personId}
-                />
-            </div>
-            <div>
-                <h2 className="font-medium text-lg mb-2">Crew Credits</h2>
-                <SmallCreditsList
-                    creds={content.combined_credits.crew}
                     showId={personId}
                     personId={personId}
                 />

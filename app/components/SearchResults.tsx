@@ -1,8 +1,6 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import Card from './Card';
-import BackButton from './BackButton';
 import Link from 'next/link';
 import Pagination from './Pagination';
 import LargeCreditsList from './LargeCreditsList';
@@ -125,8 +123,8 @@ export default function SearchResults(props: {
                             type={props.cat}
                             search={true}
                             credits={false}
-                            fwr={false}
                             seasons={false}
+                            clip={false}
                         />
                     </div>
                 )}
