@@ -34,9 +34,9 @@ export default async function SeasonsArea({
                 type="tv"
                 credits={false}
                 search={false}
-                fwr={false}
                 seasons={true}
                 showId={showId.toString()}
+                clip={true}
             />
         </div>
     );

@@ -35,8 +35,8 @@ export default async function ShowCredits({
                     type="tv"
                     search={false}
                     credits={true}
-                    fwr={false}
                     seasons={false}
+                    clip={true}
                 />
             </div>
             <div className="@container">
@@ -46,8 +46,8 @@ export default async function ShowCredits({
                     type="tv"
                     search={false}
                     credits={true}
-                    fwr={false}
                     seasons={false}
+                    clip={true}
                 />
             </div>
         </div>

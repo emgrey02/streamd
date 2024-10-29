@@ -62,6 +62,7 @@ export default async function Season({
 
     return (
         <div className="flex flex-col gap-4">
+            <BackButton main={false} link={`/tv/${showId}/seasons`} />
             <div className="flex gap-4 md:h-[400px] h-auto">
                 {deets.poster_path ?
                     <div>
@@ -116,7 +117,7 @@ export default async function Season({
                             type={'person'}
                             search={false}
                             credits={true}
-                            fwr={false}
+                            clip={true}
                             seasons={false}
                         />
                     </div>
