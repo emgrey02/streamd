@@ -167,8 +167,8 @@ export default async function Episode({
                         type={'person'}
                         search={false}
                         credits={true}
-                        fwr={false}
                         seasons={false}
+                        clip={false}
                     />
                 </div>
             )}
@@ -180,8 +180,8 @@ export default async function Episode({
                         type={'person'}
                         search={false}
                         credits={true}
-                        fwr={false}
                         seasons={false}
+                        clip={false}
                     />
                 </div>
             )}
