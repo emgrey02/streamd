@@ -4,13 +4,6 @@ import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 
-type Props = {
-    sessionId?: string;
-    accountId?: string;
-    content: string;
-    cat: string[] | string;
-};
-
 export default function ListNav() {
     const pathname = usePathname();
     const pathnameArray = pathname.slice(1).split('/');
@@ -51,20 +44,13 @@ export default function ListNav() {
     }
 
     async function setContent() {
-        if (
-            pathnameArray[0] === 'favorite' ||
-            pathnameArray[0] === 'watchlist' ||
-            pathnameArray[0] === 'rated'
-        ) {
-            setCategories(['movies', 'tv']);
-            setCategory(pathnameArray[1]);
-        } else if (pathnameArray[0] === 'trending') {
+        if (pathnameArray[0] === 'trending') {
             setCategories(['all', 'movie', 'tv', 'people']);
             setCategory(pathnameArray[1]);
-        } else if (pathnameArray[0] === 'movie') {
+        } else if (pathnameArray[0] === 'movies') {
             setCategories(['now_playing', 'popular', 'top_rated', 'upcoming']);
             setCategory(pathnameArray[1]);
-        } else if (pathnameArray[0] === 'tv') {
+        } else if (pathnameArray[0] === 'shows') {
             setCategories([
                 'airing_today',
                 'on_the_air',
@@ -87,7 +73,7 @@ export default function ListNav() {
                             className={`h-full ${cat === category && 'bg-slate-900'} border-s-2 ${cat === category ? 'border-slate-400' : 'border-slate-600'} transition-all `}
                         >
                             <Link
-                                href={`/${pathnameArray[0]}/${cat}/1`}
+                                href={`/${pathnameArray[0]}/${cat}`}
                                 className={`grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue`}
                             >
                                 {capitalizeCategory(cat)}

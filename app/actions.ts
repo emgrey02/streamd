@@ -1,6 +1,8 @@
 'use server';
 import { cookies } from 'next/headers';
 
+//movie,tv,people info
+
 export async function getShowInfo(showId: string) {
     const options = {
         method: 'GET',
@@ -64,122 +66,77 @@ export async function getMovieInfo(movieId: string) {
     return await res.json();
 }
 
-export async function deleteRating(
+export async function getContent(
     content: string,
-    id: number,
-    sessionId: string,
-    seasonNum?: string,
-    episodeNum?: string
+    cat: string | undefined,
+    pageNum: number
 ) {
-    let res;
-
     const options = {
-        method: 'DELETE',
-        headers: {
-            accept: 'application/json',
-            'Content-Type': 'application/json;charset=utf-8',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-    };
-
-    if (seasonNum && episodeNum) {
-        res = await fetch(
-            `https://api.themoviedb.org/3/${content}/${id}/season/${seasonNum}/episode/${episodeNum}/rating?session_id=${sessionId}`,
-            options
-        );
-    } else {
-        res = await fetch(
-            `https://api.themoviedb.org/3/${content}/${id}/rating?session_id=${sessionId}`,
-            options
-        );
-    }
-
-    const resJson = await res.json();
-
-    //error handling
-    if (!res.ok) {
-        console.log(resJson);
-        console.error(`failed to rate this ${content}`);
-    }
-
-    return resJson;
-}
-
-export async function rateContent(
-    content: string,
-    id: number,
-    rating: number,
-    sessionId: string,
-    seasonNum?: string,
-    episodeNum?: string
-) {
-    let res;
-
-    const options = {
-        method: 'POST',
-        headers: {
-            accept: 'application/json',
-            'Content-Type': 'application/json;charset=utf-8',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-        body: JSON.stringify({
-            value: rating,
-        }),
-    };
-
-    if (seasonNum && episodeNum) {
-        res = await fetch(
-            `https://api.themoviedb.org/3/${content}/${id}/season/${seasonNum}/episode/${episodeNum}/rating?session_id=${sessionId}`,
-            options
-        );
-    } else {
-        res = await fetch(
-            `https://api.themoviedb.org/3/${content}/${id}/rating?session_id=${sessionId}`,
-            options
-        );
-    }
-
-    const resJson = await res.json();
-
-    //error handling
-    if (!res.ok) {
-        console.log(resJson);
-        console.error(`failed to rate this ${content}`);
-    }
-
-    return resJson;
-}
-
-export async function getRequestToken() {
-    const options: RequestInit = {
         method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    console.log(content, cat, pageNum);
+    if (content === 'trending') {
+        if (cat === 'movies') cat = 'movie';
+        if (cat === 'people') cat = 'person';
+    }
+
+    let res = await fetch(
+        `https://api.themoviedb.org/3/${content}/${cat}${content === 'trending' ? '/day' : ''}?language=en-US&page=${pageNum}`,
+        options
+    );
+
+    if (!res.ok) {
+        console.error('failed to fetch content');
+    } else {
+        console.log('successfully retrieved content');
+    }
+    let result = await res.json();
+    return result;
+}
+
+export async function getMoreContent() {}
+
+//account log-in and log-out tasks
+export async function getRequestToken() {
+    const v4options: RequestInit = {
+        method: 'POST',
         headers: {
             accept: 'application/json',
             'content-type': 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
         next: { revalidate: 60 },
+        body: JSON.stringify({
+            redirect_to: `${process.env.NEXT_PUBLIC_BASE_URL}/approval`,
+        }),
     };
 
-    options.next as RequestInit;
+    v4options.next as RequestInit;
 
     //fetch to get a request token from TMDB
-    const res = await fetch(
-        'https://api.themoviedb.org/3/authentication/token/new',
-        options
+    const v4Res = await fetch(
+        'https://api.themoviedb.org/4/auth/request_token',
+        v4options
     );
 
     //error handling
-    if (!res.ok) {
-        console.error('failed to fetch request token from tmdb');
+    if (!v4Res.ok) {
+        console.error('failed to fetch v4 request token from tmdb');
     }
 
     //assign request Token
-    const resJson = await res.json();
-    const reqToken = resJson.request_token;
+    const v4ResJson = await v4Res.json();
+
+    const v4ReqToken = v4ResJson.request_token;
+
     console.log('successfully got request token from tmdb');
-    console.log(resJson);
-    return reqToken;
+    console.log(v4ResJson);
+    return v4ReqToken;
 }
 
 export async function setReqTokenCookie(rt: string) {
@@ -205,13 +162,17 @@ export async function getReqTokenCookie() {
 
 export async function setSessionCookies(
     sessionId: string,
-    userInfo: { id: string; username: string }
+    userInfo: { id: string; username: string },
+    accessToken: string,
+    accountObjectId: string
 ) {
-    console.log(sessionId, userInfo.id, userInfo.username);
+    console.log(sessionId, accessToken, userInfo.id, userInfo.username);
     console.log('setting user session cookies');
     cookies().set('sessionId', sessionId);
     cookies().set('accId', userInfo.id);
     cookies().set('username', userInfo.username);
+    cookies().set('accessToken', accessToken);
+    cookies().set('accountObjectId', accountObjectId);
     console.log('session cookies are set');
 }
 
@@ -219,9 +180,14 @@ export async function getSessionId() {
     return cookies().get('sessionId')?.value;
 }
 
-export async function tmdbLogOut(sessionId: string) {
+export async function getAccessToken() {
+    return cookies().get('accessToken')?.value;
+}
+
+export async function tmdbLogOut(accessToken: string) {
     console.log('logging out...');
-    console.log(sessionId);
+    console.log(accessToken);
+
     const options = {
         method: 'DELETE',
         headers: {
@@ -230,12 +196,12 @@ export async function tmdbLogOut(sessionId: string) {
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
         body: JSON.stringify({
-            session_id: sessionId,
+            access_token: accessToken,
         }),
     };
 
     let res = await fetch(
-        'https://api.themoviedb.org/3/authentication/session',
+        'https://api.themoviedb.org/4/auth/access_token',
         options
     );
 
@@ -250,7 +216,7 @@ export async function tmdbLogOut(sessionId: string) {
 
 export async function createTmdbSession(rt: string) {
     //create new options object for fetching session_id using request token
-    const sessionOptions: RequestInit = {
+    const accessTokenOptions: RequestInit = {
         method: 'POST',
         headers: {
             accept: 'application/json',
@@ -263,21 +229,46 @@ export async function createTmdbSession(rt: string) {
         next: { revalidate: 60 },
     };
 
-    const sessionRes = await fetch(
-        'https://api.themoviedb.org/3/authentication/session/new',
-        sessionOptions
+    const accessTokenRes = await fetch(
+        'https://api.themoviedb.org/4/auth/access_token',
+        accessTokenOptions
     );
 
-    if (!sessionRes.ok) {
-        const sessionResJson = await sessionRes.json();
-        console.log(sessionResJson);
-        console.error('failed to get session id');
-        return sessionResJson;
+    const accessTokenResJson = await accessTokenRes.json();
+
+    if (!accessTokenRes.ok) {
+        console.log(accessTokenResJson);
+        console.error('failed to get accessToken');
     } else {
-        const sessionResJson = await sessionRes.json();
-        console.log(sessionResJson);
+        console.log(accessTokenResJson);
+        console.log('successfully got an accessToken');
+
+        const sessionOptions: RequestInit = {
+            method: 'POST',
+            headers: {
+                accept: 'application/json',
+                'content-type': 'application/json',
+                Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+            },
+            body: JSON.stringify({
+                access_token: accessTokenResJson.access_token,
+            }),
+            next: { revalidate: 60 },
+        };
+
+        const sessionRes = await fetch(
+            'https://api.themoviedb.org/3/authentication/session/convert/4',
+            sessionOptions
+        );
+
+        if (!sessionRes.ok) {
+            console.log(sessionRes);
+            console.error('failed to get session id from v4 access token');
+        }
         console.log('successfully got a session id');
-        return sessionResJson;
+        const sessionResJson = await sessionRes.json();
+
+        return { session: sessionResJson, access: accessTokenResJson };
     }
 }
 
@@ -286,6 +277,8 @@ export async function deleteCookies() {
     cookies().delete('accId');
     cookies().delete('reqToken');
     cookies().delete('sessionId');
+    cookies().delete('accessToken');
+    cookies().delete('accountObjectId');
     return cookies().delete('username');
 }
 
@@ -349,37 +342,13 @@ export async function getUserInfo(sessionId: string) {
     return userInfo;
 }
 
-export async function getContent(
-    content: string,
-    cat: string | undefined,
-    pageNum: number
-) {
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-    };
+//favorite, add to watchlist, rate
 
-    console.log(content, cat, pageNum);
-    if (content === 'trending') {
-        if (cat === 'movies') cat = 'movie';
-        if (cat === 'people') cat = 'person';
-    }
-
-    let res = await fetch(
-        `https://api.themoviedb.org/3/${content}/${cat}${content === 'trending' ? '/day' : ''}?language=en-US&page=${pageNum}`,
-        options
-    );
-
-    if (!res.ok) {
-        console.error('failed to fetch content');
-    } else {
-        console.log('successfully retrieved content');
-    }
-    let result = await res.json();
-    return result;
+interface body {
+    media_type: string;
+    media_id: number;
+    favorite?: boolean;
+    watchlist?: boolean;
 }
 
 export async function getFavorWatchRated(
@@ -412,13 +381,6 @@ export async function getFavorWatchRated(
     }
     // console.log(favorWatch);
     return favorWatch.results;
-}
-
-interface body {
-    media_type: string;
-    media_id: number;
-    favorite?: boolean;
-    watchlist?: boolean;
 }
 
 export async function addToFavorWatch(
@@ -512,5 +474,186 @@ export async function removeFavorWatch(
     } else {
         console.log(`success in removing ${type} from ${whichOne}`);
         return true;
+    }
+}
+
+export async function deleteRating(
+    content: string,
+    id: number,
+    sessionId: string,
+    seasonNum?: string,
+    episodeNum?: string
+) {
+    let res;
+
+    const options = {
+        method: 'DELETE',
+        headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json;charset=utf-8',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    if (seasonNum && episodeNum) {
+        res = await fetch(
+            `https://api.themoviedb.org/3/${content}/${id}/season/${seasonNum}/episode/${episodeNum}/rating?session_id=${sessionId}`,
+            options
+        );
+    } else {
+        res = await fetch(
+            `https://api.themoviedb.org/3/${content}/${id}/rating?session_id=${sessionId}`,
+            options
+        );
+    }
+
+    const resJson = await res.json();
+
+    //error handling
+    if (!res.ok) {
+        console.log(resJson);
+        console.error(`failed to rate this ${content}`);
+    }
+
+    return resJson;
+}
+
+export async function rateContent(
+    content: string,
+    id: number,
+    rating: number,
+    sessionId: string,
+    seasonNum?: string,
+    episodeNum?: string
+) {
+    let res;
+
+    const options = {
+        method: 'POST',
+        headers: {
+            accept: 'application/json',
+            'Content-Type': 'application/json;charset=utf-8',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+        body: JSON.stringify({
+            value: rating,
+        }),
+    };
+
+    if (seasonNum && episodeNum) {
+        res = await fetch(
+            `https://api.themoviedb.org/3/${content}/${id}/season/${seasonNum}/episode/${episodeNum}/rating?session_id=${sessionId}`,
+            options
+        );
+    } else {
+        res = await fetch(
+            `https://api.themoviedb.org/3/${content}/${id}/rating?session_id=${sessionId}`,
+            options
+        );
+    }
+
+    const resJson = await res.json();
+
+    //error handling
+    if (!res.ok) {
+        console.log(resJson);
+        console.error(`failed to rate this ${content}`);
+    }
+
+    return resJson;
+}
+
+//list utilities
+export async function getLists(accountObjectId: string, pageNum: number) {
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    console.log(accountObjectId);
+
+    let res = await fetch(
+        `https://api.themoviedb.org/4/account/${accountObjectId}/lists?page=${pageNum}`,
+        options
+    );
+
+    let lists = await res.json();
+
+    if (!res.ok) {
+        console.log(lists);
+        console.error(`failed to fetch lists`);
+    }
+    console.log(lists);
+    return lists.results;
+}
+
+export async function createList(at: string, formData: FormData) {
+    const rawFormData = {
+        name: formData.get('list name'),
+        description: formData.get('list description'),
+        public: formData.get('public toggle'),
+    };
+
+    console.log(rawFormData);
+    console.log(at);
+
+    const options = {
+        method: 'POST',
+        headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            Authorization: `Bearer ${at}`,
+        },
+        body: JSON.stringify({
+            description: rawFormData.description,
+            name: rawFormData.name,
+            iso_3166_1: 'US',
+            iso_639_1: 'en',
+            public: !rawFormData.public ? 'false' : 'true',
+        }),
+    };
+
+    console.log(options.body);
+
+    let res = await fetch('https://api.themoviedb.org/4/list', options);
+    let resJson = await res.json();
+
+    console.log(resJson);
+
+    if (!res.ok) {
+        console.log(res);
+        console.error(`failed to create list`);
+    } else {
+        console.log('successfuly created list');
+    }
+}
+
+export async function deleteList(at: string, listId: string) {
+    console.log(at);
+
+    const options = {
+        method: 'DELETE',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${at}`,
+        },
+    };
+
+    console.log(listId);
+
+    let res = await fetch(
+        `https://api.themoviedb.org/4/list/${listId}`,
+        options
+    );
+    let resJson = await res.json();
+
+    if (!res.ok) {
+        console.log(resJson);
+        console.error(`failed to delete list`);
+    } else {
+        console.log('successfuly deleted list');
     }
 }

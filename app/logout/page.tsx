@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteCookies, getSessionId, tmdbLogOut } from '../actions';
+import { deleteCookies, getAccessToken, tmdbLogOut } from '../actions';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -9,9 +9,9 @@ export default function LogOut() {
 
     useEffect(() => {
         async function removeCookies() {
-            const sessionId: string | undefined = await getSessionId();
-            if (sessionId) {
-                const didItWork = await tmdbLogOut(sessionId);
+            const accessToken: string | undefined = await getAccessToken();
+            if (accessToken) {
+                const didItWork = await tmdbLogOut(accessToken);
                 console.log(didItWork);
                 let res = await deleteCookies();
                 console.log(res);

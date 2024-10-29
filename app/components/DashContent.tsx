@@ -1,26 +1,41 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { getFavorWatchRated } from '@/app/actions';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import Lists from './Lists';
+import DashNav from './DashNav';
+import { getFavorWatchRated } from '../actions';
 
 type Props = {
-    sessionId?: string;
     accountId?: string;
+    sessionId?: string;
+    accessToken?: string;
+    accountObjectId?: string;
 };
 
-export default function DashContent({ sessionId, accountId }: Props) {
+export default function DashContent({
+    accessToken,
+    accountObjectId,
+    sessionId,
+    accountId,
+}: Props) {
     const router = useRouter();
-    const categories = ['favorite', 'watchlist', 'rated', 'lists'];
-    const [category, setCategory] = useState(categories[0]);
+    const [tvVersion, setTvVersion] = useState('image');
+    const [movieVersion, setMovieVersion] = useState('image');
+    const [category, setCategory] = useState<string>();
     const [message, setMessage] = useState('');
     const [movieList, setMovieList] = useState<any>();
     const [tvList, setTvList] = useState<any>();
 
     useEffect(() => {
         async function retrieveContent() {
+            if (category) {
+                localStorage.setItem('dashCat', category);
+            }
             if (accountId && sessionId) {
+                setCategory(localStorage.getItem('dashCat') || 'favorite');
+
                 if (category === 'favorite') {
                     let favoriteMovies = await getFavorWatchRated(
                         sessionId,
@@ -34,7 +49,7 @@ export default function DashContent({ sessionId, accountId }: Props) {
                         accountId,
                         'tv'
                     );
-                    setCategory('favorite');
+                    localStorage.setItem('dashCat', category);
                     setMovieList(favoriteMovies);
                     setTvList(favoriteTv);
                     setMessage(`Favorite some content!`);
@@ -51,7 +66,7 @@ export default function DashContent({ sessionId, accountId }: Props) {
                         accountId,
                         'tv'
                     );
-                    setCategory('watchlist');
+                    localStorage.setItem('dashCat', category);
                     setMovieList(movieWatchlist);
                     setTvList(tvWatchlist);
                     setMessage(`Add some content to your Watchlist!`);
@@ -68,7 +83,8 @@ export default function DashContent({ sessionId, accountId }: Props) {
                         accountId,
                         'tv'
                     );
-                    setCategory(category);
+
+                    localStorage.setItem('dashCat', category);
                     setMovieList(ratedMovies);
                     setTvList(ratedTv);
                     setMessage(`Rate some content!`);
@@ -76,71 +92,47 @@ export default function DashContent({ sessionId, accountId }: Props) {
             }
         }
         retrieveContent();
-    }, [sessionId, accountId, category]);
-
-    console.log(movieList);
+    }, [sessionId, accountId, category, accountObjectId]);
 
     return (
-        <div>
-            <ul className="w-fit grid grid-cols-4 items-start place-items-stretch mb-4">
-                <li>
-                    <button
-                        className={`${category === 'favorite' && 'bg-slate-900'} ps-2 pe-8 hover:bg-slate-600 w-full py-2 text-start`}
-                        onClick={() => setCategory('favorite')}
+        <div className="flex flex-col gap-4">
+            <DashNav cat={category || ''} setCat={setCategory} />
+            {movieList && category !== 'lists' && (
+                <div className="flex flex-col gap-2 relative">
+                    <h2 className="text-xl">movies</h2>
+                    <ul
+                        className={`${movieVersion === 'image' ? 'grid grid-cols-[repeat(auto-fill,_17vw)] sm:grid-cols-[repeat(auto-fill,_10vw)] lg:grid-cols-[repeat(auto-fill,_8vw)] place-items-center' : 'flex flex-col gap-2 gap-y-1 flex-wrap max-h-80 '} bg-slate-900 p-4 w-full relative py-4 pb-12 overflow-x-scroll`}
                     >
-                        favorites
-                    </button>
-                </li>
-                <li>
-                    <button
-                        className={`${category === 'watchlist' && 'bg-slate-900'} ps-2 pe-8 hover:bg-slate-600 w-full py-2 text-start`}
-                        onClick={() => setCategory('watchlist')}
-                    >
-                        watchlist
-                    </button>
-                </li>
-                <li>
-                    <button
-                        className={`${category === 'rated' && 'bg-slate-900'} ps-2 pe-8 hover:bg-slate-600 w-full py-2 text-start`}
-                        onClick={() => setCategory('rated')}
-                    >
-                        rated
-                    </button>
-                </li>
-                <li>
-                    <button
-                        className={`${category === 'lists' && 'bg-slate-900'} ps-2 pe-8 hover:bg-slate-600 w-full py-2 text-start`}
-                        onClick={() => setCategory('lists')}
-                    >
-                        your lists
-                    </button>
-                </li>
-            </ul>
-            {movieList && (
-                <>
-                    <h2>movies</h2>
-                    <ul className="grid grid-cols-[repeat(auto-fill,_10vw)] md:grid-cols-[repeat(auto-fill,_7vw)] gap-2 xl:grid-cols-[repeat(auto-fill,_6vw)] 2xl:grid-cols-[repeat(auto-fill,_4vw)] bg-slate-900 p-4 place-items-start w-full relative py-8">
                         {movieList.map((movie: any, index: number) => (
-                            <li className="hover:bg-brand-blue p-1" key={index}>
+                            <li
+                                className="hover:bg-brand-blue p-1 hover:text-slate-950 text-wrap max-w-60"
+                                key={index}
+                            >
                                 <button
-                                    className="focus:outline-none focus:ring focus:ring-brand-blue"
+                                    className="focus:outline-none focus:ring focus:ring-brand-blue w-full text-start"
                                     onClick={() =>
                                         router.push(
                                             `/movie/${movie.id.toString()}`
                                         )
                                     }
                                 >
-                                    {movie.poster_path ?
-                                        <Image
-                                            src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
-                                            alt={`Poster for ${movie.title}`}
-                                            width={80}
-                                            height={120}
-                                            className="max-w-full"
-                                        />
-                                    :   <div className="w-[80px] h-[120px] bg-slate-300/20 grid place-items-center">
-                                            movie poster unavailable
-                                        </div>
+                                    {movieVersion === 'text' ?
+                                        <div>{movie.title}</div>
+                                    :   <>
+                                            {movie.poster_path ?
+                                                <Image
+                                                    src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+                                                    alt={`Poster for ${movie.title}`}
+                                                    width={80}
+                                                    height={120}
+                                                    className="max-w-full"
+                                                    title={movie.title}
+                                                />
+                                            :   <div className="w-[80px] h-[120px] bg-slate-300/20 grid place-items-center">
+                                                    movie poster unavailable
+                                                </div>
+                                            }
+                                        </>
                                     }
                                 </button>
                             </li>
@@ -151,36 +143,89 @@ export default function DashContent({ sessionId, accountId }: Props) {
                             </p>
                         )}
                     </ul>
-                </>
+                    {movieList.length > 0 && (
+                        <button
+                            onClick={() =>
+                                setMovieVersion(
+                                    movieVersion === 'text' ? 'image' : 'text'
+                                )
+                            }
+                            className="absolute bottom-0 right-0 pe-4 pb-4 underline underline-offset-2 text-slate-400 hover:text-slate-300"
+                        >
+                            {movieVersion === 'text' ?
+                                'image version'
+                            :   'text version'}
+                        </button>
+                    )}
+                </div>
             )}
-            {tvList && (
-                <>
-                    <h2>tv shows</h2>
-                    <ul className="grid grid-cols-[repeat(auto-fill,_10vw)] md:grid-cols-[repeat(auto-fill,_7vw)] gap-2 xl:grid-cols-[repeat(auto-fill,_6vw)] 2xl:grid-cols-[repeat(auto-fill,_4vw)] bg-slate-900 p-4 place-items-start w-full">
+            {tvList && category !== 'lists' && (
+                <div className="flex flex-col gap-1 relative">
+                    <h2 className="text-xl">tv shows</h2>
+                    <ul
+                        className={`${tvVersion === 'image' ? 'grid grid-cols-[repeat(auto-fill,_17vw)] sm:grid-cols-[repeat(auto-fill,_10vw)] lg:grid-cols-[repeat(auto-fill,_8vw)] place-items-center' : 'flex flex-col flex-wrap gap-2 gap-y-1 max-h-80 '} bg-slate-900 p-4 w-full relative py-4 pb-12 overflow-x-scroll`}
+                    >
                         {tvList.map((show: any, index: number) => (
-                            <li className="p-1 hover:bg-brand-blue" key={index}>
+                            <li
+                                className="hover:bg-brand-blue p-1 hover:text-slate-950"
+                                key={index}
+                            >
                                 <button
-                                    className="focus:outline-none focus:ring focus:ring-brand-blue"
+                                    className="focus:outline-none focus:ring focus:ring-brand-blue w-full text-start"
                                     onClick={() =>
                                         router.push(`/tv/${show.id.toString()}`)
                                     }
                                 >
-                                    {show.poster_path ?
-                                        <Image
-                                            src={`https://image.tmdb.org/t/p/w200${show.poster_path}`}
-                                            alt={`Poster for ${show.title}`}
-                                            width={80}
-                                            height={120}
-                                        />
-                                    :   <div className="w-[80px] h-[120px] bg-slate-300/20 grid place-items-center">
-                                            movie poster unavailable
-                                        </div>
+                                    {tvVersion === 'text' ?
+                                        <div>{show.name}</div>
+                                    :   <>
+                                            {show.poster_path ?
+                                                <Image
+                                                    src={`https://image.tmdb.org/t/p/w200${show.poster_path}`}
+                                                    alt={`Poster for ${show.name}`}
+                                                    width={80}
+                                                    height={120}
+                                                    title={show.name}
+                                                />
+                                            :   <div
+                                                    title={show.name}
+                                                    className="w-[80px] h-[120px] bg-slate-300/20 grid place-items-center"
+                                                >
+                                                    movie poster unavailable
+                                                </div>
+                                            }
+                                        </>
                                     }
                                 </button>
                             </li>
                         ))}
+                        {tvList.length > 0 || (
+                            <p className="absolute top-0 grid w-full h-full place-items-center">
+                                {message}
+                            </p>
+                        )}
                     </ul>
-                </>
+                    {tvList.length > 0 && (
+                        <button
+                            onClick={() =>
+                                setTvVersion(
+                                    tvVersion === 'text' ? 'image' : 'text'
+                                )
+                            }
+                            className="absolute bottom-0 right-0 pe-4 pb-4 underline underline-offset-2 text-slate-400 hover:text-slate-300"
+                        >
+                            {tvVersion === 'text' ?
+                                'image version'
+                            :   'text version'}
+                        </button>
+                    )}
+                </div>
+            )}
+            {category == 'lists' && (
+                <Lists
+                    accessToken={accessToken}
+                    accountObjectId={accountObjectId}
+                />
             )}
         </div>
     );

@@ -22,12 +22,12 @@ export default function Page() {
         }
 
         //get access Token & other session info w/ this request token & return it
-        async function getSessionId() {
+        async function getSessionAccessInfo() {
             const reqToken = await getTokenCookie();
             if (reqToken) {
-                let sessionInfo = await createTmdbSession(reqToken);
-                console.log(sessionInfo);
-                return sessionInfo.session_id;
+                let sessionAccessInfo = await createTmdbSession(reqToken);
+                console.log(sessionAccessInfo);
+                return sessionAccessInfo;
             } else {
                 return null;
             }
@@ -35,11 +35,24 @@ export default function Page() {
 
         //set cookies with user session info
         async function setTheCookies() {
-            let sessionId = await getSessionId();
-            console.log(sessionId);
-            let userInfo: any = await getUserInfo(sessionId);
-            console.log(userInfo);
-            await setSessionCookies(sessionId, userInfo);
+            let sessionAccessInfo = await getSessionAccessInfo();
+            console.log(sessionAccessInfo);
+            if (sessionAccessInfo) {
+                let userInfo: any = await getUserInfo(
+                    sessionAccessInfo.session.session_id
+                );
+                console.log(userInfo);
+                let accessToken = sessionAccessInfo.access.access_token;
+                let sessionId = sessionAccessInfo.session.session_id;
+                let accountId = sessionAccessInfo.access.account_id;
+
+                await setSessionCookies(
+                    sessionId,
+                    userInfo,
+                    accessToken,
+                    accountId
+                );
+            }
         }
 
         setTheCookies().then(() => router.replace('/'));

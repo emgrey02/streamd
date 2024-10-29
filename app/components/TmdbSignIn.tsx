@@ -21,7 +21,7 @@ export default function TmdbSignIn() {
     return (
         <Link
             className="font-bold tracking-wider bg-slate-900 hover:ring-1 ring-slate-200 py-2 px-4 shadow-inner transition"
-            href={`https://www.themoviedb.org/authenticate/${reqToken}?redirect_to=${url}/approval`}
+            href={`https://www.themoviedb.org/auth/access?request_token=${reqToken}`}
         >
             sign in
         </Link>
