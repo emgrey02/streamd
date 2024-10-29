@@ -1,12 +1,14 @@
 'use client';
 import { useRouter } from 'next/navigation';
 
-export default function BackButton(props: { main: boolean }) {
+export default function BackButton(props: { main: boolean; link?: string }) {
     const router = useRouter();
 
     function sendToPage() {
         if (props.main) {
             router.push('/');
+        } else if (props.link) {
+            router.replace(props.link);
         } else {
             router.back();
         }

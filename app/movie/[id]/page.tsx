@@ -37,7 +37,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
         let str = amt.toString().split('');
         str.splice(-3, 0, ',');
         str.splice(-7, 0, ',');
-        if (str.length >= 12) str.splice(-12, 0, ',');
+        if (str.length >= 12) str.splice(-11, 0, ',');
         if (str.length === 8) str.splice(0, 1);
         let finalStr = str.join('');
         return `$${finalStr}`;

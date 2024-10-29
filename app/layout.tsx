@@ -44,7 +44,7 @@ export default async function RootLayout({
                             <li>
                                 <Link
                                     className="underline underline-offset-1 hover:underline-offset-4 transition-all"
-                                    href="/movie/now_playing/1/"
+                                    href="/movies/now_playing"
                                 >
                                     movies
                                 </Link>
@@ -52,7 +52,7 @@ export default async function RootLayout({
                             <li>
                                 <Link
                                     className="underline underline-offset-1 hover:underline-offset-4 transition-all"
-                                    href="/tv/airing_today/1/"
+                                    href="/shows/airing_today"
                                 >
                                     shows
                                 </Link>
@@ -60,7 +60,7 @@ export default async function RootLayout({
                             <li>
                                 <Link
                                     className="underline underline-offset-1 hover:underline-offset-4 transition-all"
-                                    href="/trending/people/1/"
+                                    href="/trending/people"
                                 >
                                     people
                                 </Link>

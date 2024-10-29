@@ -30,43 +30,9 @@ export default function ContentList({
 
     useEffect(() => {
         async function retrieveContent() {
-            if (accountId && sessionId) {
-                if (content === 'favorite') {
-                    let favorites = await getFavorWatchRated(
-                        sessionId,
-                        content,
-                        accountId,
-                        cat[0]
-                    );
-                    setCategory(cat[0]);
-                    setContentList(favorites);
-                    setMessage(`Favorite some movies!`);
-                } else if (content === 'watchlist') {
-                    let watchlist = await getFavorWatchRated(
-                        sessionId,
-                        content,
-                        accountId,
-                        cat[0]
-                    );
-                    setCategory(cat[0]);
-                    setContentList(watchlist);
-                    setMessage(`Add some movies to your Watchlist!`);
-                } else if (content === 'rated') {
-                    let rated = await getFavorWatchRated(
-                        sessionId,
-                        content,
-                        accountId,
-                        cat[0]
-                    );
-                    setCategory(cat[0]);
-                    setContentList(rated);
-                    setMessage(`Rate some movies!`);
-                }
-            } else {
-                let cont = await getContent(content, cat[0], 1);
-                setCategory(cat[0]);
-                setContentList(cont.results);
-            }
+            let cont = await getContent(content, cat[0], 1);
+            setCategory(cat[0]);
+            setContentList(cont.results);
         }
         retrieveContent();
     }, [sessionId, accountId, cat, content]);
@@ -75,33 +41,11 @@ export default function ContentList({
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) {
         let newCat = e.currentTarget.dataset.cat;
-        let cont;
-        if (
-            content === 'favorite' ||
-            content === 'watchlist' ||
-            content === 'rated'
-        ) {
-            if (sessionId && accountId && newCat) {
-                cont = await getFavorWatchRated(
-                    sessionId,
-                    content,
-                    accountId,
-                    newCat
-                );
-                if (newCat) {
-                    setMessage(`Add some ${newCat}s to your ${content}`);
-                    setCategory(newCat);
-                    setContentList(cont);
-                    scrollToBeginning();
-                }
-            }
-        } else {
-            cont = await getContent(content, newCat, 1);
-            if (newCat) {
-                setCategory(newCat);
-                setContentList(cont.results);
-                scrollToBeginning();
-            }
+        let cont = await getContent(content, newCat, 1);
+        if (newCat) {
+            setCategory(newCat);
+            setContentList(cont.results);
+            scrollToBeginning();
         }
     }
 
@@ -272,7 +216,7 @@ export default function ContentList({
             </div>
             {contentList && contentList.length == 20 && (
                 <button
-                    onClick={() => router.push(`/${content}/${category}/1`)}
+                    onClick={() => router.push(`/${content}/${category}`)}
                     className="self-end mt-2 px-2"
                 >
                     See More

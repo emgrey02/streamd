@@ -36,8 +36,8 @@ export default async function MovieCredits({
                         type="tv"
                         search={false}
                         credits={true}
-                        fwr={false}
                         seasons={false}
+                        clip={true}
                     />
                 </div>
             </div>
@@ -49,8 +49,8 @@ export default async function MovieCredits({
                         type="tv"
                         search={false}
                         credits={true}
-                        fwr={false}
                         seasons={false}
+                        clip={true}
                     />
                 </div>
             </div>

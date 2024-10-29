@@ -51,6 +51,7 @@ export default function EpisodeList(props: {
                             <Link
                                 className="flex gap-4 bg-slate-700 p-2 hover:bg-slate-700/40 hover:ring-2 hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
                                 href={`/tv/${props.showId}/season/${props.seasonNum}/episode/${e.episode_number}`}
+                                replace
                             >
                                 <div className="flex items-center">
                                     {e.still_path ?
@@ -88,6 +89,7 @@ export default function EpisodeList(props: {
                     <Link
                         className="flex flex-col @md:grid @md:grid-cols-[min-content_auto] gap-4 bg-slate-700 p-2 hover:bg-slate-700/40 hover:ring-2 focus:outline-none focus:ring focus:ring-brand-blue hover:ring-brand-blue/20 "
                         href={`/tv/${props.showId}/season/${props.seasonNum}/episode/${data.episode_number}`}
+                        replace
                     >
                         <div className="w-[150px] md:w-[250px]">
                             {data.still_path ?

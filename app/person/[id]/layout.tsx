@@ -69,65 +69,60 @@ export default async function Layout({ children, params }: LayoutProps) {
     return (
         <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">
             <BackButton main={false} />
-            <div className="grid gap-4 md:flex">
+            <div>
+                <h1 className="text-2xl sm:text-4xl tracking-wider">
+                    {deets.name}
+                </h1>
+                <div className="w-full max-w-full h-[2px] bg-brand-blue mt-1"></div>
+                <p className="font-light">{genders[deets.gender]}</p>
+            </div>
+            <div className="flex flex-col gap-6 sm:flex-row @container w-full">
                 {deets.profile_path ?
                     <Image
-                        className="max-h-600"
+                        className="self-center sm:self-start"
                         src={`https://image.tmdb.org/t/p/w400${deets.profile_path}`}
                         alt="person poster"
-                        width={400}
-                        height={600}
+                        width={200}
+                        height={300}
                         priority
                     />
-                :   <div className="w-full sm:w-[400px] h-[600px] bg-slate-700 grid place-items-center text-center">
+                :   <div className="w-96 bg-slate-300/20 grid place-items-center">
                         {deets.name}&apos;s profile picture unavailable
                     </div>
                 }
-                <div className="flex flex-col gap-4">
-                    <div>
-                        <h1 className="font-bold text-2xl">{deets.name}</h1>
-                        <p className="font-light">{genders[deets.gender]}</p>
-                    </div>
-                    <div>
+                <div className="flex flex-col gap-6 @4xl:flex-row w-full">
+                    <div className="flex flex-col gap-4 @container w-full">
                         {deets.birthday && (
-                            <>
-                                <p className="font-bold">Birthday</p>
-                                <p className="font-light">
-                                    {getDate(deets.birthday)}
-                                </p>
-                                <p>
-                                    ({getAge(new Date(deets.birthday))} years
-                                    old)
-                                </p>
-                            </>
+                            <p className="font-light">
+                                Born on {getDate(deets.birthday)} (
+                                {getAge(new Date(deets.birthday))} years old)
+                            </p>
                         )}
                         {deets.deathday && (
-                            <>
-                                <p className="font-bold">Death</p>
-                                <p className="font-light">
-                                    {getDate(deets.deathday)}
-                                </p>
-                            </>
+                            <p className="font-light">
+                                Passed Away on {getDate(deets.deathday)}
+                            </p>
+                        )}
+
+                        {deets.place_of_birth && (
+                            <p>
+                                From{' '}
+                                <span className="italic">
+                                    {deets.place_of_birth}
+                                </span>
+                            </p>
+                        )}
+                        {deets.known_for_department && (
+                            <p>Known for {deets.known_for_department}</p>
+                        )}
+
+                        {deets.biography && (
+                            <div>
+                                <h2 className="text-lg font-bold">Biography</h2>
+                                <Text text={deets.biography} />
+                            </div>
                         )}
                     </div>
-                    {deets.place_of_birth && (
-                        <div>
-                            <h2 className="font-bold">Birthplace</h2>
-                            <p>From {deets.place_of_birth}</p>
-                        </div>
-                    )}
-                    <div>
-                        <h2 className="font-bold">Known For</h2>
-                        <p>{deets.known_for_department}</p>
-                    </div>
-                    {deets.biography && (
-                        <div>
-                            <h2 className="text-lg font-bold my-2">
-                                Biography
-                            </h2>
-                            <Text text={deets.biography} />
-                        </div>
-                    )}
                 </div>
             </div>
             <ContentPageNav />

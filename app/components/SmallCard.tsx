@@ -3,12 +3,11 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
-export default function NewCard(props: {
+export default function SmallCard(props: {
     data: any;
     type?: string;
     search: boolean;
     credits: boolean;
-    fwr: boolean;
     seasons: boolean;
     seasonNum?: number;
     showId?: string;
@@ -16,17 +15,13 @@ export default function NewCard(props: {
     const p = props.data;
     let type = props.type;
 
+    console.log(props.type);
+
     if (!props.search) {
         // not searching
         // movie & tv credits are people
-        if (
-            (type === 'movie' || type === 'tv') &&
-            !props.fwr &&
-            props.credits
-        ) {
+        if ((type === 'movie' || type === 'tv') && props.credits) {
             type = 'person';
-        } else if (props.fwr) {
-            if (type === 'movies') type = 'movie';
         } else if (props.seasons) {
             type = 'tv';
         } else {
@@ -43,18 +38,19 @@ export default function NewCard(props: {
 
     return (
         <Link
-            className="p-[5px] grid grid-cols-[40px_auto] h-[70px] gap-2 bg-slate-700 hover:bg-slate-700/40 hover:ring-2 hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
+            className="p-[5px] grid grid-cols-[50px_auto] h-[85px] gap-2 bg-slate-700 hover:bg-slate-700/40 hover:ring-2 hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
             href={`/${type}/${props.showId ? props.showId : p.id}/${props.seasons ? `season/${props.seasonNum}/` : '/'}`}
+            replace
         >
             {p.profile_path || p.poster_path ?
                 <Image
                     className="overflow-y-clip"
                     src={`https://image.tmdb.org/t/p/w200/${p.poster_path || p.profile_path}`}
                     alt={`${p.profile_path ? 'Profile of' : 'Poster for'} ${p.name || p.title}`}
-                    width="40"
-                    height="60"
+                    width="50"
+                    height="75"
                 />
-            :   <div className="w-[40px] h-[60px] bg-slate-900/80 text-slate-400 grid place-items-center text-center text-xs">
+            :   <div className="w-[50px] h-[75px] bg-slate-900/80 text-slate-400 grid place-items-center text-center text-xs">
                     no image
                 </div>
             }
@@ -93,7 +89,7 @@ export default function NewCard(props: {
                     </p>
                 )}
 
-                {type == 'movie' && (
+                {type == 'movie' && p.release_date && (
                     <p className="text-sm font-light">
                         {p.release_date.slice(0, 4)}
                     </p>

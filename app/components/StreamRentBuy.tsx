@@ -27,7 +27,7 @@ export default function StreamRentBuy(props: { content: any }) {
         <>
             {content && (
                 <>
-                    <div className="ring-2 ring-slate-700 h-full pt-4 px-4 flex flex-col pb-2">
+                    <div className="ring-2 ring-slate-700 h-full pt-4 px-4 flex flex-col">
                         <ul className="mb-4 flex ring-1 ring-slate-900 w-fit">
                             <li className="border-e-2 border-slate-600">
                                 <button
@@ -55,7 +55,7 @@ export default function StreamRentBuy(props: { content: any }) {
                             </li>
                         </ul>
 
-                        <ul className="flex flex-wrap gap-4 w-full pb-4">
+                        <ul className="flex flex-wrap gap-4 w-full">
                             {currentContent ?
                                 currentContent.map((wp: any, index: number) => (
                                     <li

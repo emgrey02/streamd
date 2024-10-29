@@ -58,7 +58,7 @@ export default async function Layout({ children, params }: LayoutProps) {
     }
 
     return (
-        <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10 ">
+        <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">
             <BackButton main={false} />
             <div>
                 <h1 className="text-2xl sm:text-4xl tracking-wider">
@@ -82,25 +82,22 @@ export default async function Layout({ children, params }: LayoutProps) {
                     </div>
                 }
                 <div className="flex flex-col gap-6 @4xl:flex-row w-full">
-                    <div className="flex flex-col gap-4 @container w-full flex-shring-1">
+                    <div className="flex flex-col gap-4 @container w-full">
                         {deets.tagline && (
                             <p className="font-light italic text-xl">
                                 {deets.tagline}
                             </p>
                         )}
-
                         {deets.release_date && (
-                            <div>
-                                <p>Released {getDate(deets.release_date)}</p>
-                            </div>
+                            <p>Released {getDate(deets.release_date)}</p>
                         )}
                         <Genres data={deets.genres} content="movie" />
-                        {deets.overview ?
+                        {deets.overview && (
                             <div className="col-span-2">
                                 <h2 className="font-bold text-lg">Overview</h2>
                                 <Text text={deets.overview} />
                             </div>
-                        :   <p>no overview available.</p>}
+                        )}
                     </div>
                     <div className="flex flex-col gap-4 self-end w-full flex-grow bg-slate-900/60 p-4">
                         {accountId && sessionId && (

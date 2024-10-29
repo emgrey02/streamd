@@ -36,7 +36,10 @@ export default function SmallCreditsList(props: {
                     </ul>
                 </div>
             :   <div>no credits available...</div>}
-            <Link className="self-end my-2" href={`${props.showId}/credits`}>
+            <Link
+                className="self-end my-2 text-sm"
+                href={`${props.showId}/credits`}
+            >
                 See All Credits
             </Link>
         </div>
