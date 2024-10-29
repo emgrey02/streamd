@@ -7,7 +7,6 @@ import SearchBar from '@/app/components/SearchBar';
 import { cookies } from 'next/headers';
 
 interface Props {
-    children: React.ReactNode;
     params: { content: string; cat: string };
 }
 
