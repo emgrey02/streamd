@@ -7,6 +7,7 @@ import Genres from '@/app/components/Genres';
 import FavorWatchButton from '@/app/components/FavorWatchButton';
 import SubmitRating from '@/app/components/SubmitRating';
 import LargeCreditsList from '@/app/components/LargeCreditsList';
+import Link from 'next/link';
 
 export default async function Episode({
     params,
@@ -30,6 +31,11 @@ export default async function Episode({
         },
     };
 
+    let seasonRes = await fetch(
+        `https://api.themoviedb.org/3/tv/${showId}/season/${seasonNum}?language=en-US`,
+        options
+    );
+
     let res = await fetch(
         `https://api.themoviedb.org/3/tv/${showId}/season/${seasonNum}/episode/${episodeNum}?language=en-US`,
         options
@@ -39,8 +45,15 @@ export default async function Episode({
         console.error('failed to fetch episode data');
     }
 
+    if (!res.ok) {
+        console.error('failed to fetch season data');
+    }
+
+    let season = await seasonRes.json();
     let deets = await res.json();
     console.log(deets);
+    console.log(season.episodes.length);
+    const totalEpisodes = season.episodes.length;
 
     function getDate(birthday: string) {
         let birthArray = birthday.split('-');
@@ -71,6 +84,28 @@ export default async function Episode({
 
     return (
         <div className="flex flex-col gap-4">
+            <BackButton
+                main={false}
+                link={`/tv/${showId}/season/${seasonNum}`}
+            />
+            <div className="w-full grid grid-cols-2 gap-2">
+                <Link
+                    className={`bg-slate-900 ${+episodeNum - 1 == 0 && 'pointer-events-none text-slate-700'} hover:bg-slate-700 p-4`}
+                    aria-disabled={+episodeNum - 1 == 0}
+                    href={`/tv/${showId}/season/${seasonNum}/episode/${+episodeNum - 1}`}
+                    replace
+                >
+                    Previous Episode
+                </Link>
+                <Link
+                    className={`${+episodeNum + 1 > +totalEpisodes && 'pointer-events-none text-slate-700'} bg-slate-900 hover:bg-slate-700 p-4 text-end w-full`}
+                    aria-disabled={+episodeNum + 1 > +totalEpisodes}
+                    href={`/tv/${showId}/season/${seasonNum}/episode/${+episodeNum + 1}`}
+                    replace
+                >
+                    Next Episode
+                </Link>
+            </div>
             <div className="grid gap-4 md:flex md:h-auto h-auto bg-slate-700 p-4">
                 {deets.still_path ?
                     <div>
