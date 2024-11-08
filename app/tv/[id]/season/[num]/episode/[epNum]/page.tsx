@@ -1,10 +1,7 @@
 import Text from '@/app/components/Text';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
-import { headers } from 'next/headers';
 import BackButton from '@/app/components/BackButton';
-import Genres from '@/app/components/Genres';
-import FavorWatchButton from '@/app/components/FavorWatchButton';
 import SubmitRating from '@/app/components/SubmitRating';
 import LargeCreditsList from '@/app/components/LargeCreditsList';
 import Link from 'next/link';
@@ -134,7 +131,6 @@ export default async function Episode({
                             </span>
                         </p>
                     </div>
-
                     <div>
                         <h2 className="font-bold">Air Date</h2>
                         <p>{getDate(deets.air_date)}</p>

@@ -1,25 +1,19 @@
 import BackButton from '@/app/components/BackButton';
 import ContentPage from '@/app/components/ContentPage';
-import LargeCreditsList from '@/app/components/LargeCreditsList';
 import ListNav from '@/app/components/ListNav';
-import Pagination from '@/app/components/Pagination';
 import SearchBar from '@/app/components/SearchBar';
-import { cookies } from 'next/headers';
+import { Suspense } from 'react';
 
 interface Props {
     params: { content: string; cat: string };
 }
 
 export default async function Page({ params }: Props) {
-    const sessionId: string | undefined = cookies().get('sessionId')?.value;
-    const accountId: string | undefined = cookies().get('accId')?.value;
     let pageNum = 1;
 
     if (params.content === 'movies') params.content = 'movie';
 
     if (params.content === 'shows') params.content = 'tv';
-
-    let allContent: any = [];
 
     const options = {
         method: 'GET',
@@ -61,13 +55,15 @@ export default async function Page({ params }: Props) {
                 <div className="w-[80%] max-w-full h-[1px] bg-brand-blue"></div>
             </div>
             <ListNav />
-            <ContentPage
-                data={content.results}
-                pageNum={pageNum}
-                type={type}
-                cat={params.cat}
-                content={params.content}
-            />
+            <Suspense fallback={<p>Loading content...</p>}>
+                <ContentPage
+                    data={content.results}
+                    pageNum={pageNum}
+                    type={type}
+                    cat={params.cat}
+                    content={params.content}
+                />
+            </Suspense>
         </main>
     );
 }

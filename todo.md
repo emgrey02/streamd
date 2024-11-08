@@ -1,6 +1,6 @@
 ### contentlist
 
--   [ ] use localhost to remember which tab user was on
+-   [x] use localhost to remember which tab user was on
 -   [x] scroll to beginning when user chooses new tab
 
 ### accessibility
@@ -24,14 +24,18 @@
 -   [ ] delete unused components
 -   [ ] scroll to top of page when link pressed
 -   [ ] remove adult content - places i see it: trending ppl
+-   [ ] get people credits to reflect tv seasons air date rather than first air date
 
 ### plan navigation
 
 -   [] go over some user flows, what options should users have at what time
 -   [] create more components, separate large docs into smaller chunks
 -   [] think about breadcrumbs...?
--   [] create separate pages for movies/tv/people, add them to nav at top
+-   [x] create separate pages for movies/tv/people, add them to nav at top
 
 ## credit cards
 
 -   [] use container to change font size based on width of element
+
+Backlogggd and Letterboxd
+Dulynotd

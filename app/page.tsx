@@ -1,5 +1,4 @@
 import ContentList from './components/ContentList';
-import { cookies } from 'next/headers';
 import SearchBar from './components/SearchBar';
 
 export default async function Home() {
