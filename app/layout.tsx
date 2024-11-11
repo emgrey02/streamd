@@ -12,7 +12,7 @@ const inter = Exo({
 });
 
 export const metadata: Metadata = {
-    title: 'dulynotd',
+    title: 'streamd',
     description:
         'A source for movies, tv shows, and celebrities. See ratings, reviews, and where to watch your favorite movies and tv shows. Save movies and tv shows to your favorites, watchlist, or create your own custom lists.',
 };
@@ -39,7 +39,7 @@ export default async function RootLayout({
                         className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full py-2 px-4 "
                     >
                         <h1 className="font-bold text-lg text-brand-blue tracking-widest">
-                            <Link href="/">dulynotd</Link>
+                            <Link href="/">streamd</Link>
                         </h1>
                         <ul className="flex flex-wrap gap-y-6 m-4 w-full py-4 sm:w-fit justify-center sm:m-0 gap-4 text-center">
                             <li>
