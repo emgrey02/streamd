@@ -7,17 +7,26 @@ import Link from 'next/link';
 export default function ListNav() {
     const pathname = usePathname();
     const pathnameArray = pathname.slice(1).split('/');
-    const [category, setCategory] = useState<string>();
-    const [categories, setCategories] = useState<string[]>();
-    console.log(pathnameArray);
     const content = pathnameArray[0];
+    const category = pathnameArray[1];
+    console.log(pathnameArray);
 
-    // 'favorite' 'movie'
-    // 'trending' 'all'
+    const [categories, setCategories] = useState<string[]>();
 
     useEffect(() => {
-        setContent();
-    }, []);
+        if (content === 'trending') {
+            setCategories(['all', 'movie', 'tv', 'people']);
+        } else if (content === 'movies') {
+            setCategories(['now_playing', 'popular', 'top_rated', 'upcoming']);
+        } else if (content === 'shows') {
+            setCategories([
+                'airing_today',
+                'on_the_air',
+                'popular',
+                'top_rated',
+            ]);
+        }
+    }, [content]);
 
     function capitalizeCategory(cat: string) {
         if (cat.includes('_')) {
@@ -43,24 +52,6 @@ export default function ListNav() {
         }
     }
 
-    async function setContent() {
-        if (pathnameArray[0] === 'trending') {
-            setCategories(['all', 'movie', 'tv', 'people']);
-            setCategory(pathnameArray[1]);
-        } else if (pathnameArray[0] === 'movies') {
-            setCategories(['now_playing', 'popular', 'top_rated', 'upcoming']);
-            setCategory(pathnameArray[1]);
-        } else if (pathnameArray[0] === 'shows') {
-            setCategories([
-                'airing_today',
-                'on_the_air',
-                'popular',
-                'top_rated',
-            ]);
-            setCategory(pathnameArray[1]);
-        }
-    }
-
     return (
         <div className="flex flex-col">
             <div className="relative h-min grid gap-y-4">
@@ -75,6 +66,7 @@ export default function ListNav() {
                             <Link
                                 href={`/${pathnameArray[0]}/${cat}`}
                                 className={`grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue`}
+                                replace
                             >
                                 {capitalizeCategory(cat)}
                             </Link>

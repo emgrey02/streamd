@@ -43,6 +43,10 @@ export default function ContentPage(props: {
         finalData,
     ]);
 
+    const scrollToTop = () => {
+        window.scrollTo(0, 0);
+    };
+
     return (
         <>
             <div className="@container">
@@ -55,12 +59,22 @@ export default function ContentPage(props: {
                     clip={false}
                 />
             </div>
-            <button
-                className="w-full bg-slate-700 py-2 hover:bg-brand-blue hover:text-slate-950 hover:font-bold"
-                onClick={() => setLoadMore(true)}
-            >
-                Load More
-            </button>
+            <div className="flex flex-col gap-4">
+                {finalData.length > 20 && (
+                    <button
+                        onClick={scrollToTop}
+                        className="self-end px-8 bg-slate-700 py-2 hover:bg-slate-900"
+                    >
+                        Back To Top
+                    </button>
+                )}
+                <button
+                    className="w-full bg-slate-700 py-2 hover:bg-brand-blue hover:text-slate-950 hover:font-bold"
+                    onClick={() => setLoadMore(true)}
+                >
+                    Load More
+                </button>
+            </div>
         </>
     );
 }

@@ -26,10 +26,17 @@ export default function LargeCreditsList(props: {
 
     let yearsArray: any = [];
 
-    let sortedArray = data.toSorted(
-        (a: any, b: any) =>
-            +b.release_date?.slice(0, 4) - +a.release_date?.slice(0, 4)
-    );
+    let sortedArray = data.toSorted((a: any, b: any) => {
+        console.log(
+            a.release_date?.slice(0, 4) || a.first_air_date?.slice(0, 4)
+        );
+
+        let aVal = a.release_date?.slice(0, 4) || a.first_air_date?.slice(0, 4);
+        let bVal = b.release_date?.slice(0, 4) || b.first_air_date?.slice(0, 4);
+        return +bVal - +aVal;
+    });
+
+    console.log(sortedArray);
 
     sortedArray.forEach((credit: any) => {
         if (!yearsArray?.includes(credit.release_date?.slice(0, 4))) {
@@ -43,6 +50,8 @@ export default function LargeCreditsList(props: {
     yearsArray = yearsArray.filter((year: string) => {
         return year !== '' && year;
     });
+
+    console.log(yearsArray);
 
     let finalArray: any = [];
 

@@ -1,4 +1,5 @@
 'use server';
+import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
 //movie,tv,people info
@@ -99,7 +100,59 @@ export async function getContent(
     return result;
 }
 
-export async function getMoreContent() {}
+export async function searchForContent(search: string, pageNum: number) {
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    const tvRes = await fetch(
+        `https://api.themoviedb.org/3/search/tv?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${pageNum}`,
+        options
+    );
+
+    const movieRes = await fetch(
+        `https://api.themoviedb.org/3/search/movie?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${pageNum}`,
+        options
+    );
+
+    if (!movieRes.ok) {
+        console.error('failed to get movie search results');
+    } else {
+        console.log('successfully retrieved movie search results');
+    }
+
+    if (!tvRes.ok) {
+        console.error('failed to get tv search results');
+    } else {
+        console.log('successfully retrieved tv search results');
+    }
+
+    let movieResult = await movieRes.json();
+    let tvResult = await tvRes.json();
+
+    movieResult.results.forEach((r: any) => {
+        r.media_type = 'movie';
+    });
+
+    tvResult.results.forEach((r: any) => {
+        r.media_type = 'tv';
+    });
+
+    let finalArray = [];
+
+    for (let i = 0; i < 20; i++) {
+        finalArray.push(movieResult.results[i]);
+        finalArray.push(tvResult.results[i]);
+    }
+
+    console.log(finalArray);
+
+    return finalArray;
+}
 
 //account log-in and log-out tasks
 export async function getRequestToken() {
@@ -629,6 +682,50 @@ export async function createList(at: string, formData: FormData) {
     } else {
         console.log('successfuly created list');
     }
+
+    revalidatePath('/dashboard', 'page');
+}
+
+export async function updateList(at: string, id: string, formData: FormData) {
+    const rawFormData = {
+        name: formData.get('list name'),
+        description: formData.get('list description'),
+        public: formData.get('public toggle'),
+    };
+
+    console.log(rawFormData);
+    console.log(at);
+
+    const options = {
+        method: 'PUT',
+        headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            Authorization: `Bearer ${at}`,
+        },
+        body: JSON.stringify({
+            description: rawFormData.description,
+            name: rawFormData.name,
+            public: !rawFormData.public ? false : true,
+            sort_by: 'original_order.asc',
+        }),
+    };
+
+    console.log(options.body);
+
+    let res = await fetch(`https://api.themoviedb.org/4/list/${id}`, options);
+    let resJson = await res.json();
+
+    console.log(resJson);
+
+    if (!res.ok) {
+        console.log(res);
+        console.error(`failed to update list`);
+    } else {
+        console.log('successfuly updated list');
+    }
+
+    revalidatePath('/dashboard', 'page');
 }
 
 export async function deleteList(at: string, listId: string) {
@@ -655,5 +752,150 @@ export async function deleteList(at: string, listId: string) {
         console.error(`failed to delete list`);
     } else {
         console.log('successfuly deleted list');
+    }
+
+    revalidatePath('/dashboard', 'page');
+}
+
+export async function AddToList(
+    at: string,
+    listId: string,
+    mt: string,
+    mi: number
+) {
+    const options = {
+        method: 'POST',
+        headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            Authorization: `Bearer ${at}`,
+        },
+        body: JSON.stringify({
+            items: [{ media_type: mt, media_id: mi }],
+        }),
+    };
+
+    let res = await fetch(
+        `https://api.themoviedb.org/4/list/${listId}/items`,
+        options
+    );
+    let resJson = await res.json();
+
+    if (!res.ok) {
+        console.log(resJson);
+        console.error(`failed to add item to list`);
+    } else {
+        console.log('successfuly added item to list');
+    }
+
+    revalidatePath('/dashboard/list/[id]', 'page');
+}
+
+export async function deleteListItem(
+    at: string,
+    listId: string,
+    mt: string,
+    mi: number
+) {
+    const options = {
+        method: 'DELETE',
+        headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            Authorization: `Bearer ${at}`,
+        },
+        body: JSON.stringify({
+            items: [{ media_type: mt, media_id: mi }],
+        }),
+    };
+
+    let res = await fetch(
+        `https://api.themoviedb.org/4/list/${listId}/items`,
+        options
+    );
+    let resJson = await res.json();
+
+    if (!res.ok) {
+        console.log(resJson);
+        console.error(`failed to delete item from list`);
+    } else {
+        console.log('successfuly added item to list');
+    }
+
+    revalidatePath('/dashboard/list/[id]', 'page');
+}
+
+export async function addNote(
+    at: string,
+    listId: string,
+    mt: string,
+    mi: number,
+    formData: FormData
+) {
+    const rawFormData = {
+        note: formData.get('note'),
+    };
+
+    console.log(rawFormData.note);
+
+    const options = {
+        method: 'PUT',
+        headers: {
+            accept: 'application/json',
+            'content-type': 'application/json',
+            Authorization: `Bearer ${at}`,
+        },
+        body: JSON.stringify({
+            items: [
+                { media_type: mt, media_id: mi, comment: rawFormData.note },
+            ],
+        }),
+    };
+
+    let res = await fetch(
+        `https://api.themoviedb.org/4/list/${listId}/items`,
+        options
+    );
+    let resJson = await res.json();
+
+    if (!res.ok) {
+        console.log(resJson);
+        console.error(`failed to add note`);
+    } else {
+        console.log('successfuly added note');
+    }
+
+    revalidatePath('/dashboard/list/[id]', 'page');
+}
+
+export async function getItemStatus(
+    at: string,
+    listId: string,
+    mt: string,
+    mi: number
+) {
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${at}`,
+        },
+    };
+
+    let res = await fetch(
+        `https://api.themoviedb.org/4/list/${listId}/item_status?media_id=${mi}$media_type=${mt}`,
+        options
+    );
+
+    let status = await res.json();
+
+    if (!status.ok) {
+        console.log(status);
+        console.error(`item is not on list ${listId}`);
+        return false;
+    } else {
+        console.log(status);
+        console.log(`item is on list ${listId}`);
+        return true;
     }
 }

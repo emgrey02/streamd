@@ -1,19 +1,49 @@
-import { useState } from 'react';
-import { createList } from '../actions';
+import { useEffect, useState } from 'react';
+import { createList, updateList } from '../actions';
 
-export default function NewListForm(props: { at: string; updateLists: any }) {
+export default function NewListForm(props: {
+    at: string;
+    updateLists: any;
+    edit: boolean;
+    data?: any;
+}) {
     const [showForm, setShowForm] = useState<boolean>(false);
+    let data = props.data;
 
-    const createListWithAccessToken = createList.bind(null, props.at);
+    console.log(props.edit);
+    console.log(data);
+
+    const formAction = async (formData: FormData) => {
+        if (!props.edit) {
+            await createList(props.at, formData);
+        } else {
+            await updateList(props.at, data.id, formData);
+        }
+        setShowForm(false);
+        props.updateLists();
+    };
+
+    const handleFormOpenClose = () => {
+        setShowForm(!showForm);
+        if (props.edit) {
+            props.updateLists();
+        }
+    };
+
+    useEffect(() => {
+        if (props.edit) {
+            setShowForm(true);
+        }
+    }, [props.edit]);
 
     return (
         <div className="flex flex-col gap-2 items-start">
-            <button onClick={() => setShowForm(!showForm)}>
+            <button onClick={handleFormOpenClose}>
                 {showForm ? 'Close' : 'Create List'}
             </button>
             {showForm && (
                 <form
-                    action={createListWithAccessToken}
+                    action={formAction}
                     className={`${!showForm ? 'hidden' : 'flex'} flex-col gap-4 w-full bg-slate-900 px-3 py-2`}
                 >
                     <div className="flex flex-col">
@@ -22,6 +52,7 @@ export default function NewListForm(props: { at: string; updateLists: any }) {
                             type="text"
                             name="list name"
                             id="list-name"
+                            defaultValue={props.data.name || ''}
                             className="text-slate-800 px-2 py-1 bg-slate-300"
                         />
                     </div>
@@ -31,6 +62,7 @@ export default function NewListForm(props: { at: string; updateLists: any }) {
                             name="list description"
                             id="list-desc"
                             rows={10}
+                            defaultValue={props.data.desc || ''}
                             className="text-slate-800 px-2 py-1 bg-slate-300"
                         ></textarea>
                     </div>
@@ -39,15 +71,15 @@ export default function NewListForm(props: { at: string; updateLists: any }) {
                             type="checkbox"
                             name="public toggle"
                             id="public-toggle"
+                            defaultValue={props.data.pub || false}
                         />
                         <label htmlFor="public-toggle">Make Public?</label>
                     </div>
                     <button
                         type="submit"
-                        onClick={props.updateLists}
                         className="bg-slate-700 py-2 hover:bg-slate-800 transition"
                     >
-                        Create List
+                        {!props.edit ? 'Create List' : 'Update List'}
                     </button>
                 </form>
             )}
