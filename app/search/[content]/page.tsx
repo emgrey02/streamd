@@ -1,5 +1,9 @@
 import BackButton from '@/app/components/BackButton';
 import SearchResults from '../../components/SearchResults';
+import { doASearch, genreSearch, keywordSearch } from '@/app/actions';
+import SearchResNav from '@/app/components/SearchResNav';
+import SearchBar from '@/app/components/SearchBar';
+import { Suspense } from 'react';
 
 export default async function Search({
     params,
@@ -15,6 +19,7 @@ export default async function Search({
     const page = searchParams.page;
     let theKeyword;
     let theGenre;
+
     console.log(content);
     console.log(searchParams.query);
 
@@ -31,97 +36,41 @@ export default async function Search({
         console.log(search);
     }
 
-    let data;
-
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-    };
-
-    let movieRes;
-    let tvRes;
-    let peopleRes;
-    let allRes;
+    let movies;
+    let shows;
+    let people;
+    let all;
     console.log(search);
 
     if (genre) {
-        movieRes = await fetch(
-            `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${search.split('--')[0]}'`,
-            options
-        );
-
-        tvRes = await fetch(
-            `https://api.themoviedb.org/3/discover/tv?with_genres=${search.split('--')[0]}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
-            options
-        );
+        movies = await genreSearch(search.split('--')[0], 'movie', page);
+        shows = await genreSearch(search.split('--')[0], 'tv', page);
     } else if (keyword) {
-        movieRes = await fetch(
-            `https://api.themoviedb.org/3/discover/movie?with_keywords=${search.split('--')[0]}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
-            options
-        );
-        tvRes = await fetch(
-            `https://api.themoviedb.org/3/discover/tv?with_keywords=${search.split('--')[0]}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
-            options
-        );
+        movies = await keywordSearch(search.split('--')[0], 'movie', page);
+        shows = await keywordSearch(search.split('--')[0], 'tv', page);
     } else {
-        movieRes = await fetch(
-            `https://api.themoviedb.org/3/search/movie?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
-            options
-        );
-        tvRes = await fetch(
-            `https://api.themoviedb.org/3/search/tv?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
-            options
-        );
-        peopleRes = await fetch(
-            `https://api.themoviedb.org/3/search/person?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
-            options
-        );
-
-        allRes = await fetch(
-            `https://api.themoviedb.org/3/search/multi?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
-            options
-        );
+        movies = await doASearch(search, 'movie', +page);
+        shows = await doASearch(search, 'tv', +page);
+        people = await doASearch(search, 'person', +page);
+        all = await doASearch(search, 'multi', +page);
     }
 
-    let people;
     let peopleLength;
-    let all;
     let allLength;
 
-    if (peopleRes && allRes) {
-        people = await peopleRes.json();
+    if (people && all) {
         peopleLength = people.total_results;
-        all = await allRes.json();
         allLength = all.total_results;
-
-        if (!peopleRes.ok) {
-            console.error('failed to complete people search');
-        }
-        if (!allRes.ok) {
-            console.error('failed to compete multi search');
-        }
     }
 
-    if (!movieRes.ok) {
-        console.error('failed to complete movie search');
-    }
-    if (!tvRes.ok) {
-        console.error('failed to complete tv search');
-    }
-
-    const movies = await movieRes.json();
     const movieLength = movies.total_results;
-
-    const tv = await tvRes.json();
-    const tvLength = tv.total_results;
+    const tvLength = shows.total_results;
+    let data;
 
     if (content === 'movie') {
         data = movies;
     } else if (content === 'tv') {
-        data = tv;
+        data = shows;
     } else if (content === 'person') {
         data = people;
     } else {
@@ -151,22 +100,34 @@ export default async function Search({
                     {genre && (
                         <>
                             <div className="font-light">Genre:</div>
-                            <div className="text-4xl italic">{theGenre}</div>
+                            <div className="text-xl sm:text-4xl italic">
+                                {theGenre}
+                            </div>
                         </>
                     )}
                     {!keyword && !genre && `Search results for: ${search}`}
                 </h1>
                 <div className="w-[80%] max-w-full h-[1px] bg-brand-blue"></div>
             </div>
-            <div className="w-full">
-                <SearchResults
-                    data={data}
-                    lengths={lengths}
+            <SearchBar
+                searchTerm={keyword || genre ? '' : search.split('-')[0]}
+            />
+            <div className="flex sm:flex-row gap-4 flex-col">
+                <SearchResNav
+                    keyword={theKeyword || undefined}
+                    genre={theGenre || undefined}
                     query={search}
-                    cat={content}
-                    keyword={keyword}
-                    genre={genre}
+                    lengths={lengths}
                 />
+                <Suspense fallback={<p>Loading content...</p>}>
+                    <SearchResults
+                        keyword={theKeyword || undefined}
+                        genre={theGenre || undefined}
+                        query={search}
+                        cat={content}
+                        data={data.results}
+                    />
+                </Suspense>
             </div>
         </main>
     );

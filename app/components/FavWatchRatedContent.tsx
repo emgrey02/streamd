@@ -11,6 +11,7 @@ export default function FavWatchRatedContent(props: {
     const category = props.category;
     const sessionId = props.sessionId;
     const accountId = props.accountId;
+
     const [movieList, setMovieList] = useState<any>();
     const [tvList, setTvList] = useState<any>();
     const [message, setMessage] = useState('');

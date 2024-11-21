@@ -12,9 +12,23 @@ const inter = Exo({
 });
 
 export const metadata: Metadata = {
-    title: 'streamd',
+    title: {
+        template: '%s | streamd',
+        default: 'streamd',
+    },
     description:
         'A source for movies, tv shows, and celebrities. See ratings, reviews, and where to watch your favorite movies and tv shows. Save movies and tv shows to your favorites, watchlist, or create your own custom lists.',
+    generator: 'Next.js',
+    applicationName: 'streamd',
+    referrer: 'origin-when-cross-origin',
+    keywords: ['movies', 'shows', 'actors'],
+    authors: [{ name: 'Emma', url: 'https://emmagrey.netlify.app' }],
+    creator: 'Emma Grey',
+    formatDetection: {
+        email: false,
+        address: false,
+        telephone: false,
+    },
 };
 
 export default async function RootLayout({

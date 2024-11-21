@@ -154,6 +154,84 @@ export async function searchForContent(search: string, pageNum: number) {
     return finalArray;
 }
 
+export async function doASearch(search: string, type: string, page: number) {
+    // type can be movie, tv, person, multi
+
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    const res = await fetch(
+        `https://api.themoviedb.org/3/search/${type}?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
+        options
+    );
+    const results = await res.json();
+
+    if (!res.ok) {
+        console.log(results);
+        console.error(`unable to do a ${type} search`);
+    }
+
+    return results;
+}
+
+export async function keywordSearch(
+    search: string,
+    type: string,
+    page: string
+) {
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    const res = await fetch(
+        `https://api.themoviedb.org/3/discover/${type}?with_keywords=${search.split('--')[0]}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
+        options
+    );
+
+    const results = await res.json();
+
+    if (!res.ok) {
+        console.log(results);
+        console.error(`unable to do keyword ${type} search`);
+    }
+
+    return results;
+}
+
+export async function genreSearch(search: string, type: string, page: string) {
+    const options = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+    };
+
+    const res = await fetch(
+        `https://api.themoviedb.org/3/discover/${type}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${search.split('--')[0]}'`,
+        options
+    );
+
+    const results = await res.json();
+    console.log(results);
+
+    if (!res.ok) {
+        console.log(results);
+        console.error(`unable to do genre ${type} search`);
+    }
+
+    return results;
+}
+
 //account log-in and log-out tasks
 export async function getRequestToken() {
     const v4options: RequestInit = {

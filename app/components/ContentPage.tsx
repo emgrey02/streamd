@@ -14,8 +14,6 @@ export default function ContentPage(props: {
     const [finalData, setFinalData] = useState<any>(props.data);
     const [shownPageNumbers, setShownPageNumbers] = useState(1);
 
-    console.log(props.data);
-
     useEffect(() => {
         if (loadMore) {
             const loadMoreContent = async () => {
