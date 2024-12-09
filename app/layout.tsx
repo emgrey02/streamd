@@ -93,8 +93,8 @@ export default async function RootLayout({
                                 </div>
                             :   <div>
                                     <p>
-                                        Sign in to save content to your
-                                        favorites or watchlist.
+                                        Sign in to save movies/tv to your own
+                                        lists, favorites, or watchlist.
                                     </p>
                                 </div>
                             }

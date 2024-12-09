@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { AddToList, searchForContent } from '../actions';
+import { AddToList, getItemStatus, searchForContent } from '../actions';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -10,9 +10,28 @@ export default function AddContentToList(props: { at: string; id: string }) {
     const [searchValue, setSearchValue] = useState('');
     const [pageNum, setPageNum] = useState(1);
     const router = useRouter();
+    const [itemStatuses, setItemStatuses] = useState<any>();
 
     const LoadMore = () => {
         setPageNum(pageNum + 1);
+    };
+
+    const getItemStatuses = async () => {
+        if (itemStatuses) {
+        }
+        for (let i = 0; i++; i < searchResults.length) {
+            const itemStatus = await getItemStatus(
+                props.at,
+                props.id,
+                searchResults[i].media_type,
+                searchResults[i].id
+            ).then(() =>
+                setItemStatuses((itemStatuses: any) => [
+                    ...itemStatuses,
+                    itemStatus,
+                ])
+            );
+        }
     };
 
     useEffect(() => {
@@ -25,10 +44,10 @@ export default function AddContentToList(props: { at: string; id: string }) {
             doASearch();
         } else {
             setSearchResults(null);
+            setPageNum(1);
+            setItemStatuses(null);
         }
     }, [searchValue, pageNum]);
-
-    console.log(searchResults);
 
     return (
         <div className="w-[400px]">
@@ -38,7 +57,10 @@ export default function AddContentToList(props: { at: string; id: string }) {
                 </label>
                 <input
                     className="text-slate-900 bg-slate-300 ps-2 py-1"
-                    onChange={(e) => setSearchValue(e.target.value)}
+                    onChange={(e) => {
+                        setSearchValue(e.target.value);
+                        getItemStatuses();
+                    }}
                     type="text"
                     id="content-search"
                     name="content search"

@@ -4,9 +4,7 @@ import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
 
 export default function ContentPageNav() {
-    const [currentPage, setCurrentPage] = useState(
-        localStorage.getItem('currentPage') || 'info'
-    );
+    const [currentPage, setCurrentPage] = useState('info');
     const pathname = usePathname();
     const pathnameArray = pathname.slice(1).split('/');
     const mediaType = pathnameArray[0];

@@ -126,6 +126,7 @@ export default async function Search({
                         query={search}
                         cat={content}
                         data={data.results}
+                        lengths={lengths}
                     />
                 </Suspense>
             </div>

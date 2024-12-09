@@ -36,6 +36,7 @@ export default function SearchResNav(props: {
                             `/search/genre-movie?query=${encodeURIComponent(query)}&page=1`
                         :   `/search/movie?query=${query}&page=1`
                     }
+                    replace
                 >
                     <div className="flex gap-2 w-full px-4 py-2 justify-end ">
                         <p>Movies</p>
@@ -54,6 +55,7 @@ export default function SearchResNav(props: {
                             `/search/genre-tv?query=${encodeURIComponent(query)}&page=1`
                         :   `/search/tv?query=${query}&page=1`
                     }
+                    replace
                 >
                     <div className="flex gap-2 w-full px-4 py-2 justify-end">
                         <p>Tv</p>
@@ -68,6 +70,7 @@ export default function SearchResNav(props: {
                             id="people"
                             className={`w-full hover:bg-slate-800 ${cat === 'person' ? 'bg-slate-800' : 'bg-slate-600'}`}
                             href={`/search/person?query=${query}&page=1`}
+                            replace
                         >
                             <div className="flex gap-2 w-full px-4 py-2 justify-end">
                                 <p>People</p>
@@ -80,6 +83,7 @@ export default function SearchResNav(props: {
                             id="all"
                             className={`w-full hover:bg-slate-800 ${cat === 'multi' ? 'bg-slate-800' : 'bg-slate-600'}`}
                             href={`/search/multi?query=${query}&page=1`}
+                            replace
                         >
                             <div className="flex gap-2 w-full px-4 py-2 justify-end">
                                 <p>All</p>

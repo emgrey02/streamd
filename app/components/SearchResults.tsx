@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import ContentPage from './ContentPage';
 import { doASearch, genreSearch, keywordSearch } from '../actions';
 import LargeCreditsList from './LargeCreditsList';
@@ -11,12 +11,27 @@ export default function SearchResults(props: {
     query: string;
     cat: string;
     data: any;
+    lengths: any;
 }) {
     const [loadMore, setLoadMore] = useState(false);
     const [shownPageNumbers, setShownPageNumbers] = useState(1);
     const [finalData, setFinalData] = useState(props.data);
 
+    let totalCount;
+
+    props.cat === 'person' && (totalCount = props.lengths.people);
+    props.cat === 'tv' && (totalCount = props.lengths.tv);
+    props.cat === 'movie' && (totalCount = props.lengths.movie);
+    props.cat === 'multi' && (totalCount = props.lengths.all);
+
+    const [currentCount, setCurrentCount] = useState(
+        totalCount < 20 ? totalCount : 20
+    );
+
+    console.log(totalCount);
+
     console.log(props.data);
+    console.log(props.lengths);
 
     console.log(props.cat);
     console.log(props.query);
@@ -25,6 +40,7 @@ export default function SearchResults(props: {
         if (loadMore) {
             const loadMoreContent = async () => {
                 let moreContent;
+
                 if (props.keyword) {
                     moreContent = await keywordSearch(
                         props.query,
@@ -44,7 +60,9 @@ export default function SearchResults(props: {
                         shownPageNumbers + 1
                     );
                 }
+
                 setShownPageNumbers(shownPageNumbers + 1);
+                setCurrentCount(currentCount + moreContent.results.length);
                 console.log(moreContent);
                 console.log(finalData.concat(moreContent.results));
 
@@ -54,7 +72,16 @@ export default function SearchResults(props: {
             loadMoreContent();
         }
         console.log(shownPageNumbers);
-    }, [finalData, loadMore, props.cat, props.query, shownPageNumbers]);
+    }, [
+        finalData,
+        loadMore,
+        props.cat,
+        props.genre,
+        props.keyword,
+        props.query,
+        shownPageNumbers,
+        currentCount,
+    ]);
 
     const scrollToTop = () => {
         window.scrollTo(0, 0);
@@ -81,12 +108,17 @@ export default function SearchResults(props: {
                         Back To Top
                     </button>
                 )}
-                <button
-                    className="w-full bg-slate-700 py-2 hover:bg-brand-blue hover:text-slate-950 hover:font-bold"
-                    onClick={() => setLoadMore(true)}
-                >
-                    Load More
-                </button>
+                {finalData.length >= 20 && currentCount != totalCount && (
+                    <button
+                        className="w-full bg-slate-700 py-2 hover:bg-brand-blue hover:text-slate-950 hover:font-bold"
+                        onClick={() => setLoadMore(true)}
+                    >
+                        Load More
+                        <p className="text-sm font-normal">
+                            {currentCount} / {totalCount}
+                        </p>
+                    </button>
+                )}
             </div>
         </div>
     );

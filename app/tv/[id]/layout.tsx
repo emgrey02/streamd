@@ -6,6 +6,7 @@ import Genres from '@/app/components/Genres';
 import FavorWatchButton from '@/app/components/FavorWatchButton';
 import SubmitRating from '@/app/components/SubmitRating';
 import ContentPageNav from '@/app/components/ContentPageNav';
+import AddToListButton from '@/app/components/AddToListButton';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -17,6 +18,8 @@ export default async function Layout({ children, params }: LayoutProps) {
 
     const sessionId = cookies().get('sessionId')?.value;
     const accountId = cookies().get('accId')?.value;
+    const accountObjectId = cookies().get('accountObjectId')?.value;
+    const accessToken = cookies().get('accessToken')?.value;
 
     const options = {
         method: 'GET',
@@ -112,8 +115,8 @@ export default async function Layout({ children, params }: LayoutProps) {
                             </div>
                         )}
                     </div>
-                    <div className="flex flex-col gap-4 self-end w-full flex-grow bg-slate-900/60 p-4">
-                        {accountId && sessionId && (
+                    {accountId && sessionId && (
+                        <div className="flex flex-col gap-4 self-end w-full flex-grow bg-slate-900/60 p-4">
                             <div className="flex flex-col gap-6">
                                 <div className="grid grid-cols-1 gap-2 @sm:flex @sm:flex-row @sm:gap-4 w-full">
                                     <FavorWatchButton
@@ -138,9 +141,15 @@ export default async function Layout({ children, params }: LayoutProps) {
                                     voteAvg={deets.vote_average}
                                     totalVotes={deets.vote_count}
                                 />
+                                <AddToListButton
+                                    accountObjectId={accountObjectId || ''}
+                                    accessToken={accessToken || ''}
+                                    mediaType={'tv'}
+                                    mediaId={deets.id}
+                                />
                             </div>
-                        )}
-                    </div>
+                        </div>
+                    )}
                 </div>
             </div>
 

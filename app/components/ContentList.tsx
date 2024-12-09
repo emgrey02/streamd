@@ -26,7 +26,19 @@ export default function ContentList({
     const [progress, setProgress] = useState(0);
     const [message, setMessage] = useState('Loading...');
     const scrollCont = useRef<HTMLUListElement>(null);
-    console.log(content);
+
+    let urlContent;
+    switch (content) {
+        case 'tv':
+            urlContent = 'shows';
+            break;
+        case 'movie':
+            urlContent = 'movies';
+            break;
+        default:
+            urlContent = 'trending';
+            break;
+    }
 
     useEffect(() => {
         async function retrieveContent() {
@@ -216,7 +228,7 @@ export default function ContentList({
             </div>
             {contentList && contentList.length == 20 && (
                 <button
-                    onClick={() => router.push(`/${content}/${category}`)}
+                    onClick={() => router.push(`/${urlContent}/${category}`)}
                     className="self-end mt-2 px-2"
                 >
                     See More

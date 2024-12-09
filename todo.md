@@ -16,7 +16,7 @@
 
 ### tabs
 
--   [ ] make tabs on front page the same as tabs within movie/tv/people pages
+-   [x] make tabs on front page the same as tabs within movie/tv/people pages
 
 ### other
 
@@ -39,3 +39,4 @@
 
 Backlogggd and Letterboxd
 Dulynotd
+streamd

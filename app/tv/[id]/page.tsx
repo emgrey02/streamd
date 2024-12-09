@@ -26,15 +26,6 @@ export default async function Show({ params }: { params: { id: string } }) {
     }
 
     let content = await res.json();
-    console.log(content);
-
-    console.log(content.last_episode_to_air);
-    console.log(content.next_episode_to_air);
-    console.log(
-        content.last_episode_to_air && content.next_episode_to_air ?
-            'col-span-1'
-        :   'col-span-2'
-    );
 
     return (
         <div className="flex flex-col md:grid md:grid-cols-2 gap-10 max-w-vw @container">

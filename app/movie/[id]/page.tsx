@@ -25,13 +25,6 @@ export default async function Movie({ params }: { params: { id: string } }) {
     }
 
     const content = await res.json();
-    console.log(content);
-    console.log(content.revenue);
-    console.log(content.keywords.keywords);
-    console.log(content.keywords.length);
-    console.log(content['watch/providers']);
-    console.log(content.original_title);
-    console.log(content.spoken_languages);
 
     function convertQuantity(amt: number) {
         let str = amt.toString().split('');
@@ -44,9 +37,8 @@ export default async function Movie({ params }: { params: { id: string } }) {
     }
 
     function getRuntime(min: number) {
-        let hrs = (min / 60).toFixed(0);
+        let hrs = Math.floor(min / 60);
         let mins = min % 60;
-        console.log(hrs);
         return `${hrs}h ${mins}m`;
     }
 

@@ -23,9 +23,6 @@ export default function ContentPage(props: {
                     shownPageNumbers + 1
                 );
                 setShownPageNumbers(shownPageNumbers + 1);
-                console.log(moreContent);
-                console.log(finalData.concat(moreContent.results));
-
                 setFinalData(finalData.concat(moreContent.results));
                 setLoadMore(false);
             };

@@ -109,6 +109,8 @@ export async function searchForContent(search: string, pageNum: number) {
         },
     };
 
+    console.log(search);
+
     const tvRes = await fetch(
         `https://api.themoviedb.org/3/search/tv?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${pageNum}`,
         options
@@ -133,6 +135,8 @@ export async function searchForContent(search: string, pageNum: number) {
 
     let movieResult = await movieRes.json();
     let tvResult = await tvRes.json();
+
+    console.log(movieResult, tvResult);
 
     movieResult.results.forEach((r: any) => {
         r.media_type = 'movie';
@@ -486,7 +490,8 @@ export async function getFavorWatchRated(
     sessionId: string,
     whichOne: string,
     accountId: string,
-    content: string
+    content: string,
+    pageNum: number
 ) {
     const options = {
         method: 'GET',
@@ -501,7 +506,7 @@ export async function getFavorWatchRated(
     console.log(whichOne, content);
 
     let res = await fetch(
-        `https://api.themoviedb.org/3/account/${accountId}/${whichOne}/${content}?session_id=${sessionId}&language=en-US&page=1&sort_by=created_at.asc`,
+        `https://api.themoviedb.org/3/account/${accountId}/${whichOne}/${content}?session_id=${sessionId}&language=en-US&page=${pageNum}&sort_by=created_at.asc`,
         options
     );
 
@@ -511,7 +516,7 @@ export async function getFavorWatchRated(
         console.error(`failed to fetch ${whichOne} ${content}`);
     }
     // console.log(favorWatch);
-    return favorWatch.results;
+    return favorWatch;
 }
 
 export async function addToFavorWatch(
@@ -696,12 +701,13 @@ export async function rateContent(
 
 //list utilities
 export async function getLists(accountObjectId: string, pageNum: number) {
-    const options = {
+    const options: RequestInit = {
         method: 'GET',
         headers: {
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
+        cache: 'no-cache',
     };
 
     console.log(accountObjectId);
@@ -867,6 +873,10 @@ export async function AddToList(
     }
 
     revalidatePath('/dashboard/list/[id]', 'page');
+    revalidatePath('/tv/[id]', 'layout');
+    revalidatePath('/movie/[id]', 'layout');
+
+    return resJson;
 }
 
 export async function deleteListItem(
@@ -901,6 +911,8 @@ export async function deleteListItem(
     }
 
     revalidatePath('/dashboard/list/[id]', 'page');
+
+    return resJson;
 }
 
 export async function addNote(
@@ -952,27 +964,29 @@ export async function getItemStatus(
     mt: string,
     mi: number
 ) {
-    const options = {
+    console.log(mt);
+    console.log(mi);
+    const options: RequestInit = {
         method: 'GET',
         headers: {
             accept: 'application/json',
             Authorization: `Bearer ${at}`,
         },
+        cache: 'no-cache',
     };
 
     let res = await fetch(
-        `https://api.themoviedb.org/4/list/${listId}/item_status?media_id=${mi}$media_type=${mt}`,
+        `https://api.themoviedb.org/4/list/${listId}/item_status?media_id=${mi}&media_type=${mt}`,
         options
     );
 
     let status = await res.json();
+    console.log(status);
 
-    if (!status.ok) {
-        console.log(status);
-        console.error(`item is not on list ${listId}`);
+    if (!status.success) {
+        console.log(`item is not on list ${listId}`);
         return false;
     } else {
-        console.log(status);
         console.log(`item is on list ${listId}`);
         return true;
     }

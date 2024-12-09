@@ -21,22 +21,13 @@ export default function LargeCreditsList(props: {
 
     const [limit, setLimit] = useState(12);
 
-    console.log(data);
-    console.log(type);
-
     let yearsArray: any = [];
 
     let sortedArray = data.toSorted((a: any, b: any) => {
-        console.log(
-            a.release_date?.slice(0, 4) || a.first_air_date?.slice(0, 4)
-        );
-
         let aVal = a.release_date?.slice(0, 4) || a.first_air_date?.slice(0, 4);
         let bVal = b.release_date?.slice(0, 4) || b.first_air_date?.slice(0, 4);
         return +bVal - +aVal;
     });
-
-    console.log(sortedArray);
 
     sortedArray.forEach((credit: any) => {
         if (!yearsArray?.includes(credit.release_date?.slice(0, 4))) {
@@ -51,12 +42,9 @@ export default function LargeCreditsList(props: {
         return year !== '' && year;
     });
 
-    console.log(yearsArray);
-
     let finalArray: any = [];
 
     for (let i = 0; i < yearsArray.length; i++) {
-        console.log(yearsArray[i]);
         let res = data.filter((credit: any) => {
             if (credit.release_date) {
                 return yearsArray[i] == credit.release_date?.slice(0, 4);
@@ -64,11 +52,8 @@ export default function LargeCreditsList(props: {
                 return yearsArray[i] == credit.first_air_date?.slice(0, 4);
             }
         });
-        console.log(res);
         finalArray.push({ year: yearsArray[i], credits: res });
     }
-
-    console.log(finalArray);
 
     return (
         <div className="flex flex-col gap-4">

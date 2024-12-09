@@ -6,7 +6,6 @@ import DashContent from '../components/DashContent';
 export default async function Page() {
     const sessionId: string | undefined = cookies().get('sessionId')?.value;
     const accountId: string | undefined = cookies().get('accId')?.value;
-    const username: string | undefined = cookies().get('username')?.value;
     const accountObjectId: string | undefined =
         cookies().get('accountObjectId')?.value;
     const accessToken: string | undefined = cookies().get('accessToken')?.value;

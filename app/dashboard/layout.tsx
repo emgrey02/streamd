@@ -4,7 +4,6 @@ import { cookies } from 'next/headers';
 import BackButton from '../components/BackButton';
 import TmdbSignIn from '../components/TmdbSignIn';
 import Link from 'next/link';
-import DashContent from '../components/DashContent';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -13,11 +12,7 @@ interface LayoutProps {
 
 export default async function Layout({ children, params }: LayoutProps) {
     const sessionId: string | undefined = cookies().get('sessionId')?.value;
-    const accountId: string | undefined = cookies().get('accId')?.value;
     const username: string | undefined = cookies().get('username')?.value;
-    const accountObjectId: string | undefined =
-        cookies().get('accountObjectId')?.value;
-    const accessToken: string | undefined = cookies().get('accessToken')?.value;
 
     return (
         <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">

@@ -30,8 +30,6 @@ export default async function PersonPage({
     }
 
     const content = await res.json();
-    console.log(content.known_for);
-    console.log(content.combined_credits.cast);
 
     return (
         <>

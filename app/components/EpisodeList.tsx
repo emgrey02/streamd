@@ -8,10 +8,6 @@ export default function EpisodeList(props: {
     seasonNum: string;
 }) {
     const data = props.data;
-    console.log(data);
-    console.log(props.showId);
-    console.log(props.seasonNum);
-    console.log(data.length);
 
     function getDate(birthday: string) {
         let birthArray = birthday.split('-');
@@ -34,7 +30,7 @@ export default function EpisodeList(props: {
     }
 
     function getRuntime(min: number) {
-        console.log('minutes: ', min);
+        console.log(min);
         let hrs = Math.floor(min / 60);
         let mins = min % 60;
         console.log(hrs);
@@ -71,15 +67,20 @@ export default function EpisodeList(props: {
                                     <p className="text-lg">{e.name}</p>
                                     <p className="font-light text-sm mb-4">
                                         Episode {e.episode_number} -{' '}
-                                        {e.runtime && (
+                                        {e.runtime ?
                                             <span className="font-medium">
                                                 {getRuntime(e.runtime)}
                                             </span>
-                                        )}
+                                        :   <span className="font-xs">
+                                                ? minutes
+                                            </span>
+                                        }
                                     </p>
-                                    <p className="text-sm">
-                                        {getDate(e.air_date)}
-                                    </p>
+                                    {e.air_date && (
+                                        <p className="text-sm">
+                                            {getDate(e.air_date)}
+                                        </p>
+                                    )}
                                 </div>
                             </Link>
                         </li>

@@ -2,6 +2,7 @@ import BackButton from '@/app/components/BackButton';
 import ContentPage from '@/app/components/ContentPage';
 import ListNav from '@/app/components/ListNav';
 import SearchBar from '@/app/components/SearchBar';
+import {} from 'next/cache';
 import { Suspense } from 'react';
 
 interface Props {
@@ -21,6 +22,9 @@ export default async function Page({ params }: Props) {
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
+        next: {
+            revalidate: 3600,
+        },
     };
 
     const type = params.content;
@@ -32,7 +36,6 @@ export default async function Page({ params }: Props) {
         console.error('failed to fetch movie/show category');
     }
     const content = await res.json();
-    console.log(content);
 
     function renameContent(cont: string) {
         if (cont === 'movie') {

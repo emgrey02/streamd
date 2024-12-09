@@ -15,10 +15,7 @@ export default async function Episode({
     let seasonNum = params.num;
     let episodeNum = params.epNum;
 
-    console.log(showId, seasonNum, episodeNum);
-
     const sessionId = cookies().get('sessionId')?.value;
-    const accountId = cookies().get('accId')?.value;
 
     const options = {
         method: 'GET',
@@ -48,8 +45,6 @@ export default async function Episode({
 
     let season = await seasonRes.json();
     let deets = await res.json();
-    console.log(deets);
-    console.log(season.episodes.length);
     const totalEpisodes = season.episodes.length;
 
     function getDate(birthday: string) {
@@ -164,7 +159,7 @@ export default async function Episode({
                         search={false}
                         credits={true}
                         seasons={false}
-                        clip={false}
+                        clip={true}
                     />
                 </div>
             )}
@@ -177,7 +172,7 @@ export default async function Episode({
                         search={false}
                         credits={true}
                         seasons={false}
-                        clip={false}
+                        clip={true}
                     />
                 </div>
             )}

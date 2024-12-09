@@ -1,7 +1,6 @@
 'use client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 
 export default function SmallCard(props: {
     data: any;
@@ -14,8 +13,6 @@ export default function SmallCard(props: {
 }) {
     const p = props.data;
     let type = props.type;
-
-    console.log(props.type);
 
     if (!props.search) {
         // not searching

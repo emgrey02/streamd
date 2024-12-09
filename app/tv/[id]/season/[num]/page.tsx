@@ -1,9 +1,6 @@
 import Text from '@/app/components/Text';
-import { cookies } from 'next/headers';
 import Image from 'next/image';
 import BackButton from '@/app/components/BackButton';
-import Genres from '@/app/components/Genres';
-import FavorWatchButton from '@/app/components/FavorWatchButton';
 import LargeCreditsList from '@/app/components/LargeCreditsList';
 import EpisodeList from '@/app/components/EpisodeList';
 
@@ -14,10 +11,6 @@ export default async function Season({
 }) {
     let showId = params.id;
     let seasonNum = params.num.toString();
-    console.log(params);
-
-    const sessionId = cookies().get('sessionId')?.value;
-    const accountId = cookies().get('accId')?.value;
 
     const options = {
         method: 'GET',
