@@ -57,13 +57,13 @@ export default function Text(props: { text: string }) {
                             onClick={showText}
                             className="underline underline-offset-2 hover:underline-offset-4  transition-all"
                         >
-                            read more
+                            more
                         </button>
                     :   <button
                             className="underline underline-offset-2 hover:underline-offset-4  transition-all"
                             onClick={hideText}
                         >
-                            close
+                            less
                         </button>
                     }
                 </div>

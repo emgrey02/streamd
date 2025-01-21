@@ -92,10 +92,10 @@ export default function FavWatchRatedContent(props: {
     return (
         <>
             {movieList && (
-                <div className="flex flex-col gap-2 relative @container">
+                <div className="flex flex-col gap-2 relative">
                     <h2 className="text-xl">movies</h2>
                     <ul
-                        className={`${movieVersion === 'image' ? 'grid grid-cols-[repeat(auto-fill,_17cqw)] sm:grid-cols-[repeat(auto-fill,_10cqw)] lg:grid-cols-[repeat(auto-fill,_8cqw)] place-items-center' : 'flex flex-col gap-2 gap-y-1 flex-wrap max-h-80 '} bg-slate-900 p-4 w-full relative py-4 pb-12 overflow-x-scroll`}
+                        className={`${movieVersion === 'image' ? 'grid grid-cols-[repeat(auto-fill,_42cqw)] sm:grid-cols-[repeat(auto-fill,_30cqw)] lg:grid-cols-[repeat(auto-fill,_15cqw)] place-items-center' : 'flex flex-col gap-2 gap-y-1 flex-wrap max-h-80 '} bg-slate-900 p-4 w-full relative py-4 pb-12 overflow-x-scroll`}
                     >
                         {movieList.map((movie: any, index: number) => (
                             <li
@@ -117,9 +117,9 @@ export default function FavWatchRatedContent(props: {
                                                 <Image
                                                     src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
                                                     alt={`Poster for ${movie.title}`}
-                                                    width={80}
+                                                    width={300}
                                                     height={120}
-                                                    className="max-w-full"
+                                                    className="min-w-full"
                                                     title={movie.title}
                                                 />
                                             :   <div className="w-[80px] h-[120px] bg-slate-300/20 grid place-items-center">
@@ -137,7 +137,11 @@ export default function FavWatchRatedContent(props: {
                             </p>
                         )}
                         {moviePages > shownMoviePageNumbers && (
-                            <button id="movie" onClick={loadMoreContent}>
+                            <button
+                                id="movie"
+                                className={`w-max h-min p-2 outline-2 outline-brand-blue outline hover:bg-slate-700`}
+                                onClick={loadMoreContent}
+                            >
                                 Load More
                             </button>
                         )}
@@ -160,14 +164,14 @@ export default function FavWatchRatedContent(props: {
                 </div>
             )}
             {tvList && (
-                <div className="flex flex-col gap-1 relative">
+                <div className="flex flex-col gap-2 relative">
                     <h2 className="text-xl">tv shows</h2>
                     <ul
-                        className={`${tvVersion === 'image' ? 'grid grid-cols-[repeat(auto-fill,_17cqw)] sm:grid-cols-[repeat(auto-fill,_10cqw)] lg:grid-cols-[repeat(auto-fill,_8cqw)] place-items-center' : 'flex flex-col flex-wrap gap-2 gap-y-1 max-h-80 '} bg-slate-900 p-4 w-full relative py-4 pb-12 overflow-x-scroll`}
+                        className={`${tvVersion === 'image' ? 'grid grid-cols-[repeat(auto-fill,_42cqw)] sm:grid-cols-[repeat(auto-fill,_30cqw)] lg:grid-cols-[repeat(auto-fill,_15cqw)] place-items-center' : 'flex flex-col gap-2 gap-y-1 flex-wrap max-h-80 '} bg-slate-900 p-4 w-full relative py-4 pb-12 overflow-x-scroll`}
                     >
                         {tvList.map((show: any, index: number) => (
                             <li
-                                className="hover:bg-brand-blue p-1 hover:text-slate-950"
+                                className="hover:bg-brand-blue p-1 hover:text-slate-950 text-wrap max-w-60"
                                 key={index}
                             >
                                 <button
@@ -183,8 +187,9 @@ export default function FavWatchRatedContent(props: {
                                                 <Image
                                                     src={`https://image.tmdb.org/t/p/w200${show.poster_path}`}
                                                     alt={`Poster for ${show.name}`}
-                                                    width={80}
+                                                    width={300}
                                                     height={120}
+                                                    className="min-w-full"
                                                     title={show.name}
                                                 />
                                             :   <div
@@ -205,7 +210,11 @@ export default function FavWatchRatedContent(props: {
                             </p>
                         )}
                         {tvPages > shownTvPageNumbers && (
-                            <button id="tv" onClick={loadMoreContent}>
+                            <button
+                                id="tv"
+                                className="w-min"
+                                onClick={loadMoreContent}
+                            >
                                 Load More
                             </button>
                         )}

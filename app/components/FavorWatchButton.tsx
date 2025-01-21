@@ -123,6 +123,7 @@ export default function FavorWatchButton({
             {whichOne === 'favorite' ?
                 <button
                     className="flex items-center justify-start gap-2"
+                    type="button"
                     onClick={handleClick}
                 >
                     {canFavorite ?
@@ -139,7 +140,7 @@ export default function FavorWatchButton({
                                     className="stroke-brand-blue stroke-1"
                                 />
                             </svg>
-                            <p>Favorite</p>
+                            Favorite
                         </>
                     :   <>
                             <svg
@@ -154,12 +155,13 @@ export default function FavorWatchButton({
                                     className="stroke-brand-blue stroke-1 fill-brand-blue"
                                 />
                             </svg>
-                            <p>UnFavorite</p>
+                            UnFavorite
                         </>
                     }
                 </button>
             :   <button
                     className="flex items-center justify-start gap-2"
+                    type="button"
                     onClick={handleClick}
                 >
                     {canAddToWatchlist ?
@@ -174,7 +176,7 @@ export default function FavorWatchButton({
                                 <title>Add to watchlist</title>
                                 <path d="M16 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9h-4v4H9v-4H5V9h4V5h2v4h4v2z" />
                             </svg>
-                            <p className="shrink-0">Add to Watchlist</p>
+                            Add to Watchlist
                         </>
                     :   <>
                             <svg
@@ -187,7 +189,7 @@ export default function FavorWatchButton({
                                 <title>Remove from watchlist</title>
                                 <path d="M16 2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-1 9H5V9h10v2z" />
                             </svg>
-                            <p>Remove from Watchlist</p>
+                            Remove from Watchlist
                         </>
                     }
                 </button>

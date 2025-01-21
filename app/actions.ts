@@ -80,7 +80,6 @@ export async function getContent(
         },
     };
 
-    console.log(content, cat, pageNum);
     if (content === 'trending') {
         if (cat === 'movies') cat = 'movie';
         if (cat === 'people') cat = 'person';
@@ -94,7 +93,7 @@ export async function getContent(
     if (!res.ok) {
         console.error('failed to fetch content');
     } else {
-        console.log('successfully retrieved content');
+        console.log(`successfully retrieved ${content} content`);
     }
     let result = await res.json();
     return result;
@@ -238,7 +237,7 @@ export async function genreSearch(search: string, type: string, page: string) {
 
 //account log-in and log-out tasks
 export async function getRequestToken() {
-    const v4options: RequestInit = {
+    const options: RequestInit = {
         method: 'POST',
         headers: {
             accept: 'application/json',
@@ -251,27 +250,26 @@ export async function getRequestToken() {
         }),
     };
 
-    v4options.next as RequestInit;
+    options.next as RequestInit;
 
     //fetch to get a request token from TMDB
-    const v4Res = await fetch(
+    const res = await fetch(
         'https://api.themoviedb.org/4/auth/request_token',
-        v4options
+        options
     );
 
     //error handling
-    if (!v4Res.ok) {
+    if (!res.ok) {
         console.error('failed to fetch v4 request token from tmdb');
     }
 
     //assign request Token
-    const v4ResJson = await v4Res.json();
+    const resJson = await res.json();
 
-    const v4ReqToken = v4ResJson.request_token;
+    const reqToken = resJson.request_token;
 
     console.log('successfully got request token from tmdb');
-    console.log(v4ResJson);
-    return v4ReqToken;
+    return reqToken;
 }
 
 export async function setReqTokenCookie(rt: string) {
@@ -710,8 +708,6 @@ export async function getLists(accountObjectId: string, pageNum: number) {
         cache: 'no-cache',
     };
 
-    console.log(accountObjectId);
-
     let res = await fetch(
         `https://api.themoviedb.org/4/account/${accountObjectId}/lists?page=${pageNum}`,
         options
@@ -723,7 +719,7 @@ export async function getLists(accountObjectId: string, pageNum: number) {
         console.log(lists);
         console.error(`failed to fetch lists`);
     }
-    console.log(lists);
+
     return lists.results;
 }
 
@@ -733,9 +729,6 @@ export async function createList(at: string, formData: FormData) {
         description: formData.get('list description'),
         public: formData.get('public toggle'),
     };
-
-    console.log(rawFormData);
-    console.log(at);
 
     const options = {
         method: 'POST',
@@ -752,8 +745,6 @@ export async function createList(at: string, formData: FormData) {
             public: !rawFormData.public ? 'false' : 'true',
         }),
     };
-
-    console.log(options.body);
 
     let res = await fetch('https://api.themoviedb.org/4/list', options);
     let resJson = await res.json();
@@ -794,8 +785,6 @@ export async function updateList(at: string, id: string, formData: FormData) {
             sort_by: 'original_order.asc',
         }),
     };
-
-    console.log(options.body);
 
     let res = await fetch(`https://api.themoviedb.org/4/list/${id}`, options);
     let resJson = await res.json();
@@ -926,8 +915,6 @@ export async function addNote(
         note: formData.get('note'),
     };
 
-    console.log(rawFormData.note);
-
     const options = {
         method: 'PUT',
         headers: {
@@ -964,8 +951,6 @@ export async function getItemStatus(
     mt: string,
     mi: number
 ) {
-    console.log(mt);
-    console.log(mi);
     const options: RequestInit = {
         method: 'GET',
         headers: {
@@ -981,7 +966,6 @@ export async function getItemStatus(
     );
 
     let status = await res.json();
-    console.log(status);
 
     if (!status.success) {
         console.log(`item is not on list ${listId}`);

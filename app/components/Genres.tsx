@@ -2,7 +2,6 @@ import Link from 'next/link';
 
 export default function Genres(props: { data: any; content: string }) {
     const deets = props.data;
-    console.log(deets);
 
     return (
         <>

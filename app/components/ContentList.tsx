@@ -28,6 +28,7 @@ export default function ContentList({
     const scrollCont = useRef<HTMLUListElement>(null);
 
     let urlContent;
+
     switch (content) {
         case 'tv':
             urlContent = 'shows';
