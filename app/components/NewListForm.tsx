@@ -38,7 +38,10 @@ export default function NewListForm(props: {
 
     return (
         <div className="flex flex-col gap-2 items-start">
-            <button onClick={handleFormOpenClose}>
+            <button
+                onClick={handleFormOpenClose}
+                className="bg-slate-700 hover:bg-slate-900 transition border-2 border-slate-900 text-brand-blue px-4 py-2"
+            >
                 {showForm ? 'Close' : 'Create List'}
             </button>
             {showForm && (
@@ -53,7 +56,7 @@ export default function NewListForm(props: {
                             name="list name"
                             id="list-name"
                             defaultValue={props.data.name || ''}
-                            className="text-slate-800 px-2 py-1 bg-slate-300"
+                            className="text-slate-800 px-2 py-1 bg-slate-400"
                         />
                     </div>
                     <div className="flex flex-col">
@@ -63,7 +66,7 @@ export default function NewListForm(props: {
                             id="list-desc"
                             rows={10}
                             defaultValue={props.data.desc || ''}
-                            className="text-slate-800 px-2 py-1 bg-slate-300"
+                            className="text-slate-800 px-2 py-1 bg-slate-400"
                         ></textarea>
                     </div>
                     <div className="flex gap-4">
@@ -73,7 +76,9 @@ export default function NewListForm(props: {
                             id="public-toggle"
                             defaultValue={props.data.pub || false}
                         />
-                        <label htmlFor="public-toggle">Make Public?</label>
+                        <label htmlFor="public-toggle" className="">
+                            Make Public?
+                        </label>
                     </div>
                     <button
                         type="submit"

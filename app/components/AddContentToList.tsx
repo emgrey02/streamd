@@ -86,20 +86,23 @@ export default function AddContentToList(props: { at: string; id: string }) {
                                 <div className="flex justify-between w-full items-center">
                                     <p>{r.title || r.name}</p>
                                     <div className="flex flex-col items-end text-end gap-2">
-                                        <button
-                                            className="text-end"
-                                            onClick={() => {
-                                                AddToList(
-                                                    props.at,
-                                                    props.id,
-                                                    r.media_type,
-                                                    +r.id
-                                                );
-                                                router.refresh();
-                                            }}
-                                        >
-                                            Add to List
-                                        </button>
+                                        {itemStatuses[index] ?
+                                            <></>
+                                        :   <button
+                                                className="text-end"
+                                                onClick={() => {
+                                                    AddToList(
+                                                        props.at,
+                                                        props.id,
+                                                        r.media_type,
+                                                        +r.id
+                                                    );
+                                                    router.refresh();
+                                                }}
+                                            >
+                                                Add to List
+                                            </button>
+                                        }
                                         <Link href={`/${r.media_type}/${r.id}`}>
                                             Visit Page
                                         </Link>

@@ -26,6 +26,7 @@ export default async function PersonCredits({
     }
 
     const content = await res.json();
+    console.log(content);
 
     return (
         <div className="grid md:grid-cols-2 gap-10">

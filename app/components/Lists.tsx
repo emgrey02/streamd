@@ -24,7 +24,6 @@ export default function Lists({ accessToken, accountObjectId }: Props) {
     useEffect(() => {
         async function getThoseLists() {
             if (accountObjectId) {
-                console.log('running use effect');
                 let lists = await getLists(accountObjectId, 1);
                 localStorage.setItem('dashcat', 'lists');
                 setLists(lists);
@@ -76,7 +75,7 @@ export default function Lists({ accessToken, accountObjectId }: Props) {
                                     }
                                     className="flex flex-col items-stretch gap-2"
                                 >
-                                    <div className="flex gap-2">
+                                    <div className="flex items-end gap-2">
                                         {l.backdrop_path ?
                                             <Image
                                                 className="overflow-y-clip"
@@ -89,7 +88,7 @@ export default function Lists({ accessToken, accountObjectId }: Props) {
                                                 image unavailable
                                             </div>
                                         }
-                                        <div className="flex justify-between w-full">
+                                        <div className="flex justify-between text-left w-full">
                                             <h3 className="text-2xl text-brand-blue">
                                                 {l.name}
                                             </h3>
