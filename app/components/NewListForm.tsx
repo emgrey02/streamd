@@ -37,7 +37,7 @@ export default function NewListForm(props: {
     }, [props.edit]);
 
     return (
-        <div className="flex flex-col gap-2 items-start">
+        <div className="flex flex-col gap-2 w-full">
             <button
                 onClick={handleFormOpenClose}
                 className="bg-slate-700 hover:bg-slate-900 transition border-2 border-slate-900 text-brand-blue px-4 py-2"

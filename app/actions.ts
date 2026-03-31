@@ -225,10 +225,10 @@ export async function genreSearch(search: string, type: string, page: string) {
     );
 
     const results = await res.json();
-    console.log(results);
+    //console.log(results);
 
     if (!res.ok) {
-        console.log(results);
+        //console.log(results);
         console.error(`unable to do genre ${type} search`);
     }
 
@@ -299,7 +299,7 @@ export async function setSessionCookies(
     accessToken: string,
     accountObjectId: string
 ) {
-    console.log(sessionId, accessToken, userInfo.id, userInfo.username);
+    //console.log(sessionId, accessToken, userInfo.id, userInfo.username);
     console.log('setting user session cookies');
     cookies().set('sessionId', sessionId);
     cookies().set('accId', userInfo.id);
@@ -319,7 +319,7 @@ export async function getAccessToken() {
 
 export async function tmdbLogOut(accessToken: string) {
     console.log('logging out...');
-    console.log(accessToken);
+    //console.log(accessToken);
 
     const options = {
         method: 'DELETE',
@@ -370,10 +370,10 @@ export async function createTmdbSession(rt: string) {
     const accessTokenResJson = await accessTokenRes.json();
 
     if (!accessTokenRes.ok) {
-        console.log(accessTokenResJson);
+        //console.log(accessTokenResJson);
         console.error('failed to get accessToken');
     } else {
-        console.log(accessTokenResJson);
+        //console.log(accessTokenResJson);
         console.log('successfully got an accessToken');
 
         const sessionOptions: RequestInit = {
@@ -471,7 +471,7 @@ export async function getUserInfo(sessionId: string) {
         console.error('failed to fetch account info');
     }
     const userInfo = await res.json();
-    console.log(userInfo);
+    //console.log(userInfo);
     return userInfo;
 }
 
@@ -501,7 +501,7 @@ export async function getFavorWatchRated(
 
     if (content === 'movie') content = 'movies';
 
-    console.log(whichOne, content);
+    //console.log(whichOne, content);
 
     let res = await fetch(
         `https://api.themoviedb.org/3/account/${accountId}/${whichOne}/${content}?session_id=${sessionId}&language=en-US&page=${pageNum}&sort_by=created_at.asc`,

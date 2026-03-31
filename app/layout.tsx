@@ -17,7 +17,7 @@ export const metadata: Metadata = {
         default: 'streamd',
     },
     description:
-        'A source for movies, tv shows, and celebrities. See ratings, reviews, and where to watch your favorite movies and tv shows. Save movies and tv shows to your favorites, watchlist, or create your own custom lists.',
+        'Quickly learn about a movie or tv show, add it to your favorites or watchlist, and create your own custom lists, on streamd.',
     generator: 'Next.js',
     applicationName: 'streamd',
     referrer: 'origin-when-cross-origin',
@@ -45,10 +45,16 @@ export default async function RootLayout({
             <body
                 className={`${inter.className} w-full h-full relative bg-slate-800 text-gray-300 flex flex-col items-center`}
             >
-                <div
+                <div className="h-screen w-full grid place-items-center">
+                    <h1 className="text-3xl max-w-[35ch] text-center">
+                        streamd is currently undergoing maintenance. sorry for
+                        the inconvenience.
+                    </h1>
+                </div>
+                {/* <div
                     className={`min-h-svh max-w-7xl flex flex-col w-full h-full`}
                 >
-                    <nav
+                     <nav
                         aria-label="primary navigation"
                         className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full py-2 px-4 "
                     >
@@ -155,7 +161,7 @@ export default async function RootLayout({
                     </p>
                     <p>designed & developed by emma grey</p>
                     <p>&copy; 2024</p>
-                </footer>
+                </footer> */}
             </body>
         </html>
     );
