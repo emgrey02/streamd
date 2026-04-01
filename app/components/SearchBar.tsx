@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -9,7 +8,7 @@ export default function SearchBar(props: { searchTerm?: string }) {
     const router = useRouter();
 
     function editQuery(event: React.ChangeEvent<HTMLInputElement>) {
-        let search = event.target.value;
+        const search = event.target.value;
         setSearch(search);
     }
 

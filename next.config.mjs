@@ -15,6 +15,11 @@ const nextConfig = {
         ignoreBuildErrors: false,
         tsConfigPath: 'tsconfig.json',
     },
+    logging: {
+        fetches: {
+            fullUrl: true,
+        },
+    },
 };
 
 export default nextConfig;

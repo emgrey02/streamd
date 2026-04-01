@@ -2,19 +2,15 @@ import BackButton from '@/app/components/BackButton';
 import ContentPage from '@/app/components/ContentPage';
 import ListNav from '@/app/components/ListNav';
 import SearchBar from '@/app/components/SearchBar';
-import {} from 'next/cache';
 import { Suspense } from 'react';
 
-interface Props {
-    params: { content: string; cat: string };
-}
-
-export default async function Page({ params }: Props) {
-    let pageNum = 1;
-
-    if (params.content === 'movies') params.content = 'movie';
-
-    if (params.content === 'shows') params.content = 'tv';
+// content is either movies, shows, or trending
+export default async function Page({
+    params,
+}: {
+    params: Promise<{ content: string; cat: string }>;
+}) {
+    const { content, cat } = await params;
 
     const options = {
         method: 'GET',
@@ -23,19 +19,18 @@ export default async function Page({ params }: Props) {
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
         next: {
-            revalidate: 3600,
+            revalidate: 86400,
         },
     };
 
-    const type = params.content;
-    const url = `https://api.themoviedb.org/3/${type}/${params.cat === 'people' ? 'person' : params.cat}${params.content === 'trending' ? '/day' : ''}?language=en-US&page=1`;
+    const url = `https://api.themoviedb.org/3/${content}/${cat}${content === 'trending' ? '/day' : ''}?language=en-US&page=1`;
 
-    let res = await fetch(url, options);
+    const res = await fetch(url, options);
 
     if (!res.ok) {
         console.error('failed to fetch movie/show category');
     }
-    const content = await res.json();
+    const contentData = await res.json();
 
     function renameContent(cont: string) {
         if (cont === 'movie') {
@@ -53,18 +48,18 @@ export default async function Page({ params }: Props) {
             <SearchBar />
             <div>
                 <h1 className="text-5xl tracking-wider font-light mb-2">
-                    {renameContent(params.content)}
+                    {renameContent(content)}
                 </h1>
                 <div className="w-[80%] max-w-full h-px bg-brand-blue"></div>
             </div>
             <ListNav />
             <Suspense fallback={<p>Loading content...</p>}>
                 <ContentPage
-                    data={content.results}
-                    pageNum={pageNum}
-                    type={type}
-                    cat={params.cat}
-                    content={params.content}
+                    data={contentData.results}
+                    pageNum={1}
+                    type={content}
+                    cat={cat}
+                    content={content}
                 />
             </Suspense>
         </main>

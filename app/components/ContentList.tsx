@@ -1,94 +1,76 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
-import { getContent, getFavorWatchRated } from '@/app/actions';
+import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
 type Props = {
     sessionId?: string;
     accountId?: string;
-    content: string;
+    content: any[];
     cat: string[] | string;
+    title: string;
 };
 
-export default function ContentList({
-    sessionId,
-    accountId,
-    content,
-    cat,
-}: Props) {
+export default function ContentList({ title, content, cat }: Props) {
     const router = useRouter();
-    const [contentList, setContentList] = useState<Movie[] | Show[]>();
+    const [contentList, setContentList] = useState<Movie[] | Show[]>(
+        content[0]
+    );
     const [scrollPx, setScrollPx] = useState(0);
     const [scrollWidth, setScrollWidth] = useState(2000);
-    const [category, setCategory] = useState(cat || cat[0]);
+    const [category, setCategory] = useState(cat[0]);
     const [progress, setProgress] = useState(0);
-    const [message, setMessage] = useState('Loading...');
     const scrollCont = useRef<HTMLUListElement>(null);
-
-    let urlContent;
-
-    switch (content) {
-        case 'tv':
-            urlContent = 'shows';
-            break;
-        case 'movie':
-            urlContent = 'movies';
-            break;
-        default:
-            urlContent = 'trending';
-            break;
-    }
-
-    useEffect(() => {
-        async function retrieveContent() {
-            let cont = await getContent(content, cat[0], 1);
-            setCategory(cat[0]);
-            setContentList(cont.results);
-        }
-        retrieveContent();
-    }, [sessionId, accountId, cat, content]);
 
     async function setContent(
         e: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) {
-        let newCat = e.currentTarget.dataset.cat;
-        let cont = await getContent(content, newCat, 1);
+        const newCat = e.currentTarget.dataset.cat;
+
         if (newCat) {
+            const index = cat.indexOf(newCat);
             setCategory(newCat);
-            setContentList(cont.results);
+            setContentList(content[index]);
             scrollToBeginning();
         }
     }
 
     function capitalizeCategory(cat: string) {
         if (cat.includes('_')) {
-            let array = cat.split('_');
-            let firstLetterCap = array[0].slice(0, 1).toUpperCase();
-            let secondLetterCap = array[1].slice(0, 1).toUpperCase();
+            const array = cat.split('_');
+            const firstLetterCap = array[0].slice(0, 1).toUpperCase();
+            const secondLetterCap = array[1].slice(0, 1).toUpperCase();
 
             array[0] = firstLetterCap + array[0].slice(1);
             array[1] = secondLetterCap + array[1].slice(1);
 
             if (array[2]) {
-                let thirdLetterCap = array[2]?.slice(0, 1).toUpperCase();
+                const thirdLetterCap = array[2]?.slice(0, 1).toUpperCase();
                 array[2] = thirdLetterCap + array[2]?.slice(1);
             }
 
             return `${array.join(' ')}`;
         } else {
-            let capLetter = cat.slice(0, 1).toUpperCase();
+            const capLetter = cat.slice(0, 1).toUpperCase();
             let capCat = `${capLetter}${cat.slice(1)}`;
             if (capCat === 'Movie') capCat = 'Movies';
-            if (capCat === 'Favorite') capCat = 'Favorites';
             return capCat;
+        }
+    }
+
+    function renameContent(cont: string) {
+        if (cont === 'movie') {
+            return 'Movies';
+        } else if (cont === 'tv') {
+            return 'Shows';
+        } else if (cont === 'trending') {
+            return 'Trending';
         }
     }
 
     function scrollToBeginning() {
         if (scrollCont.current) {
-            console.log('scrolling to beginning');
             console.log(scrollPx);
             scrollCont.current.scrollBy({
                 left: -scrollPx,
@@ -145,10 +127,10 @@ export default function ContentList({
         <div className="flex flex-col">
             <div className="relative h-min grid gap-y-4">
                 <h2 className="text-xl font-medium tracking-wider">
-                    {capitalizeCategory(content)}
+                    {renameContent(title)}
                 </h2>
                 <ul
-                    className={`grid ${content === 'favorite' || content === 'watchlist' || content === 'rated' ? 'grid-cols-2 max-w-100' : 'grid-cols-4 max-w-150'} items-center ring-1 ring-gray-900 bg-slate-700/40`}
+                    className={`grid grid-cols-4 max-w-150 items-center ring-1 ring-gray-900 bg-slate-700/40`}
                 >
                     {Array.isArray(cat) &&
                         cat.map((c: string, index: number) => (
@@ -175,7 +157,7 @@ export default function ContentList({
                     >
                         &#171;
                     </button>
-                    {contentList && contentList.length > 0 ?
+                    {contentList && contentList.length > 0 && (
                         <ul
                             id="scroll-cont"
                             className="flex items-start overflow-x-scroll snap-x mx-2 gap-1"
@@ -191,7 +173,7 @@ export default function ContentList({
                                         className="focus:outline-none focus:ring focus:ring-brand-blue"
                                         onClick={() =>
                                             router.push(
-                                                `/${ent.media_type || (content === 'favorite' || content === 'watchlist' || content === 'rated' ? category : content)}/${ent.id.toString()}`
+                                                `/${ent.media_type || title}/${ent.id.toString()}`
                                             )
                                         }
                                     >
@@ -203,7 +185,7 @@ export default function ContentList({
                                                 height={300}
                                             />
                                         :   <div className="w-48 h-72 bg-slate-300/20 grid place-items-center">
-                                                {content === 'tv' ?
+                                                {title === 'tv' ?
                                                     ent.name
                                                 :   ent.title}{' '}
                                                 poster unavailable
@@ -213,10 +195,7 @@ export default function ContentList({
                                 </li>
                             ))}
                         </ul>
-                    :   <p className="h-60 grid place-items-center">
-                            {message}
-                        </p>
-                    }
+                    )}
                     <button
                         id="forward"
                         onClick={scrollDiv}
@@ -229,7 +208,7 @@ export default function ContentList({
             </div>
             {contentList && contentList.length == 20 && (
                 <button
-                    onClick={() => router.push(`/${urlContent}/${category}`)}
+                    onClick={() => router.push(`/${title}/${category}`)}
                     className="self-end mt-2 px-2"
                 >
                     See More
