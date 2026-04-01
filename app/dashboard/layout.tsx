@@ -11,8 +11,9 @@ interface LayoutProps {
 }
 
 export default async function Layout({ children, params }: LayoutProps) {
-    const sessionId: string | undefined = cookies().get('sessionId')?.value;
-    const username: string | undefined = cookies().get('username')?.value;
+    const cookieStore = await cookies();
+    const sessionId: string | undefined = cookieStore.get('sessionId')?.value;
+    const username: string | undefined = cookieStore.get('username')?.value;
 
     return (
         <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">
@@ -21,7 +22,7 @@ export default async function Layout({ children, params }: LayoutProps) {
                 <h1 className="text-5xl tracking-wider font-light mb-2">
                     Your Dashboard
                 </h1>
-                <div className="w-[80%] max-w-full h-[1px] bg-brand-blue"></div>
+                <div className="w-[80%] max-w-full h-px bg-brand-blue"></div>
             </div>
             {!username && (
                 <p className="mb-8 italic text-brand-blue">

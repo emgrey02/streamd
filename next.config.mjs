@@ -11,6 +11,10 @@ const nextConfig = {
             },
         ],
     },
+    typescript: {
+        ignoreBuildErrors: false,
+        tsConfigPath: 'tsconfig.json',
+    },
 };
 
 export default nextConfig;

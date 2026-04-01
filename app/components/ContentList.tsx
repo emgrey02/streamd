@@ -148,7 +148,7 @@ export default function ContentList({
                     {capitalizeCategory(content)}
                 </h2>
                 <ul
-                    className={`grid ${content === 'favorite' || content === 'watchlist' || content === 'rated' ? 'grid-cols-2 max-w-[400px]' : 'grid-cols-4 max-w-[600px]'} items-center ring-1 ring-gray-900 bg-slate-700/40`}
+                    className={`grid ${content === 'favorite' || content === 'watchlist' || content === 'rated' ? 'grid-cols-2 max-w-100' : 'grid-cols-4 max-w-150'} items-center ring-1 ring-gray-900 bg-slate-700/40`}
                 >
                     {Array.isArray(cat) &&
                         cat.map((c: string, index: number) => (
@@ -184,7 +184,7 @@ export default function ContentList({
                             {contentList.map((ent: any, index: number) => (
                                 <li
                                     data-num={index}
-                                    className="min-w-[200px] grid snap-start py-1 px-1"
+                                    className="min-w-50 grid snap-start py-1 px-1"
                                     key={index}
                                 >
                                     <button

@@ -49,7 +49,7 @@ export default function Card(props: {
     return (
         <>
             <div
-                className={`${windowWidth && windowWidth < 640 ? 'w-[100px]' : 'w-[200px]'}`}
+                className={`${windowWidth && windowWidth < 640 ? 'w-25' : 'w-50'}`}
             >
                 <p className="font-bold text-xs sm:text-base tracking-wide line-clamp-2 text-wrap">
                     {p.name || p.title}
@@ -79,7 +79,7 @@ export default function Card(props: {
                             }
                         />
                     :   <div
-                            className={`${windowWidth && windowWidth < 640 ? 'w-[100px] h-[150px]' : 'w-[200px] h-[300px]'} bg-slate-900/80 text-slate-400 grid place-items-center text-center`}
+                            className={`${windowWidth && windowWidth < 640 ? 'w-25 h-37.5' : 'w-50 h-75'} bg-slate-900/80 text-slate-400 grid place-items-center text-center`}
                         >
                             no image available
                         </div>

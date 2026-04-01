@@ -15,7 +15,7 @@ export default function Genres(props: { data: any; content: string }) {
                                 index: number
                             ) => (
                                 <li
-                                    className="w-fit text-sm ring-1 h-min px-2 py-0 pt-[2px] ring-slate-400 hover:bg-slate-950"
+                                    className="w-fit text-sm ring-1 h-min px-2 py-0 pt-0.5 ring-slate-400 hover:bg-slate-950"
                                     key={index}
                                 >
                                     <Link
@@ -41,7 +41,7 @@ export default function Genres(props: { data: any; content: string }) {
                                 index: number
                             ) => (
                                 <li
-                                    className="w-fit text-sm ring-1 h-min px-2 py-0 pt-[2px] ring-slate-400 hover:bg-slate-950"
+                                    className="w-fit text-sm ring-1 h-min px-2 py-0 pt-0.5 ring-slate-400 hover:bg-slate-950"
                                     key={index}
                                 >
                                     <Link

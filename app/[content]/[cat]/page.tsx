@@ -55,7 +55,7 @@ export default async function Page({ params }: Props) {
                 <h1 className="text-5xl tracking-wider font-light mb-2">
                     {renameContent(params.content)}
                 </h1>
-                <div className="w-[80%] max-w-full h-[1px] bg-brand-blue"></div>
+                <div className="w-[80%] max-w-full h-px bg-brand-blue"></div>
             </div>
             <ListNav />
             <Suspense fallback={<p>Loading content...</p>}>

@@ -36,7 +36,7 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const sessionId = cookieStore.get('sessionId')?.value;
     const username = cookieStore.get('username')?.value;
 

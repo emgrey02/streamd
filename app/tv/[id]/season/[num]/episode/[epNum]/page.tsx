@@ -15,7 +15,8 @@ export default async function Episode({
     let seasonNum = params.num;
     let episodeNum = params.epNum;
 
-    const sessionId = cookies().get('sessionId')?.value;
+    const cookieStore = await cookies();
+    const sessionId = cookieStore.get('sessionId')?.value;
 
     const options = {
         method: 'GET',
@@ -109,7 +110,7 @@ export default async function Episode({
                             height={225}
                         />
                     </div>
-                :   <div className="w-[400px] h-[225px] bg-slate-300/20 grid place-items-center text-center">
+                :   <div className="w-100 h-56.25 bg-slate-300/20 grid place-items-center text-center">
                         {deets.name} poster unavailable
                     </div>
                 }

@@ -43,7 +43,7 @@ export default function NewCard(props: {
 
     return (
         <Link
-            className="p-[5px] grid grid-cols-[100px_auto] h-[160px] gap-2 bg-slate-700 hover:bg-slate-700/40 hover:ring-2 hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
+            className="p-1.25 grid grid-cols-[100px_auto] h-40 gap-2 bg-slate-700 hover:bg-slate-700/40 hover:ring-2 hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
             href={`/${type}/${props.showId ? props.showId : p.id}/${props.seasons ? `season/${props.seasonNum}/` : '/'}`}
         >
             {p.profile_path || p.poster_path ?
@@ -54,7 +54,7 @@ export default function NewCard(props: {
                     width="100"
                     height="150"
                 />
-            :   <div className="w-[100px] h-[150px] bg-slate-900/80 text-slate-400 grid place-items-center text-center">
+            :   <div className="w-25 h-37.5 bg-slate-900/80 text-slate-400 grid place-items-center text-center">
                     no image available
                 </div>
             }

@@ -62,7 +62,7 @@ export default function StreamRentBuy(props: { content: any }) {
                                         key={index}
                                         className="w-fit flex items-center gap-2"
                                     >
-                                        <div className="grid place-items-center bg-slate-600 min-w-[60px] min-h-[60px]">
+                                        <div className="grid place-items-center bg-slate-600 min-w-15 min-h-15">
                                             {wp.logo_path ?
                                                 <Image
                                                     className="p-2"
@@ -71,7 +71,7 @@ export default function StreamRentBuy(props: { content: any }) {
                                                     width="60"
                                                     height="60"
                                                 />
-                                            :   <div className="w-[60px] h-[60px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
+                                            :   <div className="w-15 h-15 bg-slate-900 grid place-items-center p-2 text-center text-slate-400">
                                                     no logo available
                                                 </div>
                                             }

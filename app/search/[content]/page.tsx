@@ -107,7 +107,7 @@ export default async function Search({
                     )}
                     {!keyword && !genre && `Search results for: ${search}`}
                 </h1>
-                <div className="w-[80%] max-w-full h-[1px] bg-brand-blue"></div>
+                <div className="w-[80%] max-w-full h-px bg-brand-blue"></div>
             </div>
             <SearchBar
                 searchTerm={keyword || genre ? '' : search.split('-')[0]}

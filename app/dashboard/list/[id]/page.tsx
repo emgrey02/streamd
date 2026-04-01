@@ -11,8 +11,10 @@ import Note from '@/app/components/Note';
 import { getContentAccountInfo } from '@/app/actions';
 
 export default async function ListPage({ params }: { params: { id: string } }) {
-    const accessToken: string | undefined = cookies().get('accessToken')?.value;
-    const sessionId: string | undefined = cookies().get('sessionId')?.value;
+    const cookieStore = await cookies();
+    const accessToken: string | undefined =
+        cookieStore.get('accessToken')?.value;
+    const sessionId: string | undefined = cookieStore.get('sessionId')?.value;
 
     const options = {
         method: 'GET',
@@ -47,7 +49,7 @@ export default async function ListPage({ params }: { params: { id: string } }) {
     return (
         <div className="flex flex-col gap-4">
             <BackButton main={false} />
-            <div className="flex flex-col-reverse gap-4 md:grid md:grid-cols-[auto,_400px]">
+            <div className="flex flex-col-reverse gap-4 md:grid md:grid-cols-[auto,400px]">
                 <div className="flex flex-col gap-4">
                     <div>
                         <h2 className="text-3xl font-light">{list.name}</h2>
@@ -76,7 +78,7 @@ export default async function ListPage({ params }: { params: { id: string } }) {
                                                     width="60"
                                                     height="90"
                                                 />
-                                            :   <div className="w-[50px] h-[75px] bg-slate-900/80 text-slate-400 grid place-items-center text-center text-xs">
+                                            :   <div className="w-12.5 h-18.5 bg-slate-900/80 text-slate-400 grid place-items-center text-center text-xs">
                                                     no image
                                                 </div>
                                             }

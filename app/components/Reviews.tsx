@@ -31,7 +31,7 @@ export default function Reviews(props: { reviews: any }) {
                             </div>
                             <div className="flex gap-2 items-center">
                                 {post.author_details.avatar_path ?
-                                    <div className="w-[40px] h-[40px] bg-slate-900 grid place-items-center">
+                                    <div className="w-10 h-10 bg-slate-900 grid place-items-center">
                                         <Image
                                             src={`https://image.tmdb.org/t/p/w200/${post.author_details.avatar_path}`}
                                             alt={`${post.author}'s profile image`}
@@ -39,7 +39,7 @@ export default function Reviews(props: { reviews: any }) {
                                             height={40}
                                         />
                                     </div>
-                                :   <div className="w-[40px] h-[40px] bg-slate-900 text-center text-4xl font-thin text-slate-500">
+                                :   <div className="w-10 h-10 bg-slate-900 text-center text-4xl font-thin text-slate-500">
                                         X
                                     </div>
                                 }
@@ -54,7 +54,7 @@ export default function Reviews(props: { reviews: any }) {
                                         post.created_at
                                     ).toLocaleDateString()}
                                 </p>
-                                <div className="w-full h-[1px] bg-slate-500 mb-10"></div>
+                                <div className="w-full h-px bg-slate-500 mb-10"></div>
                             </div>
                         </div>
                     ))

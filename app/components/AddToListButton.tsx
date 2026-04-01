@@ -71,7 +71,7 @@ export default function AddToListButton(props: {
                 {showOptions ? 'Close' : 'Add to List'}
             </button>
             {showOptions && itemStatuses.length > 0 && (
-                <ul className="bg-slate-600 absolute top-[100%] w-full">
+                <ul className="bg-slate-600 absolute top-full w-full">
                     {lists.map((l: any, index: number) => (
                         <li
                             className={`p-2 ${!itemStatuses[index].isItemInList ? 'hover:bg-slate-900' : 'hover:none'} flex justify-between`}

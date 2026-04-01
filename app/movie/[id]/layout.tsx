@@ -16,10 +16,11 @@ interface LayoutProps {
 export default async function Layout({ children, params }: LayoutProps) {
     let movieId = params.id;
 
-    const sessionId = cookies().get('sessionId')?.value;
-    const accountId = cookies().get('accId')?.value;
-    const accountObjectId = cookies().get('accountObjectId')?.value;
-    const accessToken = cookies().get('accessToken')?.value;
+    const cookieStore = await cookies();
+    const sessionId = cookieStore.get('sessionId')?.value;
+    const accountId = cookieStore.get('accId')?.value;
+    const accountObjectId = cookieStore.get('accountObjectId')?.value;
+    const accessToken = cookieStore.get('accessToken')?.value;
 
     const options = {
         method: 'GET',
@@ -67,7 +68,7 @@ export default async function Layout({ children, params }: LayoutProps) {
                 <h1 className="text-2xl sm:text-4xl tracking-wider">
                     {deets.title}
                 </h1>
-                <div className="w-full max-w-full h-[2px] bg-brand-blue mt-1"></div>
+                <div className="w-full max-w-full h-0.5 bg-brand-blue mt-1"></div>
                 <p className="font-light">movie</p>
             </div>
             <div className="flex flex-col gap-6 sm:flex-row @container w-full">
@@ -103,7 +104,7 @@ export default async function Layout({ children, params }: LayoutProps) {
                         )}
                     </div>
                     {accountId && sessionId && (
-                        <div className="flex flex-col gap-4 self-end w-full flex-grow bg-slate-900/60 p-4">
+                        <div className="flex flex-col gap-4 self-end w-full grow bg-slate-900/60 p-4">
                             <div className="flex flex-col gap-6">
                                 <div className="grid grid-cols-1 gap-2 @sm:flex @sm:flex-row @sm:gap-4 w-full">
                                     <FavorWatchButton

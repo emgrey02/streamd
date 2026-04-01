@@ -50,7 +50,7 @@ export default function AddContentToList(props: { at: string; id: string }) {
     }, [searchValue, pageNum]);
 
     return (
-        <div className="w-[400px]">
+        <div className="w-100">
             <form className="grid" name="search for content">
                 <label htmlFor="content-search">
                     Search for movies or shows...
@@ -68,7 +68,7 @@ export default function AddContentToList(props: { at: string; id: string }) {
             </form>
             {searchResults && (
                 <div className="bg-slate-900">
-                    <ul className="grid gap-4 overflow-y-scroll h-[300px] p-4">
+                    <ul className="grid gap-4 overflow-y-scroll h-75 p-4">
                         {searchResults.map((r: any, index: number) => (
                             <li key={index} className="flex gap-2 items-center">
                                 {r.profile_path || r.poster_path ?
@@ -79,7 +79,7 @@ export default function AddContentToList(props: { at: string; id: string }) {
                                         width="50"
                                         height="75"
                                     />
-                                :   <div className="w-[50px] h-[75px] bg-slate-900/80 text-slate-400 grid place-items-center text-center text-xs">
+                                :   <div className="w-12.5 h-18.75 bg-slate-900/80 text-slate-400 grid place-items-center text-center text-xs">
                                         no image
                                     </div>
                                 }

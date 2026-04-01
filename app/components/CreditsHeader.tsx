@@ -55,7 +55,7 @@ export default function CreditsHeader(props: { data: any; type: string }) {
                         width={200}
                         height={300}
                     />
-                :   <div className="w-[200px] h-[300px] grid place-items-center text-center bg-slate-300/20">
+                :   <div className="w-50 h-75 grid place-items-center text-center bg-slate-300/20">
                         {c.name} image unavailable
                     </div>
                 }
@@ -102,7 +102,7 @@ export default function CreditsHeader(props: { data: any; type: string }) {
                     </Link>
                 </div>
             </div>
-            <div className="w-full h-[2px] bg-slate-900 my-8"></div>
+            <div className="w-full h-0.5 bg-slate-900 my-8"></div>
         </>
     );
 }

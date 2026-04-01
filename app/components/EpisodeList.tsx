@@ -52,13 +52,13 @@ export default function EpisodeList(props: {
                                 <div className="flex items-center">
                                     {e.still_path ?
                                         <Image
-                                            className="h-auto w-[150px] md:w-[250px]"
+                                            className="h-auto w-37.5 md:w-62.5"
                                             src={`https://image.tmdb.org/t/p/w400${e.still_path}`}
                                             alt="tv poster"
                                             width={250}
                                             height={141}
                                         />
-                                    :   <div className="h-[85px] md:h-[141px] w-[150px] md:w-[250px] bg-slate-300/20 grid place-items-center">
+                                    :   <div className="h-21.25 md:h-35.25 w-37.5 md:w-62.5 bg-slate-300/20 grid place-items-center">
                                             image unavailable
                                         </div>
                                     }
@@ -92,7 +92,7 @@ export default function EpisodeList(props: {
                         href={`/tv/${props.showId}/season/${props.seasonNum}/episode/${data.episode_number}`}
                         replace
                     >
-                        <div className="w-[150px] md:w-[250px]">
+                        <div className="w-37.5 md:w-62.5">
                             {data.still_path ?
                                 <Image
                                     className=""
@@ -101,7 +101,7 @@ export default function EpisodeList(props: {
                                     width={250}
                                     height={141}
                                 />
-                            :   <div className="h-[85px] md:h-[141px] w-[150px] md:w-[250px] bg-slate-300/20 grid place-items-center">
+                            :   <div className="h-21.25 md:h-35.25 w-37.5 md:w-62.5 bg-slate-300/20 grid place-items-center">
                                     image unavailable
                                 </div>
                             }

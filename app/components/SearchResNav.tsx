@@ -23,7 +23,7 @@ export default function SearchResNav(props: {
 
     return (
         <ul
-            className={`w-[150px] h-min grid ${props.keyword || props.genre ? 'grid-row-2' : 'grid-rows-4'} bg-slate-950 mb-4`}
+            className={`w-37.5 h-min grid ${props.keyword || props.genre ? 'grid-row-2' : 'grid-rows-4'} bg-slate-950 mb-4`}
         >
             <li className="grid">
                 <Link

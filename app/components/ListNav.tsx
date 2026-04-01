@@ -56,7 +56,7 @@ export default function ListNav() {
         <div className="flex flex-col">
             <div className="relative h-min grid gap-y-4">
                 <ul
-                    className={`grid ${content === 'favorite' || content === 'watchlist' || content === 'rated' ? 'grid-cols-2 max-w-[400px]' : 'grid-cols-4 max-w-[600px]'} items-center ring-1 ring-gray-900 bg-slate-700/40`}
+                    className={`grid ${content === 'favorite' || content === 'watchlist' || content === 'rated' ? 'grid-cols-2 max-w-100' : 'grid-cols-4 max-w-150'} items-center ring-1 ring-gray-900 bg-slate-700/40`}
                 >
                     {categories?.map((cat, index) => (
                         <li

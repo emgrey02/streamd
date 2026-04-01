@@ -73,7 +73,7 @@ export default async function Layout({ children, params }: LayoutProps) {
                 <h1 className="text-2xl sm:text-4xl tracking-wider">
                     {deets.name}
                 </h1>
-                <div className="w-full max-w-full h-[2px] bg-brand-blue mt-1"></div>
+                <div className="w-full max-w-full h-0.5 bg-brand-blue mt-1"></div>
                 <p className="font-light">{genders[deets.gender]}</p>
             </div>
             <div className="flex flex-col gap-6 sm:flex-row @container w-full">

@@ -274,8 +274,8 @@ export async function getRequestToken() {
 
 export async function setReqTokenCookie(rt: string) {
     console.log('setting request token cookie');
-    cookies().set('reqToken', rt);
-    if (cookies().get('reqToken')?.value === rt) {
+    (await cookies()).set('reqToken', rt);
+    if ((await cookies()).get('reqToken')?.value === rt) {
         return 'success';
     } else {
         return 'failed';
@@ -284,12 +284,12 @@ export async function setReqTokenCookie(rt: string) {
 
 export async function setAccountIdCookie(accId: string) {
     console.log('setting account id cookie');
-    cookies().set('accId', accId);
+    (await cookies()).set('accId', accId);
 }
 
 export async function getReqTokenCookie() {
     console.log('getting request token cookie');
-    const cookie = cookies().get('reqToken')?.value;
+    const cookie = (await cookies()).get('reqToken')?.value;
     return cookie;
 }
 
@@ -301,20 +301,20 @@ export async function setSessionCookies(
 ) {
     //console.log(sessionId, accessToken, userInfo.id, userInfo.username);
     console.log('setting user session cookies');
-    cookies().set('sessionId', sessionId);
-    cookies().set('accId', userInfo.id);
-    cookies().set('username', userInfo.username);
-    cookies().set('accessToken', accessToken);
-    cookies().set('accountObjectId', accountObjectId);
+    (await cookies()).set('sessionId', sessionId);
+    (await cookies()).set('accId', userInfo.id);
+    (await cookies()).set('username', userInfo.username);
+    (await cookies()).set('accessToken', accessToken);
+    (await cookies()).set('accountObjectId', accountObjectId);
     console.log('session cookies are set');
 }
 
 export async function getSessionId() {
-    return cookies().get('sessionId')?.value;
+    return (await cookies()).get('sessionId')?.value;
 }
 
 export async function getAccessToken() {
-    return cookies().get('accessToken')?.value;
+    return (await cookies()).get('accessToken')?.value;
 }
 
 export async function tmdbLogOut(accessToken: string) {
@@ -407,12 +407,12 @@ export async function createTmdbSession(rt: string) {
 
 export async function deleteCookies() {
     console.log(`deleting cookies`);
-    cookies().delete('accId');
-    cookies().delete('reqToken');
-    cookies().delete('sessionId');
-    cookies().delete('accessToken');
-    cookies().delete('accountObjectId');
-    return cookies().delete('username');
+    (await cookies()).delete('accId');
+    (await cookies()).delete('reqToken');
+    (await cookies()).delete('sessionId');
+    (await cookies()).delete('accessToken');
+    (await cookies()).delete('accountObjectId');
+    return (await cookies()).delete('username');
 }
 
 export async function getContentAccountInfo(

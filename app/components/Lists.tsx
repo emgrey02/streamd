@@ -59,7 +59,7 @@ export default function Lists({ accessToken, accountObjectId }: Props) {
     };
 
     return (
-        <div className="flex flex-col-reverse md:grid md:grid-cols-[auto,_300px] gap-4 items-start">
+        <div className="flex flex-col-reverse md:grid md:grid-cols-[auto,300px] gap-4 items-start">
             <div className="flex flex-col gap-2">
                 <h2 className="text-3xl">Your Lists</h2>
                 {lists && lists.length > 0 ?
@@ -84,7 +84,7 @@ export default function Lists({ accessToken, accountObjectId }: Props) {
                                                 width="100"
                                                 height="60"
                                             />
-                                        :   <div className="w-[100px] h-[60px] text-xs grid place-items-center bg-slate-700">
+                                        :   <div className="w-25 h-15 text-xs grid place-items-center bg-slate-700">
                                                 image unavailable
                                             </div>
                                         }

@@ -56,7 +56,7 @@ export default async function Season({
     return (
         <div className="flex flex-col gap-4">
             <BackButton main={false} link={`/tv/${showId}/seasons`} />
-            <div className="flex gap-4 md:h-[400px] h-auto">
+            <div className="flex gap-4 md:h-100 h-auto">
                 {deets.poster_path ?
                     <div>
                         <Image
@@ -67,7 +67,7 @@ export default async function Season({
                             height={375}
                         />
                     </div>
-                :   <div className="w-[250px] h-[375px] bg-slate-300/20 grid place-items-center text-center">
+                :   <div className="w-62.5 h-93.75 bg-slate-300/20 grid place-items-center text-center">
                         {deets.name} poster unavailable
                     </div>
                 }

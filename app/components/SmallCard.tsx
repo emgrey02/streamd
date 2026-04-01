@@ -35,7 +35,7 @@ export default function SmallCard(props: {
 
     return (
         <Link
-            className="p-[5px] grid grid-cols-[50px_auto] h-[85px] gap-2 bg-slate-700 hover:bg-slate-700/40 hover:ring-2 hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
+            className="p-1.25 grid grid-cols-[50px_auto] h-21.25 gap-2 bg-slate-700 hover:bg-slate-700/40 hover:ring-2 hover:ring-brand-blue/20 transition overflow-hidden focus:outline-none focus:ring focus:ring-brand-blue"
             href={`/${type}/${props.showId ? props.showId : p.id}/${props.seasons ? `season/${props.seasonNum}/` : '/'}`}
             replace
         >
@@ -47,7 +47,7 @@ export default function SmallCard(props: {
                     width="50"
                     height="75"
                 />
-            :   <div className="w-[50px] h-[75px] bg-slate-900/80 text-slate-400 grid place-items-center text-center text-xs">
+            :   <div className="w-12.5 h-18.75 bg-slate-900/80 text-slate-400 grid place-items-center text-center text-xs">
                     no image
                 </div>
             }

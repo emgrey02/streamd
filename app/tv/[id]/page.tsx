@@ -125,7 +125,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                                             key={index}
                                             className="grid grid-cols-[80px_auto] items-center gap-2 p-2"
                                         >
-                                            <div className="grid place-items-center bg-slate-600 min-w-[60px] min-h-[60px]">
+                                            <div className="grid place-items-center bg-slate-600 min-w-15 min-h-15">
                                                 {pc.logo_path ?
                                                     <Image
                                                         className="mx-2"
@@ -134,7 +134,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                                                         width="60"
                                                         height="60"
                                                     />
-                                                :   <div className="w-[60px] h-[60px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400 text-xs">
+                                                :   <div className="w-15 h-15 bg-slate-900 grid place-items-center p-2 text-center text-slate-400 text-xs">
                                                         no logo available
                                                     </div>
                                                 }
@@ -172,7 +172,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                                             key={index}
                                             className="grid grid-cols-[80px_auto] items-center gap-2 p-2"
                                         >
-                                            <div className="grid place-items-center bg-slate-600 min-w-[60px] min-h-[60px]">
+                                            <div className="grid place-items-center bg-slate-600 min-w-15 min-h-15">
                                                 {n.logo_path ?
                                                     <Image
                                                         className="mx-2"
@@ -181,7 +181,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                                                         width="60"
                                                         height="60"
                                                     />
-                                                :   <div className="w-[60px] h-[60px] bg-slate-900 grid place-items-center p-2 text-center text-slate-400 text-xs">
+                                                :   <div className="w-15 h-15 bg-slate-900 grid place-items-center p-2 text-center text-slate-400 text-xs">
                                                         no logo available
                                                     </div>
                                                 }

@@ -95,7 +95,7 @@ export default function FavWatchRatedContent(props: {
                 <div className="flex flex-col gap-2 relative">
                     <h2 className="text-xl">movies</h2>
                     <ul
-                        className={`${movieVersion === 'image' ? 'grid grid-cols-[repeat(auto-fill,_42cqw)] sm:grid-cols-[repeat(auto-fill,_30cqw)] lg:grid-cols-[repeat(auto-fill,_15cqw)] place-items-center' : 'flex flex-col gap-2 gap-y-1 flex-wrap max-h-80 '} bg-slate-900 p-4 w-full relative py-4 pb-12 overflow-x-scroll`}
+                        className={`${movieVersion === 'image' ? 'grid grid-cols-[repeat(auto-fill,42cqw)] sm:grid-cols-[repeat(auto-fill,30cqw)] lg:grid-cols-[repeat(auto-fill,15cqw)] place-items-center' : 'flex flex-col gap-2 gap-y-1 flex-wrap max-h-80 '} bg-slate-900 p-4 w-full relative py-4 pb-12 overflow-x-scroll`}
                     >
                         {movieList.map((movie: any, index: number) => (
                             <li
@@ -122,7 +122,7 @@ export default function FavWatchRatedContent(props: {
                                                     className="min-w-full"
                                                     title={movie.title}
                                                 />
-                                            :   <div className="w-[80px] h-[120px] bg-slate-300/20 grid place-items-center">
+                                            :   <div className="w-20 h-30 bg-slate-300/20 grid place-items-center">
                                                     movie poster unavailable
                                                 </div>
                                             }
@@ -139,7 +139,7 @@ export default function FavWatchRatedContent(props: {
                         {moviePages > shownMoviePageNumbers && (
                             <button
                                 id="movie"
-                                className={`w-max h-min p-2 outline-2 outline-brand-blue outline hover:bg-slate-700`}
+                                className={`w-max h-min p-2 outline-brand-blue outline hover:bg-slate-700`}
                                 onClick={loadMoreContent}
                             >
                                 Load More
@@ -167,7 +167,7 @@ export default function FavWatchRatedContent(props: {
                 <div className="flex flex-col gap-2 relative">
                     <h2 className="text-xl">tv shows</h2>
                     <ul
-                        className={`${tvVersion === 'image' ? 'grid grid-cols-[repeat(auto-fill,_42cqw)] sm:grid-cols-[repeat(auto-fill,_30cqw)] lg:grid-cols-[repeat(auto-fill,_15cqw)] place-items-center' : 'flex flex-col gap-2 gap-y-1 flex-wrap max-h-80 '} bg-slate-900 p-4 w-full relative py-4 pb-12 overflow-x-scroll`}
+                        className={`${tvVersion === 'image' ? 'grid grid-cols-[repeat(auto-fill,42cqw)] sm:grid-cols-[repeat(auto-fill,30cqw)] lg:grid-cols-[repeat(auto-fill,15cqw)] place-items-center' : 'flex flex-col gap-2 gap-y-1 flex-wrap max-h-80 '} bg-slate-900 p-4 w-full relative py-4 pb-12 overflow-x-scroll`}
                     >
                         {tvList.map((show: any, index: number) => (
                             <li
@@ -194,7 +194,7 @@ export default function FavWatchRatedContent(props: {
                                                 />
                                             :   <div
                                                     title={show.name}
-                                                    className="w-[80px] h-[120px] bg-slate-300/20 grid place-items-center"
+                                                    className="w-20 h-30 bg-slate-300/20 grid place-items-center"
                                                 >
                                                     movie poster unavailable
                                                 </div>
