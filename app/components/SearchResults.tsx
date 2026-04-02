@@ -1,7 +1,6 @@
 'use client';
 
-import { useCallback, useEffect, useState } from 'react';
-import ContentPage from './ContentPage';
+import { useEffect, useState } from 'react';
 import { doASearch, genreSearch, keywordSearch } from '../actions';
 import LargeCreditsList from './LargeCreditsList';
 

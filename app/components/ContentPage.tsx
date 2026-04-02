@@ -4,21 +4,27 @@ import { getContent } from '../actions';
 import LargeCreditsList from './LargeCreditsList';
 
 export default function ContentPage(props: {
-    data: any;
+    data: Array<Record<string, unknown>>;
     pageNum: number;
     type: string;
     cat: string;
     content: string;
 }) {
     const [loadMore, setLoadMore] = useState(false);
-    const [finalData, setFinalData] = useState<any>(props.data);
+    const [finalData, setFinalData] = useState<Array<Record<string, unknown>>>(props.data);
     const [shownPageNumbers, setShownPageNumbers] = useState(1);
+
+    function changeToSearchTerm(cont: string) {
+        if (cont === 'movies') return 'movie';
+        else if (cont === 'shows') return 'tv';
+        else return 'trending';
+    }
 
     useEffect(() => {
         if (loadMore) {
             const loadMoreContent = async () => {
-                let moreContent = await getContent(
-                    props.content,
+                const moreContent = await getContent(
+                    changeToSearchTerm(props.content),
                     props.cat,
                     shownPageNumbers + 1
                 );

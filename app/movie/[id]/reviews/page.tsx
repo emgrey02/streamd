@@ -1,22 +1,24 @@
 import Reviews from '@/app/components/Reviews';
+import { Suspense } from 'react';
 
 export default async function ReviewsArea({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
-    const movieId = params.id;
+    const { id } = await params;
 
-    const options = {
+    const options: RequestInit = {
         method: 'GET',
         headers: {
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
+        cache: 'force-cache',
     };
 
-    let res = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/reviews?language=en-US`,
+    const res = await fetch(
+        `https://api.themoviedb.org/3/movie/${id}/reviews?language=en-US`,
         options
     );
 
@@ -24,11 +26,13 @@ export default async function ReviewsArea({
         console.error('failed to fetch movie reviews');
     }
 
-    let r = await res.json();
+    const r = await res.json();
 
     return (
         <div id="reviews" className="my-8 flex flex-col gap-4">
-            <Reviews reviews={r} />
+            <Suspense fallback={<p>Loading...</p>}>
+                <Reviews reviews={r} />
+            </Suspense>
         </div>
     );
 }

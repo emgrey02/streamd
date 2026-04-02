@@ -4,19 +4,24 @@ import ImageSlider from '@/app/components/ImageSlider';
 import Genres from '@/app/components/Genres';
 import StreamRentBuy from '@/app/components/StreamRentBuy';
 
-export default async function Movie({ params }: { params: { id: string } }) {
-    let movieId = params.id;
+export default async function Movie({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    const { id } = await params;
 
-    const options = {
+    const options: RequestInit = {
         method: 'GET',
         headers: {
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
+        cache: 'force-cache',
     };
 
     const res = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}?append_to_response=images,credits,keywords,recommendations,similar,videos,watch/providers,reviews`,
+        `https://api.themoviedb.org/3/movie/${id}?append_to_response=images,credits,keywords,recommendations,similar,videos,watch/providers,reviews`,
         options
     );
 
@@ -27,18 +32,18 @@ export default async function Movie({ params }: { params: { id: string } }) {
     const content = await res.json();
 
     function convertQuantity(amt: number) {
-        let str = amt.toString().split('');
+        const str = amt.toString().split('');
         str.splice(-3, 0, ',');
         str.splice(-7, 0, ',');
         if (str.length >= 12) str.splice(-11, 0, ',');
         if (str.length === 8) str.splice(0, 1);
-        let finalStr = str.join('');
+        const finalStr = str.join('');
         return `$${finalStr}`;
     }
 
     function getRuntime(min: number) {
-        let hrs = Math.floor(min / 60);
-        let mins = min % 60;
+        const hrs = Math.floor(min / 60);
+        const mins = min % 60;
         return `${hrs}h ${mins}m`;
     }
 
@@ -126,7 +131,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
                             </h3>
                             <ul className="tracking-wide font-light">
                                 {content.production_countries.map(
-                                    (c: any, index: number) => (
+                                    (c: { name: string }, index: number) => (
                                         <li key={index}>{c.name}</li>
                                     )
                                 )}
@@ -141,7 +146,14 @@ export default async function Movie({ params }: { params: { id: string } }) {
                         </h3>
                         <ul className="tracking-wide font-light">
                             {content.spoken_languages.map(
-                                (l: any, index: number) => (
+                                (
+                                    l: {
+                                        name: string;
+                                        iso_639_1: string;
+                                        english_name: string;
+                                    },
+                                    index: number
+                                ) => (
                                     <li key={index}>
                                         {l.name}{' '}
                                         {l.iso_639_1 !== 'en' &&
@@ -163,44 +175,60 @@ export default async function Movie({ params }: { params: { id: string } }) {
                             </h3>
                             <ul className="flex flex-col gap-4 px-2 pb-2 w-full">
                                 {content.production_companies
-                                    .filter((item: any, idx: number) => idx < 4)
-                                    .map((pc: any, index: number) => (
-                                        <li
-                                            key={index}
-                                            className="grid grid-cols-[80px_auto] items-center gap-2 p-2"
-                                        >
-                                            <div className="grid place-items-center bg-slate-600 min-w-15 min-h-15">
-                                                {pc.logo_path ?
-                                                    <Image
-                                                        className="mx-2"
-                                                        src={`https://image.tmdb.org/t/p/w200/${pc.logo_path}`}
-                                                        alt={`logo for ${pc.name}`}
-                                                        width="60"
-                                                        height="60"
-                                                    />
-                                                :   <div className="w-15 h-15 bg-slate-900 grid place-items-center p-2 text-center text-slate-400 text-xs">
-                                                        no logo available
-                                                    </div>
-                                                }
-                                            </div>
-                                            <div>
-                                                <p className="text-sm">
-                                                    {pc.name}
-                                                </p>
-                                                <p className="text-xs">
-                                                    {new Intl.DisplayNames(
-                                                        ['en'],
-                                                        {
-                                                            type: 'region',
-                                                        }
-                                                    ).of(
-                                                        content
-                                                            .origin_country[0]
-                                                    )}
-                                                </p>
-                                            </div>
-                                        </li>
-                                    ))}
+                                    .filter(
+                                        (
+                                            item: {
+                                                name: string;
+                                                logo_path?: string;
+                                            },
+                                            idx: number
+                                        ) => idx < 4
+                                    )
+                                    .map(
+                                        (
+                                            pc: {
+                                                name: string;
+                                                logo_path?: string;
+                                            },
+                                            index: number
+                                        ) => (
+                                            <li
+                                                key={index}
+                                                className="grid grid-cols-[80px_auto] items-center gap-2 p-2"
+                                            >
+                                                <div className="grid place-items-center bg-slate-600 min-w-15 min-h-15">
+                                                    {pc.logo_path ?
+                                                        <Image
+                                                            className="mx-2"
+                                                            src={`https://image.tmdb.org/t/p/w200/${pc.logo_path}`}
+                                                            alt={`logo for ${pc.name}`}
+                                                            width="60"
+                                                            height="60"
+                                                        />
+                                                    :   <div className="w-15 h-15 bg-slate-900 grid place-items-center p-2 text-center text-slate-400 text-xs">
+                                                            no logo available
+                                                        </div>
+                                                    }
+                                                </div>
+                                                <div>
+                                                    <p className="text-sm">
+                                                        {pc.name}
+                                                    </p>
+                                                    <p className="text-xs">
+                                                        {new Intl.DisplayNames(
+                                                            ['en'],
+                                                            {
+                                                                type: 'region',
+                                                            }
+                                                        ).of(
+                                                            content
+                                                                .origin_country[0]
+                                                        )}
+                                                    </p>
+                                                </div>
+                                            </li>
+                                        )
+                                    )}
                             </ul>
                         </div>
                     )}
@@ -217,7 +245,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
             <div className="col-start-1">
                 <h3 className="mb-2 font-medium text-lg">Cast</h3>
                 <SmallCreditsList
-                    showId={movieId}
+                    showId={id}
                     creds={content.credits.cast}
                     cont="movie"
                 />
@@ -225,7 +253,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
             <div>
                 <h3 className="mb-2 font-medium text-lg">Crew</h3>
                 <SmallCreditsList
-                    showId={movieId}
+                    showId={id}
                     creds={content.credits.crew}
                     cont="movie"
                 />

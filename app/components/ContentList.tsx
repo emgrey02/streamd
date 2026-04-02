@@ -4,10 +4,19 @@ import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 
+type ContentItem = {
+    id: number;
+    media_type?: string;
+    poster_path?: string;
+    profile_path?: string;
+    name?: string;
+    title?: string;
+};
+
 type Props = {
     sessionId?: string;
     accountId?: string;
-    content: any[];
+    content: never[];
     cat: string[] | string;
     title: string;
 };
@@ -163,37 +172,42 @@ export default function ContentList({ title, content, cat }: Props) {
                             className="flex items-start overflow-x-scroll snap-x mx-2 gap-1"
                             ref={scrollCont}
                         >
-                            {contentList.map((ent: any, index: number) => (
-                                <li
-                                    data-num={index}
-                                    className="min-w-50 grid snap-start py-1 px-1"
-                                    key={index}
-                                >
-                                    <button
-                                        className="focus:outline-none focus:ring focus:ring-brand-blue"
-                                        onClick={() =>
-                                            router.push(
-                                                `/${ent.media_type || title}/${ent.id.toString()}`
-                                            )
-                                        }
+                            {contentList.map(
+                                (ent: ContentItem, index: number) => (
+                                    <li
+                                        data-num={index}
+                                        className="min-w-50 grid snap-start py-1 px-1"
+                                        key={index}
                                     >
-                                        {ent.poster_path || ent.profile_path ?
-                                            <Image
-                                                src={`https://image.tmdb.org/t/p/w200${ent.poster_path || ent.profile_path}`}
-                                                alt={`${ent.poster_path ? 'Poster for' : 'Profile of'} ${ent.name || ent.title}`}
-                                                width={200}
-                                                height={300}
-                                            />
-                                        :   <div className="w-48 h-72 bg-slate-300/20 grid place-items-center">
-                                                {title === 'tv' ?
-                                                    ent.name
-                                                :   ent.title}{' '}
-                                                poster unavailable
-                                            </div>
-                                        }
-                                    </button>
-                                </li>
-                            ))}
+                                        <button
+                                            className="focus:outline-none focus:ring focus:ring-brand-blue"
+                                            onClick={() =>
+                                                router.push(
+                                                    `/${ent.media_type || title}/${ent.id.toString()}`
+                                                )
+                                            }
+                                        >
+                                            {(
+                                                ent.poster_path ||
+                                                ent.profile_path
+                                            ) ?
+                                                <Image
+                                                    src={`https://image.tmdb.org/t/p/w200${ent.poster_path || ent.profile_path}`}
+                                                    alt={`${ent.poster_path ? 'Poster for' : 'Profile of'} ${ent.name || ent.title}`}
+                                                    width={200}
+                                                    height={300}
+                                                />
+                                            :   <div className="w-48 h-72 bg-slate-300/20 grid place-items-center">
+                                                    {title === 'tv' ?
+                                                        ent.name
+                                                    :   ent.title}{' '}
+                                                    poster unavailable
+                                                </div>
+                                            }
+                                        </button>
+                                    </li>
+                                )
+                            )}
                         </ul>
                     )}
                     <button
@@ -208,7 +222,11 @@ export default function ContentList({ title, content, cat }: Props) {
             </div>
             {contentList && contentList.length == 20 && (
                 <button
-                    onClick={() => router.push(`/${title}/${category}`)}
+                    onClick={() =>
+                        router.push(
+                            `/${renameContent(title)?.toLowerCase()}/${category}`
+                        )
+                    }
                     className="self-end mt-2 px-2"
                 >
                     See More

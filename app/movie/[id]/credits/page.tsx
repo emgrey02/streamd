@@ -1,22 +1,24 @@
 import LargeCreditsList from '@/app/components/LargeCreditsList';
+import { Suspense } from 'react';
 
 export default async function MovieCredits({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
-    const movieId = params.id;
+    const { id } = await params;
 
-    const options = {
+    const options: RequestInit = {
         method: 'GET',
         headers: {
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
+        cache: 'force-cache',
     };
 
-    let res = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}/credits?language=en-US`,
+    const res = await fetch(
+        `https://api.themoviedb.org/3/movie/${id}/credits?language=en-US`,
         options
     );
 
@@ -24,34 +26,38 @@ export default async function MovieCredits({
         console.error('failed to fetch movie credits');
     }
 
-    let deets = await res.json();
+    const deets = await res.json();
 
     return (
         <div id="credits" className="grid grid-cols-2 gap-10">
             <div>
                 <h2 className="text-xl mb-4 font-medium">Cast</h2>
                 <div className="@container">
-                    <LargeCreditsList
-                        data={deets.cast}
-                        type="tv"
-                        search={false}
-                        credits={true}
-                        seasons={false}
-                        clip={true}
-                    />
+                    <Suspense fallback={<p>Loading...</p>}>
+                        <LargeCreditsList
+                            data={deets.cast}
+                            type="tv"
+                            search={false}
+                            credits={true}
+                            seasons={false}
+                            clip={true}
+                        />
+                    </Suspense>
                 </div>
             </div>
             <div>
                 <h2 className="text-xl mb-4 font-medium">Crew</h2>
                 <div className="@container">
-                    <LargeCreditsList
-                        data={deets.crew}
-                        type="tv"
-                        search={false}
-                        credits={true}
-                        seasons={false}
-                        clip={true}
-                    />
+                    <Suspense fallback={<p>Loading...</p>}>
+                        <LargeCreditsList
+                            data={deets.crew}
+                            type="tv"
+                            search={false}
+                            credits={true}
+                            seasons={false}
+                            clip={true}
+                        />
+                    </Suspense>
                 </div>
             </div>
         </div>

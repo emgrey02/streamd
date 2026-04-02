@@ -23,7 +23,13 @@ export default async function Page({
         },
     };
 
-    const url = `https://api.themoviedb.org/3/${content}/${cat}${content === 'trending' ? '/day' : ''}?language=en-US&page=1`;
+    function changeToSearchTerm(cont: string) {
+        if (cont === 'movies') return 'movie';
+        else if (cont === 'shows') return 'tv';
+        else return 'trending';
+    }
+
+    const url = `https://api.themoviedb.org/3/${changeToSearchTerm(content)}/${cat}${changeToSearchTerm(content) === 'trending' ? '/day' : ''}?language=en-US&page=1`;
 
     const res = await fetch(url, options);
 

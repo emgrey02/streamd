@@ -4,7 +4,6 @@ import { doASearch, genreSearch, keywordSearch } from '@/app/actions';
 import SearchResNav from '@/app/components/SearchResNav';
 import SearchBar from '@/app/components/SearchBar';
 import { Suspense } from 'react';
-import { revalidatePath } from 'next/cache';
 
 export default async function Search({
     params,
@@ -146,9 +145,7 @@ export default async function Search({
                 </h1>
                 <div className="w-[80%] max-w-full h-px bg-brand-blue"></div>
             </div>
-            <SearchBar
-                searchTerm={keyword || genre ? '' : query.split('-')[0]}
-            />
+            <SearchBar />
             <div className="flex sm:flex-row gap-4 flex-col">
                 <SearchResNav
                     keyword={theKeyword || undefined}

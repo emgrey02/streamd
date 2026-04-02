@@ -1,9 +1,10 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
 
 export default function SearchBar(props: { searchTerm?: string }) {
+    const searchParams = useSearchParams();
     const [search, setSearch] = useState('');
     const router = useRouter();
 
@@ -15,8 +16,7 @@ export default function SearchBar(props: { searchTerm?: string }) {
     return (
         <div className="max-w-125">
             <form
-                onSubmit={(e) => {
-                    e.preventDefault();
+                onSubmit={() => {
                     router.push(`/search/multi?query=${search}&page=1`);
                 }}
                 aria-label="search bar"
@@ -32,7 +32,10 @@ export default function SearchBar(props: { searchTerm?: string }) {
                         onChange={editQuery}
                         className="h-8 bg-slate-400 px-2 text-slate-800"
                         type="text"
-                        defaultValue={props.searchTerm || ''}
+                        defaultValue={
+                            props.searchTerm ||
+                            searchParams.get('query')?.toString()
+                        }
                     ></input>
                 </div>
                 <button

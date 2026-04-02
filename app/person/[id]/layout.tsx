@@ -5,22 +5,23 @@ import ContentPageNav from '@/app/components/ContentPageNav';
 
 interface LayoutProps {
     children: React.ReactNode;
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }
 
 export default async function Layout({ children, params }: LayoutProps) {
-    let personId = params.id;
+    const { id } = await params;
 
-    const options = {
+    const options: RequestInit = {
         method: 'GET',
         headers: {
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
+        cache: 'force-cache',
     };
 
     const res = await fetch(
-        `https://api.themoviedb.org/3/person/${personId}?append_to_response=combined_credits&language=en-US&sort_by=primary_release_date.asc`,
+        `https://api.themoviedb.org/3/person/${id}?append_to_response=combined_credits&language=en-US&sort_by=primary_release_date.asc`,
         options
     );
 
@@ -28,11 +29,11 @@ export default async function Layout({ children, params }: LayoutProps) {
         console.error('failed to fetch person data');
     }
 
-    let deets = await res.json();
+    const deets = await res.json();
 
     function getDate(birthday: string) {
-        let birthArray = birthday.split('-');
-        let months = [
+        const birthArray = birthday.split('-');
+        const months = [
             'January',
             'February',
             'March',
@@ -46,7 +47,7 @@ export default async function Layout({ children, params }: LayoutProps) {
             'November',
             'December',
         ];
-        let month = months[+birthArray[1] - 1];
+        const month = months[+birthArray[1] - 1];
         return `${month} ${birthArray[2]}, ${birthArray[0]}`;
     }
 

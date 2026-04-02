@@ -1,27 +1,23 @@
-import { getPersonInfo } from '@/app/actions';
-import ContentPageNav from '@/app/components/ContentPageNav';
-import LargeCreditsList from '@/app/components/LargeCreditsList';
 import SmallCreditsList from '@/app/components/SmallCreditsList';
-import Link from 'next/link';
-import { useEffect, useState } from 'react';
 
 export default async function PersonPage({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
-    const personId = params.id;
+    const { id } = await params;
 
-    const options = {
+    const options: RequestInit = {
         method: 'GET',
         headers: {
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
+        cache: 'force-cache',
     };
 
     const res = await fetch(
-        `https://api.themoviedb.org/3/person/${personId}?append_to_response=combined_credits&language=en-US&sort_by=primary_release_date.asc`,
+        `https://api.themoviedb.org/3/person/${id}?append_to_response=combined_credits&language=en-US&sort_by=primary_release_date.asc`,
         options
     );
 
@@ -37,8 +33,8 @@ export default async function PersonPage({
                 <h2 className="font-medium text-lg mb-2">Known For</h2>
                 <SmallCreditsList
                     creds={content.combined_credits.cast}
-                    showId={personId}
-                    personId={personId}
+                    showId={id}
+                    personId={id}
                 />
             </div>
         </>

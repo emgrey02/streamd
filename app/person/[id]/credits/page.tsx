@@ -1,23 +1,23 @@
 import LargeCreditsList from '@/app/components/LargeCreditsList';
-import Link from 'next/link';
 
 export default async function PersonCredits({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
-    const personId = params.id;
+    const { id } = await params;
 
-    const options = {
+    const options: RequestInit = {
         method: 'GET',
         headers: {
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
+        cache: 'force-cache',
     };
 
     const res = await fetch(
-        `https://api.themoviedb.org/3/person/${personId}/combined_credits?language=en-US`,
+        `https://api.themoviedb.org/3/person/${id}/combined_credits?language=en-US`,
         options
     );
 
@@ -26,7 +26,6 @@ export default async function PersonCredits({
     }
 
     const content = await res.json();
-    console.log(content);
 
     return (
         <div className="grid md:grid-cols-2 gap-10">

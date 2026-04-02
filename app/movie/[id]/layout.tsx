@@ -14,7 +14,7 @@ interface LayoutProps {
 }
 
 export default async function Layout({ children, params }: LayoutProps) {
-    let movieId = params.id;
+    const { id } = await params;
 
     const cookieStore = await cookies();
     const sessionId = cookieStore.get('sessionId')?.value;
@@ -22,16 +22,17 @@ export default async function Layout({ children, params }: LayoutProps) {
     const accountObjectId = cookieStore.get('accountObjectId')?.value;
     const accessToken = cookieStore.get('accessToken')?.value;
 
-    const options = {
+    const options: RequestInit = {
         method: 'GET',
         headers: {
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
+        cache: 'force-cache',
     };
 
-    let res = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}?language=en-US`,
+    const res = await fetch(
+        `https://api.themoviedb.org/3/movie/${id}?language=en-US`,
         options
     );
 
@@ -39,11 +40,11 @@ export default async function Layout({ children, params }: LayoutProps) {
         console.error('failed to fetch movie data');
     }
 
-    let deets = await res.json();
+    const deets = await res.json();
 
     function getDate(birthday: string) {
-        let birthArray = birthday.split('-');
-        let months = [
+        const birthArray = birthday.split('-');
+        const months = [
             'January',
             'February',
             'March',
@@ -57,7 +58,7 @@ export default async function Layout({ children, params }: LayoutProps) {
             'November',
             'December',
         ];
-        let month = months[+birthArray[1] - 1];
+        const month = months[+birthArray[1] - 1];
         return `${month} ${birthArray[2]}, ${birthArray[0]}`;
     }
 
