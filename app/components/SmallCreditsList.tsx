@@ -1,15 +1,15 @@
 'use client';
-import { useEffect, useState } from 'react';
 import NewCard from './NewCard';
 import Link from 'next/link';
 
+// for displaying a few credits on the movie and tv show pages, with a link to the full credits page
 export default function SmallCreditsList(props: {
-    creds: any;
+    creds: CastCrewItem[];
     showId: string;
     cont?: string;
     personId?: string;
 }) {
-    let creds = props.creds;
+    const creds = props.creds;
 
     return (
         <div className={`flex flex-col`}>
@@ -19,7 +19,7 @@ export default function SmallCreditsList(props: {
                         className={`grid ${creds.length == 1 && '@lg:grid-cols-1 @2xl:grid-cols-1'} ${creds.length == 2 && `@lg:grid-cols-2 @2xl:grid-cols-2`} ${creds.length > 2 && 'grid-cols-1 @lg:grid-cols-2 @4xl:grid-cols-4'} gap-4 gap-y-6 justify-start`}
                     >
                         {creds.map(
-                            (p: any, index: number) =>
+                            (p: CastCrewItem, index: number) =>
                                 index < 4 && (
                                     <li key={index}>
                                         <NewCard

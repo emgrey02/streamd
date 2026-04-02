@@ -13,7 +13,7 @@ export default function LogOut() {
             if (accessToken) {
                 const didItWork = await tmdbLogOut(accessToken);
                 console.log(didItWork);
-                let res = await deleteCookies();
+                const res = await deleteCookies();
                 console.log(res);
             }
         }

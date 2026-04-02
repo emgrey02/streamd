@@ -9,8 +9,8 @@ export default function SearchResults(props: {
     genre?: string;
     query: string;
     cat: string;
-    data: any;
-    lengths: any;
+    data: Array<Record<string, unknown>>;
+    lengths: { movie: number; tv: number; people: number; all: number };
 }) {
     const [loadMore, setLoadMore] = useState(false);
     const [shownPageNumbers, setShownPageNumbers] = useState(1);
@@ -18,22 +18,24 @@ export default function SearchResults(props: {
 
     let totalCount;
 
-    props.cat === 'person' && (totalCount = props.lengths.people);
-    props.cat === 'tv' && (totalCount = props.lengths.tv);
-    props.cat === 'movie' && (totalCount = props.lengths.movie);
-    props.cat === 'multi' && (totalCount = props.lengths.all);
+    switch (props.cat) {
+        case 'person':
+            totalCount = props.lengths.people;
+            break;
+        case 'tv':
+            totalCount = props.lengths.tv;
+            break;
+        case 'movie':
+            totalCount = props.lengths.movie;
+            break;
+        default:
+            totalCount = props.lengths.all;
+            break;
+    }
 
     const [currentCount, setCurrentCount] = useState(
         totalCount < 20 ? totalCount : 20
     );
-
-    console.log(totalCount);
-
-    console.log(props.data);
-    console.log(props.lengths);
-
-    console.log(props.cat);
-    console.log(props.query);
 
     useEffect(() => {
         if (loadMore) {

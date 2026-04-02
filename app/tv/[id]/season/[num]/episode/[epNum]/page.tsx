@@ -5,15 +5,14 @@ import BackButton from '@/app/components/BackButton';
 import SubmitRating from '@/app/components/SubmitRating';
 import LargeCreditsList from '@/app/components/LargeCreditsList';
 import Link from 'next/link';
+import { getDate, getRuntime } from '@/app/utils';
 
 export default async function Episode({
     params,
 }: {
-    params: { id: string; num: string; epNum: string };
+    params: Promise<{ id: string; num: string; epNum: string }>;
 }) {
-    let showId = params.id;
-    let seasonNum = params.num;
-    let episodeNum = params.epNum;
+    const { id, num, epNum } = await params;
 
     const cookieStore = await cookies();
     const sessionId = cookieStore.get('sessionId')?.value;
@@ -26,13 +25,13 @@ export default async function Episode({
         },
     };
 
-    let seasonRes = await fetch(
-        `https://api.themoviedb.org/3/tv/${showId}/season/${seasonNum}?language=en-US`,
+    const seasonRes = await fetch(
+        `https://api.themoviedb.org/3/tv/${id}/season/${num}?language=en-US`,
         options
     );
 
-    let res = await fetch(
-        `https://api.themoviedb.org/3/tv/${showId}/season/${seasonNum}/episode/${episodeNum}?language=en-US`,
+    const res = await fetch(
+        `https://api.themoviedb.org/3/tv/${id}/season/${num}/episode/${epNum}?language=en-US`,
         options
     );
 
@@ -44,56 +43,26 @@ export default async function Episode({
         console.error('failed to fetch season data');
     }
 
-    let season = await seasonRes.json();
-    let deets = await res.json();
+    const season = await seasonRes.json();
+    const deets = await res.json();
     const totalEpisodes = season.episodes.length;
-
-    function getDate(birthday: string) {
-        let birthArray = birthday.split('-');
-        let months = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-        ];
-        let month = months[+birthArray[1] - 1];
-        return `${month} ${birthArray[2]}, ${birthArray[0]}`;
-    }
-
-    function getRuntime(min: number) {
-        let hrs = (min / 60).toFixed(0);
-        let mins = min % 60;
-        console.log(hrs);
-        return `${hrs}h ${mins}m`;
-    }
 
     return (
         <div className="flex flex-col gap-4">
-            <BackButton
-                main={false}
-                link={`/tv/${showId}/season/${seasonNum}`}
-            />
+            <BackButton main={false} link={`/tv/${id}/season/${num}`} />
             <div className="w-full grid grid-cols-2 gap-2">
                 <Link
-                    className={`bg-slate-900 ${+episodeNum - 1 == 0 && 'pointer-events-none text-slate-700'} hover:bg-slate-700 p-4`}
-                    aria-disabled={+episodeNum - 1 == 0}
-                    href={`/tv/${showId}/season/${seasonNum}/episode/${+episodeNum - 1}`}
+                    className={`bg-slate-900 ${+epNum - 1 == 0 && 'pointer-events-none text-slate-700'} hover:bg-slate-700 p-4`}
+                    aria-disabled={+epNum - 1 == 0}
+                    href={`/tv/${id}/season/${num}/episode/${+epNum - 1}`}
                     replace
                 >
                     Previous Episode
                 </Link>
                 <Link
-                    className={`${+episodeNum + 1 > +totalEpisodes && 'pointer-events-none text-slate-700'} bg-slate-900 hover:bg-slate-700 p-4 text-end w-full`}
-                    aria-disabled={+episodeNum + 1 > +totalEpisodes}
-                    href={`/tv/${showId}/season/${seasonNum}/episode/${+episodeNum + 1}`}
+                    className={`${+epNum + 1 > +totalEpisodes && 'pointer-events-none text-slate-700'} bg-slate-900 hover:bg-slate-700 p-4 text-end w-full`}
+                    aria-disabled={+epNum + 1 > +totalEpisodes}
+                    href={`/tv/${id}/season/${num}/episode/${+epNum + 1}`}
                     replace
                 >
                     Next Episode
@@ -134,12 +103,12 @@ export default async function Episode({
                     {sessionId && (
                         <SubmitRating
                             content="tv"
-                            id={+showId}
+                            id={+id}
                             sessionId={sessionId}
                             voteAvg={deets.vote_average}
                             totalVotes={deets.vote_count}
-                            seasonNum={seasonNum}
-                            episodeNum={episodeNum}
+                            seasonNum={num}
+                            episodeNum={epNum}
                         />
                     )}
                 </div>

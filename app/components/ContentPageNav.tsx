@@ -1,26 +1,18 @@
 'use client';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 
 export default function ContentPageNav() {
-    const [currentPage, setCurrentPage] = useState('info');
     const pathname = usePathname();
     const pathnameArray = pathname.slice(1).split('/');
     const mediaType = pathnameArray[0];
     const showId = pathnameArray[1];
+    const currentPage = pathnameArray[2] || 'info';
 
     useEffect(() => {
-        const pathnameArray = pathname.slice(1).split('/');
-        const currentPage = pathnameArray[2];
         localStorage.setItem('currentPage', currentPage);
-        console.log(currentPage);
-        if (!currentPage) {
-            setCurrentPage('info');
-        } else {
-            setCurrentPage(currentPage);
-        }
-    }, [pathname]);
+    }, [currentPage]);
 
     return (
         <nav aria-label="secondary navigation">
@@ -33,7 +25,6 @@ export default function ContentPageNav() {
                     <Link
                         className="grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue"
                         href={`/${mediaType}/${showId}`}
-                        replace
                     >
                         Info
                     </Link>
@@ -44,7 +35,6 @@ export default function ContentPageNav() {
                     <Link
                         className="grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue"
                         href={`/${mediaType}/${showId}/credits`}
-                        replace
                     >
                         Credits
                     </Link>
@@ -56,7 +46,6 @@ export default function ContentPageNav() {
                         <Link
                             className="grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue"
                             href={`/${mediaType}/${showId}/reviews`}
-                            replace
                         >
                             Reviews
                         </Link>
@@ -69,7 +58,6 @@ export default function ContentPageNav() {
                         <Link
                             className="grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue"
                             href={`/${mediaType}/${showId}/seasons`}
-                            replace
                         >
                             Seasons
                         </Link>

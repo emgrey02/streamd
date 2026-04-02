@@ -3,14 +3,14 @@ import Image from 'next/image';
 import BackButton from '@/app/components/BackButton';
 import LargeCreditsList from '@/app/components/LargeCreditsList';
 import EpisodeList from '@/app/components/EpisodeList';
+import { getDate } from '@/app/utils';
 
 export default async function Season({
     params,
 }: {
-    params: { id: string; num: number };
+    params: Promise<{ id: string; num: number }>;
 }) {
-    let showId = params.id;
-    let seasonNum = params.num.toString();
+    const { id, num } = await params;
 
     const options = {
         method: 'GET',
@@ -20,8 +20,8 @@ export default async function Season({
         },
     };
 
-    let res = await fetch(
-        `https://api.themoviedb.org/3/tv/${showId}/season/${seasonNum}?append_to_response=credits&language=en-US`,
+    const res = await fetch(
+        `https://api.themoviedb.org/3/tv/${id}/season/${num}?append_to_response=credits&language=en-US`,
         options
     );
 
@@ -29,33 +29,11 @@ export default async function Season({
         console.error('failed to fetch season data');
     }
 
-    let deets = await res.json();
-
-    function getDate(birthday: string) {
-        let birthArray = birthday.split('-');
-        let months = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-        ];
-        let month = months[+birthArray[1] - 1];
-        return `${month} ${birthArray[2]}, ${birthArray[0]}`;
-    }
-
-    console.log(deets);
+    const deets = await res.json();
 
     return (
         <div className="flex flex-col gap-4">
-            <BackButton main={false} link={`/tv/${showId}/seasons`} />
+            <BackButton main={false} link={`/tv/${id}/seasons`} />
             <div className="flex gap-4 md:h-100 h-auto">
                 {deets.poster_path ?
                     <div>
@@ -96,8 +74,8 @@ export default async function Season({
                 {deets.episodes && (
                     <EpisodeList
                         data={deets.episodes}
-                        showId={showId}
-                        seasonNum={seasonNum}
+                        showId={id}
+                        seasonNum={num.toString()}
                     />
                 )}
             </div>

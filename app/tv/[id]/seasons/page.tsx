@@ -3,9 +3,9 @@ import LargeCreditsList from '@/app/components/LargeCreditsList';
 export default async function SeasonsArea({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
-    const showId = params.id;
+    const { id } = await params;
 
     const options = {
         method: 'GET',
@@ -15,8 +15,8 @@ export default async function SeasonsArea({
         },
     };
 
-    let res = await fetch(
-        `https://api.themoviedb.org/3/tv/${showId}?language=en-US`,
+    const res = await fetch(
+        `https://api.themoviedb.org/3/tv/${id}?language=en-US`,
         options
     );
 
@@ -24,7 +24,7 @@ export default async function SeasonsArea({
         console.error('failed to fetch show data');
     }
 
-    let content = await res.json();
+    const content = await res.json();
 
     return (
         <div className="@container" id="seasons">
@@ -35,7 +35,7 @@ export default async function SeasonsArea({
                 credits={false}
                 search={false}
                 seasons={true}
-                showId={showId.toString()}
+                showId={id.toString()}
                 clip={true}
             />
         </div>

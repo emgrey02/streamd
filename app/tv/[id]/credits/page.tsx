@@ -3,9 +3,9 @@ import LargeCreditsList from '@/app/components/LargeCreditsList';
 export default async function ShowCredits({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
-    const showId = params.id;
+    const { id } = await params;
 
     const options = {
         method: 'GET',
@@ -15,8 +15,8 @@ export default async function ShowCredits({
         },
     };
 
-    let res = await fetch(
-        `https://api.themoviedb.org/3/tv/${showId}/aggregate_credits?language=en-US`,
+    const res = await fetch(
+        `https://api.themoviedb.org/3/tv/${id}/aggregate_credits?language=en-US`,
         options
     );
 
@@ -24,7 +24,7 @@ export default async function ShowCredits({
         console.error('failed to fetch show credits');
     }
 
-    let deets = await res.json();
+    const deets = await res.json();
 
     return (
         <div className="grid md:grid-cols-2 gap-10">

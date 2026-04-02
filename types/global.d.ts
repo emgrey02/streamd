@@ -1,7 +1,7 @@
 export {};
 
 declare global {
-    interface Movie {
+    type MovieItem = {
         adult: boolean;
         backdrop_path: string;
         genre_ids: number[];
@@ -16,9 +16,9 @@ declare global {
         video: boolean;
         vote_average: number;
         vote_count: number;
-    }
+    };
 
-    interface Show {
+    type ShowItem = {
         adult: boolean;
         backdrop_path: string;
         genre_ids: number[];
@@ -35,5 +35,27 @@ declare global {
         popularity: number;
         poster_path: string;
         name: string;
-    }
+    };
+
+    type ContentItem = {
+        id: number;
+        media_type?: string;
+        poster_path?: string;
+        profile_path?: string;
+        name?: string;
+        title?: string;
+    };
+
+    type CastCrewItem = {
+        id: number;
+        gender?: number;
+        known_for_department?: string;
+        name?: string;
+        profile_path?: string;
+        cast_id?: number;
+        character?: string;
+        credit_id?: string;
+        department?: string;
+        job?: string;
+    };
 }

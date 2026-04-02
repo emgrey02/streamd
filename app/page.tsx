@@ -94,21 +94,21 @@ export default async function Home() {
         options
     );
 
-    const trendingData = [
+    const trendingData: ContentItem[][] = [
         await allTrending.json().then((res) => res.results),
         await movieTrending.json().then((res) => res.results),
         await tvTrending.json().then((res) => res.results),
         await pplTrending.json().then((res) => res.results),
     ];
 
-    const moviesData = [
+    const moviesData: ContentItem[][] = [
         await nowPlayingMovies.json().then((res) => res.results),
         await popularMovies.json().then((res) => res.results),
         await topRatedMovies.json().then((res) => res.results),
         await upcomingMovies.json().then((res) => res.results),
     ];
 
-    const showsData = [
+    const showsData: ContentItem[][] = [
         await airingTodayShows.json().then((res) => res.results),
         await onAirShows.json().then((res) => res.results),
         await popularShows.json().then((res) => res.results),

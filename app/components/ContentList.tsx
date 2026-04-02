@@ -3,32 +3,20 @@
 import { useState, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { capitalizeCategory, fromURLToTitle } from '../utils';
 
-type ContentItem = {
-    id: number;
-    media_type?: string;
-    poster_path?: string;
-    profile_path?: string;
-    name?: string;
-    title?: string;
-};
-
-type Props = {
-    sessionId?: string;
-    accountId?: string;
-    content: never[];
-    cat: string[] | string;
+export default function ContentList(props: {
     title: string;
-};
-
-export default function ContentList({ title, content, cat }: Props) {
+    cat: string[];
+    content: ContentItem[][];
+}) {
     const router = useRouter();
-    const [contentList, setContentList] = useState<Movie[] | Show[]>(
-        content[0]
+    const [contentList, setContentList] = useState<ContentItem[]>(
+        props.content[0]
     );
     const [scrollPx, setScrollPx] = useState(0);
     const [scrollWidth, setScrollWidth] = useState(2000);
-    const [category, setCategory] = useState(cat[0]);
+    const [category, setCategory] = useState(props.cat[0]);
     const [progress, setProgress] = useState(0);
     const scrollCont = useRef<HTMLUListElement>(null);
 
@@ -38,49 +26,15 @@ export default function ContentList({ title, content, cat }: Props) {
         const newCat = e.currentTarget.dataset.cat;
 
         if (newCat) {
-            const index = cat.indexOf(newCat);
+            const index = props.cat.indexOf(newCat);
             setCategory(newCat);
-            setContentList(content[index]);
+            setContentList(props.content[index]);
             scrollToBeginning();
-        }
-    }
-
-    function capitalizeCategory(cat: string) {
-        if (cat.includes('_')) {
-            const array = cat.split('_');
-            const firstLetterCap = array[0].slice(0, 1).toUpperCase();
-            const secondLetterCap = array[1].slice(0, 1).toUpperCase();
-
-            array[0] = firstLetterCap + array[0].slice(1);
-            array[1] = secondLetterCap + array[1].slice(1);
-
-            if (array[2]) {
-                const thirdLetterCap = array[2]?.slice(0, 1).toUpperCase();
-                array[2] = thirdLetterCap + array[2]?.slice(1);
-            }
-
-            return `${array.join(' ')}`;
-        } else {
-            const capLetter = cat.slice(0, 1).toUpperCase();
-            let capCat = `${capLetter}${cat.slice(1)}`;
-            if (capCat === 'Movie') capCat = 'Movies';
-            return capCat;
-        }
-    }
-
-    function renameContent(cont: string) {
-        if (cont === 'movie') {
-            return 'Movies';
-        } else if (cont === 'tv') {
-            return 'Shows';
-        } else if (cont === 'trending') {
-            return 'Trending';
         }
     }
 
     function scrollToBeginning() {
         if (scrollCont.current) {
-            console.log(scrollPx);
             scrollCont.current.scrollBy({
                 left: -scrollPx,
                 behavior: 'smooth',
@@ -136,26 +90,25 @@ export default function ContentList({ title, content, cat }: Props) {
         <div className="flex flex-col">
             <div className="relative h-min grid gap-y-4">
                 <h2 className="text-xl font-medium tracking-wider">
-                    {renameContent(title)}
+                    {fromURLToTitle(props.title)}
                 </h2>
                 <ul
                     className={`grid grid-cols-4 max-w-150 items-center ring-1 ring-gray-900 bg-slate-700/40`}
                 >
-                    {Array.isArray(cat) &&
-                        cat.map((c: string, index: number) => (
-                            <li
-                                key={index}
-                                className={`h-full ${c === category && 'bg-slate-900'} border-s-2 ${c === category ? 'border-slate-400' : 'border-slate-600'} transition-all `}
+                    {props.cat.map((c: string, index: number) => (
+                        <li
+                            key={index}
+                            className={`h-full ${c === category && 'bg-slate-900'} border-s-2 ${c === category ? 'border-slate-400' : 'border-slate-600'} transition-all `}
+                        >
+                            <button
+                                className={`grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue`}
+                                data-cat={c}
+                                onClick={setContent}
                             >
-                                <button
-                                    className={`grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue`}
-                                    data-cat={c}
-                                    onClick={setContent}
-                                >
-                                    {capitalizeCategory(c)}
-                                </button>
-                            </li>
-                        ))}
+                                {capitalizeCategory(c)}
+                            </button>
+                        </li>
+                    ))}
                 </ul>
                 <div className="relative grid sm:grid-cols-[35px_auto_35px] py-4 sm:px-2">
                     <button
@@ -183,7 +136,7 @@ export default function ContentList({ title, content, cat }: Props) {
                                             className="focus:outline-none focus:ring focus:ring-brand-blue"
                                             onClick={() =>
                                                 router.push(
-                                                    `/${ent.media_type || title}/${ent.id.toString()}`
+                                                    `/${ent.media_type || props.title}/${ent.id.toString()}`
                                                 )
                                             }
                                         >
@@ -198,7 +151,7 @@ export default function ContentList({ title, content, cat }: Props) {
                                                     height={300}
                                                 />
                                             :   <div className="w-48 h-72 bg-slate-300/20 grid place-items-center">
-                                                    {title === 'tv' ?
+                                                    {props.title === 'tv' ?
                                                         ent.name
                                                     :   ent.title}{' '}
                                                     poster unavailable
@@ -224,7 +177,7 @@ export default function ContentList({ title, content, cat }: Props) {
                 <button
                     onClick={() =>
                         router.push(
-                            `/${renameContent(title)?.toLowerCase()}/${category}`
+                            `/${fromURLToTitle(props.title)?.toLowerCase()}/${category}`
                         )
                     }
                     className="self-end mt-2 px-2"

@@ -4,13 +4,13 @@ import SubmitRating from '@/app/components/SubmitRating';
 import Text from '@/app/components/Text';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
-import BackButton from '@/app/components/BackButton';
 import ContentPageNav from '@/app/components/ContentPageNav';
 import AddToListButton from '@/app/components/AddToListButton';
+import { getDate } from '@/app/utils';
 
 interface LayoutProps {
     children: React.ReactNode;
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }
 
 export default async function Layout({ children, params }: LayoutProps) {
@@ -42,29 +42,8 @@ export default async function Layout({ children, params }: LayoutProps) {
 
     const deets = await res.json();
 
-    function getDate(birthday: string) {
-        const birthArray = birthday.split('-');
-        const months = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-        ];
-        const month = months[+birthArray[1] - 1];
-        return `${month} ${birthArray[2]}, ${birthArray[0]}`;
-    }
-
     return (
         <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">
-            <BackButton main={false} />
             <div>
                 <h1 className="text-2xl sm:text-4xl tracking-wider">
                     {deets.title}

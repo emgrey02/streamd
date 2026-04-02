@@ -3,9 +3,9 @@ import Reviews from '@/app/components/Reviews';
 export default async function ReviewsArea({
     params,
 }: {
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }) {
-    const showId = params.id;
+    const { id } = await params;
 
     const options = {
         method: 'GET',
@@ -15,8 +15,8 @@ export default async function ReviewsArea({
         },
     };
 
-    let res = await fetch(
-        `https://api.themoviedb.org/3/tv/${showId}/reviews?language=en-US`,
+    const res = await fetch(
+        `https://api.themoviedb.org/3/tv/${id}/reviews?language=en-US`,
         options
     );
 
@@ -24,7 +24,7 @@ export default async function ReviewsArea({
         console.error('failed to fetch show reviews');
     }
 
-    let r = await res.json();
+    const r = await res.json();
 
     return (
         <div id="reviews" className="flex flex-col gap-4">

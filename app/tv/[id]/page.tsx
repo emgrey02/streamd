@@ -2,11 +2,14 @@ import Image from 'next/image';
 import SmallCreditsList from '@/app/components/SmallCreditsList';
 import LargeCreditsList from '@/app/components/LargeCreditsList';
 import EpisodeList from '@/app/components/EpisodeList';
-import BackButton from '@/app/components/BackButton';
 import StreamRentBuy from '@/app/components/StreamRentBuy';
 
-export default async function Show({ params }: { params: { id: string } }) {
-    let showId = params.id;
+export default async function Show({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    const { id } = await params;
 
     const options = {
         method: 'GET',
@@ -16,8 +19,8 @@ export default async function Show({ params }: { params: { id: string } }) {
         },
     };
 
-    let res = await fetch(
-        `https://api.themoviedb.org/3/tv/${showId}?append_to_response=aggregate_credits,watch/providers&language=en-US`,
+    const res = await fetch(
+        `https://api.themoviedb.org/3/tv/${id}?append_to_response=aggregate_credits,watch/providers&language=en-US`,
         options
     );
 
@@ -25,7 +28,7 @@ export default async function Show({ params }: { params: { id: string } }) {
         console.error('failed to fetch show data');
     }
 
-    let content = await res.json();
+    const content = await res.json();
 
     return (
         <div className="flex flex-col md:grid md:grid-cols-2 gap-10 max-w-vw @container">
@@ -34,7 +37,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                     <h2 className="font-medium text-lg mb-2">Created By</h2>
                     <SmallCreditsList
                         creds={content.created_by}
-                        showId={showId}
+                        showId={id}
                         cont="person"
                     />
                 </div>
@@ -87,7 +90,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                         </h3>
                         <ul className="tracking-wide font-light">
                             {content.production_countries.map(
-                                (c: any, index: number) => (
+                                (c: { name: string }, index: number) => (
                                     <li key={index}>{c.name}</li>
                                 )
                             )}
@@ -102,7 +105,10 @@ export default async function Show({ params }: { params: { id: string } }) {
                         </h3>
                         <ul className="tracking-wide font-light">
                             {content.spoken_languages.map(
-                                (l: any, index: number) => (
+                                (
+                                    l: { english_name: string },
+                                    index: number
+                                ) => (
                                     <li key={index}>{l.english_name}</li>
                                 )
                             )}
@@ -118,9 +124,14 @@ export default async function Show({ params }: { params: { id: string } }) {
                                 Production Companies
                             </h3>
                             <ul className="flex flex-col gap-4 px-2 pb-2 w-full">
-                                {content.production_companies
-                                    .filter((item: any, idx: number) => idx < 4)
-                                    .map((pc: any, index: number) => (
+                                {content.production_companies.slice(0, 4).map(
+                                    (
+                                        pc: {
+                                            logo_path: string;
+                                            name: string;
+                                        },
+                                        index: number
+                                    ) => (
                                         <li
                                             key={index}
                                             className="grid grid-cols-[80px_auto] items-center gap-2 p-2"
@@ -156,7 +167,8 @@ export default async function Show({ params }: { params: { id: string } }) {
                                                 </p>
                                             </div>
                                         </li>
-                                    ))}
+                                    )
+                                )}
                             </ul>
                         </div>
                     )}
@@ -167,7 +179,10 @@ export default async function Show({ params }: { params: { id: string } }) {
                             </h2>
                             <ul className="flex flex-wrap gap-4 px-2 pb-2 w-full">
                                 {content.networks.map(
-                                    (n: any, index: number) => (
+                                    (
+                                        n: { logo_path: string; name: string },
+                                        index: number
+                                    ) => (
                                         <li
                                             key={index}
                                             className="grid grid-cols-[80px_auto] items-center gap-2 p-2"
@@ -229,7 +244,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                     </h2>
                     <EpisodeList
                         data={content.last_episode_to_air}
-                        showId={showId}
+                        showId={id}
                         seasonNum={content.last_episode_to_air.season_number}
                     />
                 </div>
@@ -251,7 +266,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                     </h2>
                     <EpisodeList
                         data={content.next_episode_to_air}
-                        showId={showId}
+                        showId={id}
                         seasonNum={content.next_episode_to_air.season_number}
                     />
                 </div>
@@ -265,7 +280,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                     credits={false}
                     search={false}
                     seasons={true}
-                    showId={showId}
+                    showId={id}
                     clip={true}
                 />
             </div>
@@ -275,7 +290,7 @@ export default async function Show({ params }: { params: { id: string } }) {
                 <SmallCreditsList
                     creds={content.aggregate_credits.cast}
                     cont="tv"
-                    showId={showId}
+                    showId={id}
                 />
             </div>
 
@@ -284,11 +299,9 @@ export default async function Show({ params }: { params: { id: string } }) {
                 <SmallCreditsList
                     creds={content.aggregate_credits.crew}
                     cont="tv"
-                    showId={showId}
+                    showId={id}
                 />
             </div>
-
-            <BackButton main={true} />
         </div>
     );
 }

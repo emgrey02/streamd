@@ -1,20 +1,20 @@
 import Text from '@/app/components/Text';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
-import BackButton from '@/app/components/BackButton';
 import Genres from '@/app/components/Genres';
 import FavorWatchButton from '@/app/components/FavorWatchButton';
 import SubmitRating from '@/app/components/SubmitRating';
 import ContentPageNav from '@/app/components/ContentPageNav';
 import AddToListButton from '@/app/components/AddToListButton';
+import { getDate } from '@/app/utils';
 
 interface LayoutProps {
     children: React.ReactNode;
-    params: { id: string };
+    params: Promise<{ id: string }>;
 }
 
 export default async function Layout({ children, params }: LayoutProps) {
-    let showId = params.id;
+    const { id } = await params;
 
     const cookieStore = await cookies();
     const sessionId = cookieStore.get('sessionId')?.value;
@@ -30,8 +30,8 @@ export default async function Layout({ children, params }: LayoutProps) {
         },
     };
 
-    let res = await fetch(
-        `https://api.themoviedb.org/3/tv/${showId}?language=en-US`,
+    const res = await fetch(
+        `https://api.themoviedb.org/3/tv/${id}?language=en-US`,
         options
     );
 
@@ -39,31 +39,10 @@ export default async function Layout({ children, params }: LayoutProps) {
         console.error('failed to fetch show data');
     }
 
-    let deets = await res.json();
-
-    function getDate(birthday: string) {
-        let birthArray = birthday.split('-');
-        let months = [
-            'January',
-            'February',
-            'March',
-            'April',
-            'May',
-            'June',
-            'July',
-            'August',
-            'September',
-            'October',
-            'November',
-            'December',
-        ];
-        let month = months[+birthArray[1] - 1];
-        return `${month} ${birthArray[2]}, ${birthArray[0]}`;
-    }
+    const deets = await res.json();
 
     return (
         <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">
-            <BackButton main={false} />
             <div>
                 <h1 className="text-5xl tracking-wider text-slate-200">
                     {deets.name}

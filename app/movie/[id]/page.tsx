@@ -3,6 +3,7 @@ import Image from 'next/image';
 import ImageSlider from '@/app/components/ImageSlider';
 import Genres from '@/app/components/Genres';
 import StreamRentBuy from '@/app/components/StreamRentBuy';
+import { getRuntime, convertQuantity } from '@/app/utils';
 
 export default async function Movie({
     params,
@@ -30,22 +31,7 @@ export default async function Movie({
     }
 
     const content = await res.json();
-
-    function convertQuantity(amt: number) {
-        const str = amt.toString().split('');
-        str.splice(-3, 0, ',');
-        str.splice(-7, 0, ',');
-        if (str.length >= 12) str.splice(-11, 0, ',');
-        if (str.length === 8) str.splice(0, 1);
-        const finalStr = str.join('');
-        return `$${finalStr}`;
-    }
-
-    function getRuntime(min: number) {
-        const hrs = Math.floor(min / 60);
-        const mins = min % 60;
-        return `${hrs}h ${mins}m`;
-    }
+    console.log(content.credits.crew);
 
     return (
         <div className="flex flex-col md:grid md:grid-cols-2 gap-10 max-w-vw @container">
