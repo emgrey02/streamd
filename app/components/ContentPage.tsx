@@ -3,33 +3,39 @@ import { useEffect, useState } from 'react';
 import { getContent } from '../actions';
 import LargeCreditsList from './LargeCreditsList';
 
+/**
+ *
+ * @param props
+ * data: an array of movies, shows, or both (trending)
+ * type: content type, either { movie, tv, trending } as a string
+ * cat: category based on the type { string }
+ * @returns
+ */
+type ContentPageItem = MovieItem | ShowItem | ContentItem;
+
 export default function ContentPage(props: {
-    data: Array<Record<string, unknown>>;
-    pageNum: number;
+    data: ContentPageItem[];
     type: string;
     cat: string;
-    content: string;
 }) {
     const [loadMore, setLoadMore] = useState(false);
-    const [finalData, setFinalData] = useState<Array<Record<string, unknown>>>(props.data);
+    const [finalData, setFinalData] = useState<ContentPageItem[]>(props.data);
     const [shownPageNumbers, setShownPageNumbers] = useState(1);
 
-    function changeToSearchTerm(cont: string) {
-        if (cont === 'movies') return 'movie';
-        else if (cont === 'shows') return 'tv';
-        else return 'trending';
-    }
+    console.log(props.type);
 
     useEffect(() => {
         if (loadMore) {
             const loadMoreContent = async () => {
                 const moreContent = await getContent(
-                    changeToSearchTerm(props.content),
+                    props.type,
                     props.cat,
                     shownPageNumbers + 1
                 );
                 setShownPageNumbers(shownPageNumbers + 1);
-                setFinalData(finalData.concat(moreContent.results));
+                setFinalData((prev) =>
+                    prev.concat(moreContent.results as ContentPageItem[])
+                );
                 setLoadMore(false);
             };
             loadMoreContent();
@@ -37,8 +43,7 @@ export default function ContentPage(props: {
     }, [
         loadMore,
         props.cat,
-        props.content,
-        props.pageNum,
+        props.type,
         props.data,
         shownPageNumbers,
         finalData,

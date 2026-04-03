@@ -231,17 +231,17 @@ export default async function Movie({
             <div className="col-start-1">
                 <h3 className="mb-2 font-medium text-lg">Cast</h3>
                 <SmallCreditsList
-                    showId={id}
+                    contentId={id}
                     creds={content.credits.cast}
-                    cont="movie"
+                    contentType="person"
                 />
             </div>
             <div>
                 <h3 className="mb-2 font-medium text-lg">Crew</h3>
                 <SmallCreditsList
-                    showId={id}
+                    contentId={id}
                     creds={content.credits.crew}
-                    cont="movie"
+                    contentType="person"
                 />
             </div>
 

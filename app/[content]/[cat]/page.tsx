@@ -2,9 +2,10 @@ import BackButton from '@/app/components/BackButton';
 import ContentPage from '@/app/components/ContentPage';
 import ListNav from '@/app/components/ListNav';
 import SearchBar from '@/app/components/SearchBar';
+import { capitalizeCategory } from '@/app/utils';
 import { Suspense } from 'react';
 
-// content is either movies, shows, or trending
+// type is either movies, shows, or trending
 export default async function Page({
     params,
 }: {
@@ -29,7 +30,7 @@ export default async function Page({
         else return 'trending';
     }
 
-    const url = `https://api.themoviedb.org/3/${changeToSearchTerm(content)}/${cat}${changeToSearchTerm(content) === 'trending' ? '/day' : ''}?language=en-US&page=1`;
+    const url = `https://api.themoviedb.org/3/${changeToSearchTerm(content)}/${cat == 'people' ? 'person' : cat}${changeToSearchTerm(content) === 'trending' ? '/day' : ''}?language=en-US&page=1`;
 
     const res = await fetch(url, options);
 
@@ -38,23 +39,13 @@ export default async function Page({
     }
     const contentData = await res.json();
 
-    function renameContent(cont: string) {
-        if (cont === 'movie') {
-            return 'Movies';
-        } else if (cont === 'tv') {
-            return 'Shows';
-        } else if (cont === 'trending') {
-            return 'Trending';
-        }
-    }
-
     return (
         <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">
-            <BackButton main={false} />
+            <BackButton main={true} />
             <SearchBar />
             <div>
                 <h1 className="text-5xl tracking-wider font-light mb-2">
-                    {renameContent(content)}
+                    {capitalizeCategory(content)}
                 </h1>
                 <div className="w-[80%] max-w-full h-px bg-brand-blue"></div>
             </div>
@@ -63,9 +54,8 @@ export default async function Page({
                 <ContentPage
                     data={contentData.results}
                     pageNum={1}
-                    type={content}
+                    type={changeToSearchTerm(content)}
                     cat={cat}
-                    content={content}
                 />
             </Suspense>
         </main>

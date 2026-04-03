@@ -37,8 +37,8 @@ export default async function Show({
                     <h2 className="font-medium text-lg mb-2">Created By</h2>
                     <SmallCreditsList
                         creds={content.created_by}
-                        showId={id}
-                        cont="person"
+                        contentId={id}
+                        contentType="person"
                     />
                 </div>
             )}
@@ -289,8 +289,8 @@ export default async function Show({
                 <h2 className="font-medium text-lg mb-2">Cast</h2>
                 <SmallCreditsList
                     creds={content.aggregate_credits.cast}
-                    cont="tv"
-                    showId={id}
+                    contentType="person"
+                    contentId={id}
                 />
             </div>
 
@@ -298,8 +298,8 @@ export default async function Show({
                 <h2 className="font-medium text-lg mb-2">Crew</h2>
                 <SmallCreditsList
                     creds={content.aggregate_credits.crew}
-                    cont="tv"
-                    showId={id}
+                    contentType="person"
+                    contentId={id}
                 />
             </div>
         </div>

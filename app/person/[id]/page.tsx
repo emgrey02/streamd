@@ -33,7 +33,7 @@ export default async function PersonPage({
                 <h2 className="font-medium text-lg mb-2">Known For</h2>
                 <SmallCreditsList
                     creds={content.combined_credits.cast}
-                    showId={id}
+                    contentType="multi"
                     personId={id}
                 />
             </div>

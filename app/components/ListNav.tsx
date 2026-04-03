@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
+import { capitalizeCategory } from '../utils';
 
 export default function ListNav() {
     const pathname = usePathname();
@@ -20,30 +21,6 @@ export default function ListNav() {
         categories = ['airing_today', 'on_the_air', 'popular', 'top_rated'];
     }
 
-    function capitalizeCategory(cat: string) {
-        if (cat.includes('_')) {
-            const array = cat.split('_');
-            const firstLetterCap = array[0].slice(0, 1).toUpperCase();
-            const secondLetterCap = array[1].slice(0, 1).toUpperCase();
-
-            array[0] = firstLetterCap + array[0].slice(1);
-            array[1] = secondLetterCap + array[1].slice(1);
-
-            if (array[2]) {
-                const thirdLetterCap = array[2]?.slice(0, 1).toUpperCase();
-                array[2] = thirdLetterCap + array[2]?.slice(1);
-            }
-
-            return `${array.join(' ')}`;
-        } else {
-            const capLetter = cat.slice(0, 1).toUpperCase();
-            let capCat = `${capLetter}${cat.slice(1)}`;
-            if (capCat === 'Movie') capCat = 'Movies';
-            if (capCat === 'Favorite') capCat = 'Favorites';
-            return capCat;
-        }
-    }
-
     return (
         <div className="flex flex-col">
             <div className="relative h-min grid gap-y-4">
@@ -59,7 +36,6 @@ export default function ListNav() {
                                 <Link
                                     href={`/${pathnameArray[0]}/${cat == 'people' ? (cat = 'person') : cat}`}
                                     className={`grid justify-start items-center px-3 py-2 min-w-full h-full focus:outline-none focus:ring focus:ring-brand-blue`}
-                                    replace
                                 >
                                     {capitalizeCategory(cat)}
                                 </Link>

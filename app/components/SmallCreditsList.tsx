@@ -1,12 +1,12 @@
 'use client';
-import NewCard from './NewCard';
+import BigCard from './BigCard';
 import Link from 'next/link';
 
 // for displaying a few credits on the movie and tv show pages, with a link to the full credits page
 export default function SmallCreditsList(props: {
     creds: CastCrewItem[];
-    showId: string;
-    cont?: string;
+    contentId?: string;
+    contentType: string;
     personId?: string;
 }) {
     const creds = props.creds;
@@ -22,13 +22,9 @@ export default function SmallCreditsList(props: {
                             (p: CastCrewItem, index: number) =>
                                 index < 4 && (
                                     <li key={index}>
-                                        <NewCard
+                                        <BigCard
                                             data={p}
-                                            type={props.cont}
-                                            search={false}
-                                            credits={true}
-                                            fwr={false}
-                                            seasons={false}
+                                            type={props.contentType}
                                         />
                                     </li>
                                 )
@@ -38,7 +34,7 @@ export default function SmallCreditsList(props: {
             :   <div>no credits available...</div>}
             <Link
                 className="self-end my-2 text-sm"
-                href={`${props.showId}/credits`}
+                href={`${props.contentId || props.personId}/credits`}
             >
                 See All Credits
             </Link>

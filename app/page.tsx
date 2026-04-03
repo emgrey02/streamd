@@ -5,6 +5,7 @@ import SearchBar from './components/SearchBar';
 export default async function Home() {
     const trendingCats: string[] = ['all', 'movie', 'tv', 'person'];
 
+    // revalidate once a day
     const options = {
         method: 'GET',
         headers: {

@@ -57,5 +57,7 @@ declare global {
         credit_id?: string;
         department?: string;
         job?: string;
+        roles?: string[{ character: string }];
+        jobs?: string[{ job: string }];
     };
 }

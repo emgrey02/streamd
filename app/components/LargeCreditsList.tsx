@@ -2,8 +2,11 @@
 import { useState } from 'react';
 import SmallCard from './SmallCard';
 
+type CreditsListItem = MovieItem | ShowItem;
+
+// cast, movies, tv shows
 export default function LargeCreditsList(props: {
-    data: any;
+    data: CreditsListItem[];
     type: string;
     search: boolean;
     credits: boolean;
@@ -11,7 +14,7 @@ export default function LargeCreditsList(props: {
     clip: boolean;
     showId?: string;
 }) {
-    let data = props.data;
+    const data = props.data;
     const type = props.type;
     const search = props.search;
     const credits = props.credits;
@@ -23,11 +26,15 @@ export default function LargeCreditsList(props: {
 
     let yearsArray: any = [];
 
-    let sortedArray = data.toSorted((a: any, b: any) => {
-        let aVal = a.release_date?.slice(0, 4) || a.first_air_date?.slice(0, 4);
-        let bVal = b.release_date?.slice(0, 4) || b.first_air_date?.slice(0, 4);
-        return +bVal - +aVal;
-    });
+    const sortedArray = data.toSorted(
+        (a: CreditsListItem, b: CreditsListItem) => {
+            const aVal =
+                a.release_date?.slice(0, 4) || a.first_air_date?.slice(0, 4);
+            const bVal =
+                b.release_date?.slice(0, 4) || b.first_air_date?.slice(0, 4);
+            return +bVal - +aVal;
+        }
+    );
 
     sortedArray.forEach((credit: any) => {
         if (!yearsArray?.includes(credit.release_date?.slice(0, 4))) {
