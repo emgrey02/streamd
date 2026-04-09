@@ -1,8 +1,8 @@
 import Image from 'next/image';
-import SmallCreditsList from '@/app/components/SmallCreditsList';
-import LargeCreditsList from '@/app/components/LargeCreditsList';
-import EpisodeList from '@/app/components/EpisodeList';
-import StreamRentBuy from '@/app/components/StreamRentBuy';
+import SmallCreditsList from '@/app/components/Lists/SmallCreditsList';
+import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
+import EpisodeList from '@/app/components/ContentPage/EpisodeList';
+import StreamRentBuy from '@/app/components/ContentPage/StreamRentBuy';
 
 export default async function Show({
     params,

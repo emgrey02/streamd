@@ -5,3 +5,7 @@
         text-wrap: balance;
     }
 }
+
+@theme {
+    --color-brand-blue: #95b4e1;
+}

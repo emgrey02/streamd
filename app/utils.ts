@@ -66,3 +66,9 @@ export function fromURLToTitle(cont: string) {
         return 'Trending';
     }
 }
+
+export function changeToSearchTerm(cont: string) {
+    if (cont === 'movies') return 'movie';
+    else if (cont === 'shows') return 'tv';
+    else return 'trending';
+}

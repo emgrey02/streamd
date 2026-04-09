@@ -1,9 +1,9 @@
-import Text from '@/app/components/Text';
+import Text from '@/app/components/ContentPage/Text';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import BackButton from '@/app/components/BackButton';
-import SubmitRating from '@/app/components/SubmitRating';
-import LargeCreditsList from '@/app/components/LargeCreditsList';
+import SubmitRating from '@/app/components/ContentPage/SubmitRating';
+import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 import Link from 'next/link';
 import { getDate, getRuntime } from '@/app/utils';
 
@@ -55,7 +55,6 @@ export default async function Episode({
                     className={`bg-slate-900 ${+epNum - 1 == 0 && 'pointer-events-none text-slate-700'} hover:bg-slate-700 p-4`}
                     aria-disabled={+epNum - 1 == 0}
                     href={`/tv/${id}/season/${num}/episode/${+epNum - 1}`}
-                    replace
                 >
                     Previous Episode
                 </Link>
@@ -63,7 +62,6 @@ export default async function Episode({
                     className={`${+epNum + 1 > +totalEpisodes && 'pointer-events-none text-slate-700'} bg-slate-900 hover:bg-slate-700 p-4 text-end w-full`}
                     aria-disabled={+epNum + 1 > +totalEpisodes}
                     href={`/tv/${id}/season/${num}/episode/${+epNum + 1}`}
-                    replace
                 >
                     Next Episode
                 </Link>

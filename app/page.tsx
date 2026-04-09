@@ -1,6 +1,6 @@
 import { Suspense } from 'react';
-import ContentList from './components/ContentList';
-import SearchBar from './components/SearchBar';
+import ContentList from './components/Home/ContentList';
+import SearchBar from './components/Search/SearchBar';
 
 export default async function Home() {
     const trendingCats: string[] = ['all', 'movie', 'tv', 'person'];

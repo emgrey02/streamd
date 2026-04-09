@@ -1,8 +1,8 @@
-import SmallCreditsList from '@/app/components/SmallCreditsList';
+import SmallCreditsList from '@/app/components/Lists/SmallCreditsList';
 import Image from 'next/image';
-import ImageSlider from '@/app/components/ImageSlider';
-import Genres from '@/app/components/Genres';
-import StreamRentBuy from '@/app/components/StreamRentBuy';
+import ImageSlider from '@/app/components/ContentPage/ImageSlider';
+import Genres from '@/app/components/ContentPage/Genres';
+import StreamRentBuy from '@/app/components/ContentPage/StreamRentBuy';
 import { getRuntime, convertQuantity } from '@/app/utils';
 
 export default async function Movie({
@@ -31,7 +31,6 @@ export default async function Movie({
     }
 
     const content = await res.json();
-    console.log(content.credits.crew);
 
     return (
         <div className="flex flex-col md:grid md:grid-cols-2 gap-10 max-w-vw @container">

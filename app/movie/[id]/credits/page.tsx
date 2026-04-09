@@ -1,4 +1,4 @@
-import LargeCreditsList from '@/app/components/LargeCreditsList';
+import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 import { Suspense } from 'react';
 
 export default async function MovieCredits({

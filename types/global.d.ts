@@ -35,6 +35,8 @@ declare global {
         popularity: number;
         poster_path: string;
         name: string;
+        air_date: string;
+        season_number: number;
     };
 
     type ContentItem = {
@@ -44,6 +46,7 @@ declare global {
         profile_path?: string;
         name?: string;
         title?: string;
+        year: string;
     };
 
     type CastCrewItem = {

@@ -1,4 +1,4 @@
-import LargeCreditsList from '@/app/components/LargeCreditsList';
+import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 
 export default async function PersonCredits({
     params,

@@ -1,8 +1,8 @@
-import Text from '@/app/components/Text';
+import Text from '@/app/components/ContentPage/Text';
 import Image from 'next/image';
 import BackButton from '@/app/components/BackButton';
-import LargeCreditsList from '@/app/components/LargeCreditsList';
-import EpisodeList from '@/app/components/EpisodeList';
+import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
+import EpisodeList from '@/app/components/ContentPage/EpisodeList';
 import { getDate } from '@/app/utils';
 
 export default async function Season({

@@ -1,8 +1,7 @@
 import BackButton from '@/app/components/BackButton';
-import SearchResults from '../../components/SearchResults';
-import { doASearch, genreSearch, keywordSearch } from '@/app/actions';
-import SearchResNav from '@/app/components/SearchResNav';
-import SearchBar from '@/app/components/SearchBar';
+import SearchResults from '../../components/Search/SearchResults';
+import SearchResNav from '@/app/components/Search/SearchResNav';
+import SearchBar from '@/app/components/Search/SearchBar';
 import { Suspense } from 'react';
 
 export default async function Search({

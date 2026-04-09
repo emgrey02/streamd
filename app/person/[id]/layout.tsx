@@ -1,7 +1,7 @@
-import Text from '@/app/components/Text';
+import Text from '@/app/components/ContentPage/Text';
 import Image from 'next/image';
 import BackButton from '@/app/components/BackButton';
-import ContentPageNav from '@/app/components/ContentPageNav';
+import ContentPageNav from '@/app/components/ContentPage/ContentPageNav';
 
 interface LayoutProps {
     children: React.ReactNode;

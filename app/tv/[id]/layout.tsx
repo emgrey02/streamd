@@ -1,11 +1,11 @@
-import Text from '@/app/components/Text';
+import Text from '@/app/components/ContentPage/Text';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
-import Genres from '@/app/components/Genres';
-import FavorWatchButton from '@/app/components/FavorWatchButton';
-import SubmitRating from '@/app/components/SubmitRating';
-import ContentPageNav from '@/app/components/ContentPageNav';
-import AddToListButton from '@/app/components/AddToListButton';
+import Genres from '@/app/components/ContentPage/Genres';
+import FavorWatchButton from '@/app/components/ContentPage/FavorWatchButton';
+import SubmitRating from '@/app/components/ContentPage/SubmitRating';
+import ContentPageNav from '@/app/components/ContentPage/ContentPageNav';
+import AddToListButton from '@/app/components/ContentPage/AddToListButton';
 import { getDate } from '@/app/utils';
 
 interface LayoutProps {

@@ -1,8 +1,8 @@
 import BackButton from '@/app/components/BackButton';
-import ContentPage from '@/app/components/ContentPage';
-import ListNav from '@/app/components/ListNav';
-import SearchBar from '@/app/components/SearchBar';
-import { capitalizeCategory } from '@/app/utils';
+import ContentPage from '@/app/components/FullContentListPage/ContentPage';
+import ListNav from '@/app/components/FullContentListPage/ListNav';
+import SearchBar from '@/app/components/Search/SearchBar';
+import { capitalizeCategory, changeToSearchTerm } from '@/app/utils';
 import { Suspense } from 'react';
 
 // type is either movies, shows, or trending
@@ -20,15 +20,10 @@ export default async function Page({
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
         next: {
+            // daily
             revalidate: 86400,
         },
     };
-
-    function changeToSearchTerm(cont: string) {
-        if (cont === 'movies') return 'movie';
-        else if (cont === 'shows') return 'tv';
-        else return 'trending';
-    }
 
     const url = `https://api.themoviedb.org/3/${changeToSearchTerm(content)}/${cat == 'people' ? 'person' : cat}${changeToSearchTerm(content) === 'trending' ? '/day' : ''}?language=en-US&page=1`;
 
@@ -37,6 +32,7 @@ export default async function Page({
     if (!res.ok) {
         console.error('failed to fetch movie/show category');
     }
+
     const contentData = await res.json();
 
     return (
@@ -53,7 +49,6 @@ export default async function Page({
             <Suspense fallback={<p>Loading content...</p>}>
                 <ContentPage
                     data={contentData.results}
-                    pageNum={1}
                     type={changeToSearchTerm(content)}
                     cat={cat}
                 />

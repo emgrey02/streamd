@@ -1,16 +1,21 @@
 'use server';
 
-import AddNoteButton from '@/app/components/AddNoteButton';
-import AddContentToList from '@/app/components/AddContentToList';
+import AddNoteButton from '@/app/components/Dashboard/AddNoteButton';
+import AddContentToList from '@/app/components/Dashboard/AddContentToList';
 import BackButton from '@/app/components/BackButton';
-import DeleteListItemButton from '@/app/components/DeleteListItemButton';
+import DeleteListItemButton from '@/app/components/Dashboard/DeleteListItemButton';
 import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
-import Note from '@/app/components/Note';
+import Note from '@/app/components/Dashboard/Note';
 import { getContentAccountInfo } from '@/app/actions';
 
-export default async function ListPage({ params }: { params: { id: string } }) {
+export default async function ListPage({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    const { id } = await params;
     const cookieStore = await cookies();
     const accessToken: string | undefined =
         cookieStore.get('accessToken')?.value;
@@ -25,14 +30,15 @@ export default async function ListPage({ params }: { params: { id: string } }) {
     };
 
     const res = await fetch(
-        `https://api.themoviedb.org/4/list/${params.id}?language=en-US&page=1`,
+        `https://api.themoviedb.org/4/list/${id}?language=en-US&page=1`,
         options
     );
 
-    let list = await res.json();
+    const list = await res.json();
+    console.log(list.results);
 
     list.results.forEach(async (res: any) => {
-        let accountInfo = await getContentAccountInfo(
+        const accountInfo = await getContentAccountInfo(
             sessionId || '',
             res.media_type,
             res.id
@@ -92,7 +98,7 @@ export default async function ListPage({ params }: { params: { id: string } }) {
                                         </Link>
                                         <DeleteListItemButton
                                             at={accessToken || ''}
-                                            listId={params.id}
+                                            listId={id}
                                             mt={c.media_type}
                                             mi={+c.id}
                                         />
@@ -104,7 +110,7 @@ export default async function ListPage({ params }: { params: { id: string } }) {
                                             />
                                             <AddNoteButton
                                                 at={accessToken || ''}
-                                                listId={params.id}
+                                                listId={id}
                                                 mt={c.media_type}
                                                 mi={+c.id}
                                             />
@@ -116,7 +122,7 @@ export default async function ListPage({ params }: { params: { id: string } }) {
                     )}
                 </div>
                 <div>
-                    <AddContentToList at={accessToken || ''} id={params.id} />
+                    <AddContentToList at={accessToken || ''} id={id} />
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-import Reviews from '@/app/components/Reviews';
+import Reviews from '@/app/components/ContentPage/Reviews';
 import { Suspense } from 'react';
 
 export default async function ReviewsArea({

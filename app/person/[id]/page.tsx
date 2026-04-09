@@ -1,4 +1,4 @@
-import SmallCreditsList from '@/app/components/SmallCreditsList';
+import SmallCreditsList from '@/app/components/Lists/SmallCreditsList';
 
 export default async function PersonPage({
     params,

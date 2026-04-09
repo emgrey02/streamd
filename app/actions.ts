@@ -4,74 +4,12 @@ import { cookies } from 'next/headers';
 
 //movie,tv,people info
 
-export async function getShowInfo(showId: string) {
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-    };
-
-    let res = await fetch(
-        `https://api.themoviedb.org/3/tv/${showId}?append_to_response=images,aggregate_credits,keywords,recommendations,similar,videos,watch_providers,reviews&language=en-US`,
-        options
-    );
-
-    if (!res.ok) {
-        console.error('failed to fetch show data');
-    }
-
-    return await res.json();
-}
-
-export async function getPersonInfo(personId: string) {
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-    };
-
-    const res = await fetch(
-        `https://api.themoviedb.org/3/person/${personId}?append_to_response=combined_credits&language=en-US&sort_by=primary_release_date.asc`,
-        options
-    );
-
-    if (!res.ok) {
-        console.error('failed to fetch movie data');
-    }
-
-    return await res.json();
-}
-
-export async function getMovieInfo(movieId: string) {
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-    };
-
-    const res = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieId}?append_to_response=images,credits,keywords,recommendations,similar,videos,watch_providers,reviews`,
-        options
-    );
-
-    if (!res.ok) {
-        console.error('failed to fetch movie data');
-    }
-
-    return await res.json();
-}
-
 export async function getContent(
     content: string,
     cat: string | undefined,
     pageNum: number
 ) {
+    'use cache';
     const options = {
         method: 'GET',
         headers: {
@@ -85,7 +23,7 @@ export async function getContent(
         if (cat === 'people') cat = 'person';
     }
 
-    let res = await fetch(
+    const res = await fetch(
         `https://api.themoviedb.org/3/${content}/${cat}${content === 'trending' ? '/day' : ''}?language=en-US&page=${pageNum}`,
         options
     );
@@ -95,7 +33,8 @@ export async function getContent(
     } else {
         console.log(`successfully retrieved ${content} content`);
     }
-    let result = await res.json();
+
+    const result = await res.json();
     return result;
 }
 
@@ -132,8 +71,8 @@ export async function searchForContent(search: string, pageNum: number) {
         console.log('successfully retrieved tv search results');
     }
 
-    let movieResult = await movieRes.json();
-    let tvResult = await tvRes.json();
+    const movieResult = await movieRes.json();
+    const tvResult = await tvRes.json();
 
     console.log(movieResult, tvResult);
 
@@ -145,7 +84,7 @@ export async function searchForContent(search: string, pageNum: number) {
         r.media_type = 'tv';
     });
 
-    let finalArray = [];
+    const finalArray = [];
 
     for (let i = 0; i < 20; i++) {
         finalArray.push(movieResult.results[i]);
@@ -250,8 +189,6 @@ export async function getRequestToken() {
         }),
     };
 
-    options.next as RequestInit;
-
     //fetch to get a request token from TMDB
     const res = await fetch(
         'https://api.themoviedb.org/4/auth/request_token',
@@ -333,7 +270,7 @@ export async function tmdbLogOut(accessToken: string) {
         }),
     };
 
-    let res = await fetch(
+    const res = await fetch(
         'https://api.themoviedb.org/4/auth/access_token',
         options
     );
@@ -462,7 +399,7 @@ export async function getUserInfo(sessionId: string) {
         },
     };
 
-    let res = await fetch(
+    const res = await fetch(
         `https://api.themoviedb.org/3/account/account_id?session_id=${sessionId}`,
         options
     );
@@ -471,7 +408,7 @@ export async function getUserInfo(sessionId: string) {
         console.error('failed to fetch account info');
     }
     const userInfo = await res.json();
-    //console.log(userInfo);
+    console.log(userInfo);
     return userInfo;
 }
 
@@ -482,39 +419,6 @@ interface body {
     media_id: number;
     favorite?: boolean;
     watchlist?: boolean;
-}
-
-export async function getFavorWatchRated(
-    sessionId: string,
-    whichOne: string,
-    accountId: string,
-    content: string,
-    pageNum: number
-) {
-    const options = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-    };
-
-    if (content === 'movie') content = 'movies';
-
-    //console.log(whichOne, content);
-
-    let res = await fetch(
-        `https://api.themoviedb.org/3/account/${accountId}/${whichOne}/${content}?session_id=${sessionId}&language=en-US&page=${pageNum}&sort_by=created_at.asc`,
-        options
-    );
-
-    let favorWatch = await res.json();
-    if (!res.ok) {
-        console.log(favorWatch);
-        console.error(`failed to fetch ${whichOne} ${content}`);
-    }
-    // console.log(favorWatch);
-    return favorWatch;
 }
 
 export async function addToFavorWatch(
@@ -550,7 +454,7 @@ export async function addToFavorWatch(
         body: JSON.stringify(body),
     };
 
-    let res = await fetch(
+    const res = await fetch(
         `https://api.themoviedb.org/3/account/${accountId}/${whichOne}?session_id=${sessionId}`,
         options
     );
@@ -597,7 +501,7 @@ export async function removeFavorWatch(
         body: JSON.stringify(body),
     };
 
-    let res = await fetch(
+    const res = await fetch(
         `https://api.themoviedb.org/3/account/${accountId}/${whichOne}?session_id=${sessionId}`,
         options
     );
@@ -708,12 +612,12 @@ export async function getLists(accountObjectId: string, pageNum: number) {
         cache: 'no-cache',
     };
 
-    let res = await fetch(
+    const res = await fetch(
         `https://api.themoviedb.org/4/account/${accountObjectId}/lists?page=${pageNum}`,
         options
     );
 
-    let lists = await res.json();
+    const lists = await res.json();
 
     if (!res.ok) {
         console.log(lists);
@@ -746,8 +650,8 @@ export async function createList(at: string, formData: FormData) {
         }),
     };
 
-    let res = await fetch('https://api.themoviedb.org/4/list', options);
-    let resJson = await res.json();
+    const res = await fetch('https://api.themoviedb.org/4/list', options);
+    const resJson = await res.json();
 
     console.log(resJson);
 
@@ -786,8 +690,8 @@ export async function updateList(at: string, id: string, formData: FormData) {
         }),
     };
 
-    let res = await fetch(`https://api.themoviedb.org/4/list/${id}`, options);
-    let resJson = await res.json();
+    const res = await fetch(`https://api.themoviedb.org/4/list/${id}`, options);
+    const resJson = await res.json();
 
     console.log(resJson);
 
@@ -802,8 +706,6 @@ export async function updateList(at: string, id: string, formData: FormData) {
 }
 
 export async function deleteList(at: string, listId: string) {
-    console.log(at);
-
     const options = {
         method: 'DELETE',
         headers: {
@@ -814,11 +716,11 @@ export async function deleteList(at: string, listId: string) {
 
     console.log(listId);
 
-    let res = await fetch(
+    const res = await fetch(
         `https://api.themoviedb.org/4/list/${listId}`,
         options
     );
-    let resJson = await res.json();
+    const resJson = await res.json();
 
     if (!res.ok) {
         console.log(resJson);
@@ -848,11 +750,11 @@ export async function AddToList(
         }),
     };
 
-    let res = await fetch(
+    const res = await fetch(
         `https://api.themoviedb.org/4/list/${listId}/items`,
         options
     );
-    let resJson = await res.json();
+    const resJson = await res.json();
 
     if (!res.ok) {
         console.log(resJson);

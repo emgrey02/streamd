@@ -6,13 +6,13 @@ import { setReqTokenCookie, getRequestToken } from '../actions';
 
 export default function TmdbSignIn() {
     const [reqToken, setReqToken] = useState(null);
-    const url = process.env.NEXT_PUBLIC_BASE_URL;
+    //const url = process.env.NEXT_PUBLIC_BASE_URL;
 
     useEffect(() => {
         async function setToken() {
             const reqToken = await getRequestToken();
             setReqToken(reqToken);
-            let res = await setReqTokenCookie(reqToken);
+            const res = await setReqTokenCookie(reqToken);
             console.log(`setting reqtoken cookie is a ${res}`);
         }
         setToken();
