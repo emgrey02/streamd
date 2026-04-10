@@ -9,7 +9,6 @@ export async function getContent(
     cat: string | undefined,
     pageNum: number
 ) {
-    'use cache';
     const options = {
         method: 'GET',
         headers: {

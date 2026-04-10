@@ -1,10 +1,6 @@
 'use client';
-import {
-    addToFavorWatch,
-    removeFavorWatch,
-    getContentAccountInfo,
-} from '../../actions';
-import { useEffect, useState } from 'react';
+import { addToFavorWatch, removeFavorWatch } from '../../actions';
+import { useState } from 'react';
 
 export default function FavorWatchButton({
     whichOne,
@@ -30,39 +26,14 @@ export default function FavorWatchButton({
         boolean | undefined
     >(!watchlisted);
 
-    // useEffect(() => {
-    //     async function setStates() {
-    //         const accountInfo = await getContentAccountInfo(
-    //             sessionId,
-    //             content,
-    //             contentId
-    //         );
-
-    //         console.log(accountInfo);
-
-    //         if (accountInfo.favorite) {
-    //             setCanFavorite(false);
-    //         } else {
-    //             setCanFavorite(true);
-    //         }
-
-    //         if (accountInfo.watchlist) {
-    //             setCanAddToWatchlist(false);
-    //         } else {
-    //             setCanAddToWatchlist(true);
-    //         }
-    //     }
-    //     setStates();
-    // }, [content, contentId, sessionId]);
-
     async function handleClick(e: React.PointerEvent<HTMLButtonElement>) {
-        let target = e.currentTarget as HTMLButtonElement;
-        let text = target.innerText;
+        const target = e.currentTarget as HTMLButtonElement;
+        const text = target.innerText;
         console.log(target.innerText);
 
         switch (text) {
             case 'Favorite':
-                let s1 = await addToFavorWatch(
+                const s1 = await addToFavorWatch(
                     'favorite',
                     content,
                     contentId,
@@ -77,7 +48,7 @@ export default function FavorWatchButton({
                 }
                 break;
             case 'UnFavorite':
-                let s2 = await removeFavorWatch(
+                const s2 = await removeFavorWatch(
                     'favorite',
                     content,
                     contentId,
@@ -92,7 +63,7 @@ export default function FavorWatchButton({
                 }
                 break;
             case 'Add to Watchlist':
-                let s3 = await addToFavorWatch(
+                const s3 = await addToFavorWatch(
                     'watchlist',
                     content,
                     contentId,
@@ -109,7 +80,7 @@ export default function FavorWatchButton({
                 }
                 break;
             case 'Remove from Watchlist':
-                let s4 = await removeFavorWatch(
+                const s4 = await removeFavorWatch(
                     'watchlist',
                     content,
                     contentId,
@@ -130,13 +101,13 @@ export default function FavorWatchButton({
 
     return (
         <>
-            {whichOne === 'favorite' ?
+            {whichOne === 'favorite' ? (
                 <button
                     className="flex items-center justify-start gap-2"
                     type="button"
                     onClick={handleClick}
                 >
-                    {canFavorite ?
+                    {canFavorite ? (
                         <>
                             <svg
                                 width="30px"
@@ -152,7 +123,8 @@ export default function FavorWatchButton({
                             </svg>
                             Favorite
                         </>
-                    :   <>
+                    ) : (
+                        <>
                             <svg
                                 width="30px"
                                 height="30px"
@@ -167,14 +139,15 @@ export default function FavorWatchButton({
                             </svg>
                             UnFavorite
                         </>
-                    }
+                    )}
                 </button>
-            :   <button
+            ) : (
+                <button
                     className="flex items-center justify-start gap-2"
                     type="button"
                     onClick={handleClick}
                 >
-                    {canAddToWatchlist ?
+                    {canAddToWatchlist ? (
                         <>
                             <svg
                                 className="fill-brand-blue shrink-0"
@@ -188,7 +161,8 @@ export default function FavorWatchButton({
                             </svg>
                             Add to Watchlist
                         </>
-                    :   <>
+                    ) : (
+                        <>
                             <svg
                                 className="fill-brand-blue"
                                 width="30px"
@@ -201,9 +175,9 @@ export default function FavorWatchButton({
                             </svg>
                             Remove from Watchlist
                         </>
-                    }
+                    )}
                 </button>
-            }
+            )}
         </>
     );
 }

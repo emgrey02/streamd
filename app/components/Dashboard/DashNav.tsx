@@ -7,11 +7,10 @@ export default function DashNav() {
     const pathname = usePathname();
     const pathnameArray = pathname.slice(1).split('/');
     const dashPage = pathnameArray[0];
-    const category =
-        pathnameArray[1] || localStorage.getItem('dashCat') || 'favorites';
-    console.log(dashPage, category);
+    const category = pathnameArray[1];
 
     useEffect(() => {
+        console.log('setting new category: ', category);
         localStorage.setItem('dashCat', category);
     }, [category]);
 
