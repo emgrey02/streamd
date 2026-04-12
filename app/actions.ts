@@ -75,11 +75,11 @@ export async function searchForContent(search: string, pageNum: number) {
 
     console.log(movieResult, tvResult);
 
-    movieResult.results.forEach((r: any) => {
+    movieResult.results.forEach((r: ContentItem) => {
         r.media_type = 'movie';
     });
 
-    tvResult.results.forEach((r: any) => {
+    tvResult.results.forEach((r: ContentItem) => {
         r.media_type = 'tv';
     });
 
@@ -306,7 +306,7 @@ export async function createTmdbSession(rt: string) {
     const accessTokenResJson = await accessTokenRes.json();
 
     if (!accessTokenRes.ok) {
-        //console.log(accessTokenResJson);
+        console.log(accessTokenResJson);
         console.error('failed to get accessToken');
     } else {
         //console.log(accessTokenResJson);
@@ -787,11 +787,11 @@ export async function deleteListItem(
         }),
     };
 
-    let res = await fetch(
+    const res = await fetch(
         `https://api.themoviedb.org/4/list/${listId}/items`,
         options
     );
-    let resJson = await res.json();
+    const resJson = await res.json();
 
     if (!res.ok) {
         console.log(resJson);
@@ -830,11 +830,11 @@ export async function addNote(
         }),
     };
 
-    let res = await fetch(
+    const res = await fetch(
         `https://api.themoviedb.org/4/list/${listId}/items`,
         options
     );
-    let resJson = await res.json();
+    const resJson = await res.json();
 
     if (!res.ok) {
         console.log(resJson);
@@ -861,12 +861,12 @@ export async function getItemStatus(
         cache: 'no-cache',
     };
 
-    let res = await fetch(
+    const res = await fetch(
         `https://api.themoviedb.org/4/list/${listId}/item_status?media_id=${mi}&media_type=${mt}`,
         options
     );
 
-    let status = await res.json();
+    const status = await res.json();
 
     if (!status.success) {
         console.log(`item is not on list ${listId}`);

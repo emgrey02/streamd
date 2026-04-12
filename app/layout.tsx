@@ -2,9 +2,8 @@ import { Exo } from 'next/font/google';
 import Link from 'next/link';
 import './globals.css';
 import { Metadata } from 'next';
-import { cookies } from 'next/headers';
-import TmdbSignIn from './components/TmdbSignIn';
-import TmdbSignOut from './components/TmdbSignOut';
+import { Suspense } from 'react';
+import SecondaryNav from './components/Home/SecondaryNav';
 
 //Mina weight: ['400', '700'],
 const inter = Exo({
@@ -22,7 +21,7 @@ export const metadata: Metadata = {
     applicationName: 'streamd',
     referrer: 'origin-when-cross-origin',
     keywords: ['movies', 'shows', 'actors'],
-    authors: [{ name: 'Emma', url: 'https://emmagrey.netlify.app' }],
+    authors: [{ name: 'Emma', url: 'https://emmagrey.dev' }],
     creator: 'Emma Grey',
     formatDetection: {
         email: false,
@@ -36,25 +35,21 @@ export default async function RootLayout({
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    const cookieStore = await cookies();
-    const sessionId = cookieStore.get('sessionId')?.value;
-    const username = cookieStore.get('username')?.value;
-
     return (
         <html lang="en scroll-auto">
             <body
                 className={`${inter.className} w-full h-full relative bg-slate-800 text-gray-300 flex flex-col items-center`}
             >
-                <div className="h-screen w-full grid place-items-center">
+                {/* <div className="h-screen w-full grid place-items-center">
                     <h1 className="text-3xl max-w-[35ch] text-center">
                         streamd is currently undergoing maintenance. sorry for
                         the inconvenience.
                     </h1>
-                </div>
-                {/* <div
+                </div> */}
+                <div
                     className={`min-h-svh max-w-7xl flex flex-col w-full h-full`}
                 >
-                     <nav
+                    <nav
                         aria-label="primary navigation"
                         className="flex flex-col sm:flex-row justify-center sm:justify-between items-center w-full py-2 px-4 "
                     >
@@ -88,41 +83,9 @@ export default async function RootLayout({
                             </li>
                         </ul>
                     </nav>
-                    <nav
-                        aria-label="secondary navigation"
-                        className={`flex justify-between items-center w-full h-fit mb-8 sm:py-4 px-4 bg-slate-700/50`}
-                    >
-                        <div>
-                            {sessionId && username ?
-                                <div>
-                                    <p>hello {username}!</p>
-                                </div>
-                            :   <div>
-                                    <p>
-                                        Sign in to save movies/tv to your own
-                                        lists, favorites, or watchlist.
-                                    </p>
-                                </div>
-                            }
-                        </div>
-                        <ul
-                            className={`flex flex-wrap gap-y-6 m-4 w-fit sm:m-0 gap-4`}
-                        >
-                            <li>
-                                <Link
-                                    className="hover:bg-slate-900 bg-slate-700/40 ring-1 ring-gray-900 px-2 py-2 text-brand-blue transition"
-                                    href="/dashboard/"
-                                >
-                                    dashboard
-                                </Link>
-                            </li>
-                            <li>
-                                {sessionId ?
-                                    <TmdbSignOut />
-                                :   <TmdbSignIn />}
-                            </li>
-                        </ul>
-                    </nav>
+                    <Suspense fallback={<p>Loading...</p>}>
+                        <SecondaryNav />
+                    </Suspense>
                     {children}
                 </div>
                 <footer className="flex flex-col self-stretch left-0 bottom-0 right-0 text-slate-300 items-center gap-4 mt-2 pt-20 pb-20 bg-slate-900/80">
@@ -161,7 +124,7 @@ export default async function RootLayout({
                     </p>
                     <p>designed & developed by emma grey</p>
                     <p>&copy; 2024</p>
-                </footer> */}
+                </footer>
             </body>
         </html>
     );
