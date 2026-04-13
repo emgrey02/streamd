@@ -4,6 +4,7 @@ import './globals.css';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import SecondaryNav from './components/Home/SecondaryNav';
+import { Analytics } from '@vercel/analytics/next';
 
 //Mina weight: ['400', '700'],
 const inter = Exo({
