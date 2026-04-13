@@ -88,6 +88,7 @@ export default async function RootLayout({
                         <SecondaryNav />
                     </Suspense>
                     {children}
+                    <Analytics />
                 </div>
                 <footer className="flex flex-col self-stretch left-0 bottom-0 right-0 text-slate-300 items-center gap-4 mt-2 pt-20 pb-20 bg-slate-900/80">
                     <svg
