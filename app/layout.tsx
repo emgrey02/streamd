@@ -37,7 +37,7 @@ export default async function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en scroll-auto">
+        <html lang="en" className="scroll-auto">
             <body
                 className={`${inter.className} w-full h-full relative bg-slate-800 text-gray-300 flex flex-col items-center`}
             >
