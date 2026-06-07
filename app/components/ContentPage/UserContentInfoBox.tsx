@@ -14,45 +14,50 @@ export default async function UserContentInfoBox(props: { id: string }) {
     const accountObjectId = cookieStore.get('accountObjectId')?.value;
     const accessToken = cookieStore.get('accessToken')?.value;
 
-    const accountInfoOptions: RequestInit = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-        cache: 'no-store',
-    };
+    let favWatchRated;
+    let deets;
 
-    const movieFavWatchRated = await fetch(
-        `https://api.themoviedb.org/3/movie/${id}/account_states?session_id=${sessionId}`,
-        accountInfoOptions
-    );
+    if (accountId && sessionId) {
+        const accountInfoOptions: RequestInit = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+            },
+            cache: 'no-store',
+        };
 
-    if (!movieFavWatchRated.ok) {
-        console.error('failed to fetch movie fav/watch/rated info');
+        const movieFavWatchRated = await fetch(
+            `https://api.themoviedb.org/3/movie/${id}/account_states?session_id=${sessionId}`,
+            accountInfoOptions
+        );
+
+        if (!movieFavWatchRated.ok) {
+            console.error('failed to fetch movie fav/watch/rated info');
+        }
+
+        favWatchRated = await movieFavWatchRated.json();
+
+        const options: RequestInit = {
+            method: 'GET',
+            headers: {
+                accept: 'application/json',
+                Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+            },
+            cache: 'force-cache',
+        };
+
+        const res = await fetch(
+            `https://api.themoviedb.org/3/movie/${id}?language=en-US`,
+            options
+        );
+
+        if (!res.ok) {
+            console.error('failed to fetch movie data');
+        }
+
+        deets = await res.json();
     }
-
-    const favWatchRated = await movieFavWatchRated.json();
-
-    const options: RequestInit = {
-        method: 'GET',
-        headers: {
-            accept: 'application/json',
-            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-        },
-        cache: 'force-cache',
-    };
-
-    const res = await fetch(
-        `https://api.themoviedb.org/3/movie/${id}?language=en-US`,
-        options
-    );
-
-    if (!res.ok) {
-        console.error('failed to fetch movie data');
-    }
-
-    const deets = await res.json();
 
     return (
         <>

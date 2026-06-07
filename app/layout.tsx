@@ -125,7 +125,7 @@ export default async function RootLayout({
                         certified by TMDB
                     </p>
                     <p>designed & developed by emma grey</p>
-                    <p>&copy; 2024</p>
+                    <p>&copy; 2023-2026</p>
                 </footer>
             </body>
         </html>
