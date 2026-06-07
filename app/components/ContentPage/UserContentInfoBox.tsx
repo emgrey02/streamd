@@ -5,7 +5,10 @@ import { cookies } from 'next/headers';
 import SubmitRating from '@/app/components/ContentPage/SubmitRating';
 import FavorWatchButton from '@/app/components/ContentPage/FavorWatchButton';
 
-export default async function UserContentInfoBox(props: { id: string }) {
+export default async function UserContentInfoBox(props: {
+    id: string;
+    content: string;
+}) {
     const id = props.id;
 
     const cookieStore = await cookies();
@@ -17,6 +20,15 @@ export default async function UserContentInfoBox(props: { id: string }) {
     let favWatchRated;
     let deets;
 
+    const options: RequestInit = {
+        method: 'GET',
+        headers: {
+            accept: 'application/json',
+            Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
+        },
+        cache: 'force-cache',
+    };
+
     if (accountId && sessionId) {
         const accountInfoOptions: RequestInit = {
             method: 'GET',
@@ -27,47 +39,73 @@ export default async function UserContentInfoBox(props: { id: string }) {
             cache: 'no-store',
         };
 
-        const movieFavWatchRated = await fetch(
-            `https://api.themoviedb.org/3/movie/${id}/account_states?session_id=${sessionId}`,
-            accountInfoOptions
-        );
+        if (props.content == 'movie') {
+            const movieFavWatchRated = await fetch(
+                `https://api.themoviedb.org/3/movie/${id}/account_states?session_id=${sessionId}`,
+                accountInfoOptions
+            );
 
-        if (!movieFavWatchRated.ok) {
-            console.error('failed to fetch movie fav/watch/rated info');
+            if (!movieFavWatchRated.ok) {
+                console.error('failed to fetch movie fav/watch/rated info');
+            } else {
+                console.log('fetched fav/watched/rated movie info');
+            }
+
+            favWatchRated = await movieFavWatchRated.json();
+
+            const res = await fetch(
+                `https://api.themoviedb.org/3/movie/${id}?language=en-US`,
+                options
+            );
+
+            if (!res.ok) {
+                console.error('failed to fetch movie data');
+            } else {
+                console.log('fetched movie data');
+            }
+
+            deets = await res.json();
+        } else {
+            const tvFavWatchRated = await fetch(
+                `https://api.themoviedb.org/3/tv/${id}/account_states?session_id=${sessionId}`,
+                accountInfoOptions
+            );
+
+            if (!tvFavWatchRated.ok) {
+                console.error('failed to fetch tv fav/watch/rated info');
+            } else {
+                console.log('fetched tv fav/watch/rated info');
+            }
+
+            favWatchRated = await tvFavWatchRated.json();
+
+            const res = await fetch(
+                `https://api.themoviedb.org/3/tv/${id}?language=en-US`,
+                options
+            );
+
+            if (!res.ok) {
+                console.error('failed to fetch tv data');
+            } else {
+                console.log('fetched tv info');
+            }
+
+            deets = await res.json();
         }
-
-        favWatchRated = await movieFavWatchRated.json();
-
-        const options: RequestInit = {
-            method: 'GET',
-            headers: {
-                accept: 'application/json',
-                Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
-            },
-            cache: 'force-cache',
-        };
-
-        const res = await fetch(
-            `https://api.themoviedb.org/3/movie/${id}?language=en-US`,
-            options
-        );
-
-        if (!res.ok) {
-            console.error('failed to fetch movie data');
-        }
-
-        deets = await res.json();
     }
 
     return (
         <>
             {accountId && sessionId && (
                 <div className="flex flex-col gap-4 self-end w-full grow bg-slate-900/60 p-4">
+                    {props.content == 'movie'}
                     <div className="flex flex-col gap-6">
                         <div className="grid grid-cols-1 gap-2 @sm:flex @sm:flex-row @sm:gap-4 w-full">
                             <FavorWatchButton
                                 whichOne="favorite"
-                                content="movie"
+                                content={
+                                    props.content == 'movie' ? 'movie' : 'tv'
+                                }
                                 favorited={favWatchRated.favorite}
                                 contentId={deets.id}
                                 accountId={accountId}
@@ -75,7 +113,9 @@ export default async function UserContentInfoBox(props: { id: string }) {
                             />
                             <FavorWatchButton
                                 whichOne="watchlist"
-                                content="movie"
+                                content={
+                                    props.content == 'movie' ? 'movie' : 'tv'
+                                }
                                 watchlisted={favWatchRated.watchlist}
                                 contentId={deets.id}
                                 accountId={accountId}
@@ -83,7 +123,7 @@ export default async function UserContentInfoBox(props: { id: string }) {
                             />
                         </div>
                         <SubmitRating
-                            content="movie"
+                            content={props.content == 'movie' ? 'movie' : 'tv'}
                             id={deets.id}
                             sessionId={sessionId}
                             voteAvg={deets.vote_average}
@@ -92,7 +132,9 @@ export default async function UserContentInfoBox(props: { id: string }) {
                         <AddToListButton
                             accountObjectId={accountObjectId || ''}
                             accessToken={accessToken || ''}
-                            mediaType={'movie'}
+                            mediaType={
+                                props.content == 'movie' ? 'movie' : 'tv'
+                            }
                             mediaId={deets.id}
                         />
                     </div>

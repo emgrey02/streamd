@@ -80,7 +80,7 @@ export default async function Layout({ children, params }: LayoutProps) {
                         </div>
                     </div>
                     <Suspense fallback={<p>Loading...</p>}>
-                        <UserContentInfoBox id={id} />
+                        <UserContentInfoBox id={id} content="movie" />
                     </Suspense>
                 </div>
                 <ContentPageNav />

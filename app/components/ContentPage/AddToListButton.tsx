@@ -63,7 +63,7 @@ export default function AddToListButton(props: {
         setItemStatuses(currentItemStatuses);
     };
 
-    console.log(itemStatuses);
+    //console.log(itemStatuses);
 
     return (
         <div className="flex flex-col items-start bg-slate-700 relative w-full">
@@ -84,7 +84,7 @@ export default function AddToListButton(props: {
                         >
                             <p>{l.name}</p>
                             <div className="flex justify-between gap-2">
-                                {itemStatuses[index].isItemInList ?
+                                {itemStatuses[index].isItemInList ? (
                                     <button
                                         onClick={() => {
                                             setStatusLoading(true);
@@ -106,11 +106,12 @@ export default function AddToListButton(props: {
                                         }}
                                         className={`w-full text-start cursor-pointer'}`}
                                     >
-                                        {statusLoading ?
-                                            'loading...'
-                                        :   'Remove'}
+                                        {statusLoading
+                                            ? 'loading...'
+                                            : 'Remove'}
                                     </button>
-                                :   <button
+                                ) : (
+                                    <button
                                         onClick={() => {
                                             setStatusLoading(true);
 
@@ -133,7 +134,7 @@ export default function AddToListButton(props: {
                                     >
                                         {statusLoading ? 'loading...' : `Add`}
                                     </button>
-                                }
+                                )}
                             </div>
                         </li>
                     ))}
