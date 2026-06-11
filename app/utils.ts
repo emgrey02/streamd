@@ -19,7 +19,7 @@ export function getDate(birthday: string) {
 }
 
 export function getRuntime(min: number) {
-    const hrs = (min / 60).toFixed(0);
+    const hrs = Math.trunc(min / 60);
     const mins = min % 60;
     return `${hrs}h ${mins}m`;
 }
