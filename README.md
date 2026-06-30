@@ -1,11 +1,30 @@
-# Welcome to streamd
+![App Screenshot](https://res.cloudinary.com/greypse/image/upload/c_fill,g_auto,h_250,w_970/b_rgb:000000,e_gradient_fade,y_-0.50/c_scale,co_rgb:ffffff,fl_relative,l_text:montserrat_25_style_light_align_center:Shop%20Now,w_0.5,y_0.18/v1782829788/streamd_ibpyog.png)
 
-This is a website where you can learn about movies, tv shows, and the people involved with them. When you sign in, you can save movies and tv shows to your favorites, add them to your watchlist, and give them your own rating out of 10. This website gets all of its information from TMDB (The movie database) and utilizes its API.
 
-Made with:
+# streamd
 
--   Nextjs
--   Typescript
--   Tailwind
--   Vercel (deployment)
--   Figma (planning & design)
+A Movie & TV Discovery Web App
+
+
+## Features
+
+- Search for movies, tv shows, and people by name
+- Browse new, trending, and popular movies and tv shows
+- Investigate the cast and crew members of your favorite movies and tv shows
+- Learn the movie/tv show's runtime, budget, revenue, country of origin, and more!
+- Dive into your favorite shows by season and even episode
+- Peruse all the movie and tv show posters and logos
+- Click a tag/keyword to see movies and tv shows also with that tag
+- Sign up to favorite, rate, and make your own lists of content
+- Fully responsive
+
+
+## Tech Stack
+
+- Nextjs
+- React
+- Typescript
+- TailwindCSS
+- TMDB API
+- Vercel
+- Figma
