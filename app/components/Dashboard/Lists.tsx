@@ -13,13 +13,31 @@ type Props = {
     accountObjectId?: string;
 };
 
+type TmdbListDetail = {
+    id: string;
+    name: string;
+    description: string;
+    backdrop_path?: string | null;
+    public: boolean | number;
+    number_of_items: number;
+    created_at: string;
+    updated_at: string;
+};
+
+export type ListFormData = {
+    id: string;
+    name: string;
+    desc: string;
+    pub: boolean;
+};
+
 export default function Lists({ accessToken, accountObjectId }: Props) {
     const router = useRouter();
     const [message, setMessage] = useState('');
-    const [lists, setLists] = useState<any>([]);
+    const [lists, setLists] = useState<TmdbListDetail[]>([]);
     const [listsUpdated, setListsUpdated] = useState<boolean>(false);
     const [editMode, setEditMode] = useState<boolean>(false);
-    const [listData, setListData] = useState<any>('');
+    const [listData, setListData] = useState<ListFormData | undefined>();
 
     useEffect(() => {
         async function getThoseLists() {
@@ -30,7 +48,7 @@ export default function Lists({ accessToken, accountObjectId }: Props) {
                 setMessage('Create some lists!');
                 setListsUpdated(false);
                 setEditMode(false);
-                setListData('');
+                setListData(undefined);
             }
         }
         getThoseLists();
@@ -52,10 +70,10 @@ export default function Lists({ accessToken, accountObjectId }: Props) {
         id: string,
         name: string,
         desc: string,
-        pub: boolean
+        pub: boolean | number
     ) => {
         setEditMode(true);
-        setListData({ id, name, desc, pub });
+        setListData({ id, name, desc, pub: Boolean(pub) });
     };
 
     return (
@@ -64,7 +82,7 @@ export default function Lists({ accessToken, accountObjectId }: Props) {
                 <h2 className="text-3xl">Your Lists</h2>
                 {lists && lists.length > 0 ? (
                     <ul className="flex flex-col gap-4">
-                        {lists.map((l: any, index: number) => (
+                        {lists.map((l: TmdbListDetail, index: number) => (
                             <li
                                 key={index}
                                 className="flex flex-col gap-1 border-2 border-slate-900 w-full py-2 px-4 hover:bg-slate-700"

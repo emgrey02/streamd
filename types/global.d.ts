@@ -49,6 +49,19 @@ declare global {
         year: string;
     };
 
+    type EpisodeItem = {
+        id: number;
+        name: string;
+        overview?: string;
+        still_path: string | null;
+        air_date: string;
+        episode_number: number;
+        season_number: number;
+        runtime: number | null;
+        vote_average?: number;
+        vote_count?: number;
+    };
+
     type CastCrewItem = {
         id: number;
         gender?: number;

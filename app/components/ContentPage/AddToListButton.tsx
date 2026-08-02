@@ -8,38 +8,41 @@ import {
     getLists,
 } from '../../actions';
 
+type TmdbList = { id: string; name: string };
+type ItemStatus = { id: string; isItemInList: boolean };
+
 export default function AddToListButton(props: {
     accountObjectId: string;
     accessToken: string;
     mediaType: string;
     mediaId: number;
 }) {
-    const [lists, setLists] = useState<any>();
+    const [lists, setLists] = useState<TmdbList[]>([]);
     const [showOptions, setShowOptions] = useState(false);
-    const [itemStatuses, setItemStatuses] = useState<any>([]);
+    const [itemStatuses, setItemStatuses] = useState<ItemStatus[]>([]);
     const [statusLoading, setStatusLoading] = useState(false);
 
     useEffect(() => {
         const getAllLists = async () => {
-            let listOfLists = await getLists(props.accountObjectId, 1);
+            const listOfLists = await getLists(props.accountObjectId, 1);
             setLists(listOfLists);
             return listOfLists;
         };
 
         const getStatuses = async () => {
-            let lists = await getAllLists();
+            const lists = await getAllLists();
 
             if (lists && lists.length > 0) {
-                let finalArray: any = [];
+                const finalArray: ItemStatus[] = [];
 
                 for (const list of lists) {
-                    let stat = await getItemStatus(
+                    const stat = await getItemStatus(
                         props.accessToken,
                         list.id,
                         props.mediaType,
                         props.mediaId
                     );
-                    let newStateObj = { id: list.id, isItemInList: stat };
+                    const newStateObj = { id: list.id, isItemInList: stat };
                     finalArray.push(newStateObj);
                 }
 
@@ -56,9 +59,9 @@ export default function AddToListButton(props: {
     ]);
 
     const updateItemStatus = (listId: string, isInList: boolean) => {
-        let newStateObj = { id: listId, isItemInList: isInList };
-        let currentItemStatuses = [...itemStatuses];
-        let index = itemStatuses.map((e: any) => e.id).indexOf(listId);
+        const newStateObj = { id: listId, isItemInList: isInList };
+        const currentItemStatuses = [...itemStatuses];
+        const index = itemStatuses.map((e: ItemStatus) => e.id).indexOf(listId);
         currentItemStatuses[index] = newStateObj;
         setItemStatuses(currentItemStatuses);
     };
@@ -77,7 +80,7 @@ export default function AddToListButton(props: {
             </button>
             {showOptions && itemStatuses.length > 0 && (
                 <ul className="bg-slate-600 absolute top-full w-full">
-                    {lists.map((l: any, index: number) => (
+                    {lists.map((l: TmdbList, index: number) => (
                         <li
                             className={`p-2 ${!itemStatuses[index].isItemInList ? 'hover:bg-slate-900' : 'hover:none'} flex justify-between`}
                             key={index}

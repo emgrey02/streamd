@@ -1,28 +1,35 @@
 'use client';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-export default function StreamRentBuy(props: { content: any }) {
-    const [currentTab, setCurrentTab] = useState('Stream it');
-    const [currentContent, setCurrentContent] = useState<any>(null);
+type WatchProvider = { provider_name: string; logo_path: string | null };
+type WatchProviderRegion = {
+    link: string;
+    flatrate?: WatchProvider[];
+    buy?: WatchProvider[];
+    rent?: WatchProvider[];
+};
+
+export default function StreamRentBuy(props: {
+    content: WatchProviderRegion | null;
+}) {
+    const [currentTab, setCurrentTab] = useState<
+        'Stream it' | 'Buy it' | 'Rent it'
+    >('Stream it');
     const content = props.content;
-    console.log(content);
 
-    useEffect(() => {
-        switch (currentTab) {
-            case 'Stream it':
-                setCurrentContent(content?.flatrate);
-                break;
-            case 'Buy it':
-                setCurrentContent(content?.buy);
-                break;
-            case 'Rent it':
-                setCurrentContent(content?.rent);
-                break;
-            default:
-                break;
-        }
-    }, [currentTab, content]);
+    let currentContent: WatchProvider[] | undefined;
+    switch (currentTab) {
+        case 'Stream it':
+            currentContent = content?.flatrate;
+            break;
+        case 'Buy it':
+            currentContent = content?.buy;
+            break;
+        case 'Rent it':
+            currentContent = content?.rent;
+            break;
+    }
 
     return (
         <>
@@ -58,7 +65,7 @@ export default function StreamRentBuy(props: { content: any }) {
 
                         <ul className="flex flex-wrap gap-4 w-full">
                             {currentContent ?
-                                currentContent.map((wp: any, index: number) => (
+                                currentContent.map((wp: WatchProvider, index: number) => (
                                     <li
                                         key={index}
                                         className="w-fit flex items-center gap-2"

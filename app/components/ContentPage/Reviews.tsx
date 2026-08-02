@@ -1,7 +1,14 @@
 import Text from './Text';
 import Image from 'next/image';
 
-export default function Reviews(props: { reviews: any }) {
+type Review = {
+    author: string;
+    author_details: { rating: number | null; avatar_path: string | null };
+    content: string;
+    created_at: string;
+};
+
+export default function Reviews(props: { reviews: { results: Review[] } }) {
     const reviews = props.reviews;
 
     return (
@@ -9,14 +16,14 @@ export default function Reviews(props: { reviews: any }) {
             <h2 className="text-lg font-medium mb-8">Reviews</h2>
             <div className="grid max-w-3xl">
                 {reviews.results.length > 0 ? (
-                    reviews.results.map((post: any, index: number) => (
+                    reviews.results.map((post: Review, index: number) => (
                         <div key={index} className="grid gap-2 max-w-2xl ">
                             <div className="flex flex-col gap-2 text-end">
                                 <div className="h-5 w-50 relative overflow-hidden bg-slate-900">
                                     <div
                                         className={`h-full bg-green-300/70 absolute`}
                                         style={{
-                                            width: `${post.author_details.rating * 10}%`,
+                                            width: `${(post.author_details.rating ?? 0) * 10}%`,
                                         }}
                                     ></div>
                                 </div>

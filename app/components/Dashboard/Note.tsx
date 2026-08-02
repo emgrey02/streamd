@@ -2,7 +2,11 @@
 
 import { useState } from 'react';
 
-export default function Note(props: { comments: any; mt: string; mi: string }) {
+export default function Note(props: {
+    comments: Record<string, string>;
+    mt: string;
+    mi: string;
+}) {
     const [showNote, setShowNote] = useState(false);
 
     return (

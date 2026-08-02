@@ -69,7 +69,14 @@ export default async function ListPage({
                     {list.results && (
                         <div className="@container">
                             <ul className="flex flex-col gap-4 ">
-                                {list.results.map((c: any, index: number) => (
+                                {list.results.map(
+                                    (
+                                        c: ContentItem & {
+                                            first_air_date?: string;
+                                            release_date?: string;
+                                        },
+                                        index: number
+                                    ) => (
                                     <li
                                         key={index}
                                         className="flex flex-col items-start relative"
@@ -101,19 +108,19 @@ export default async function ListPage({
                                         <DeleteListItemButton
                                             at={accessToken || ''}
                                             listId={id}
-                                            mt={c.media_type}
+                                            mt={c.media_type || ''}
                                             mi={+c.id}
                                         />
                                         <div className="flex justify-between w-full">
                                             <Note
                                                 comments={list.comments}
-                                                mt={c.media_type}
-                                                mi={c.id}
+                                                mt={c.media_type || ''}
+                                                mi={c.id.toString()}
                                             />
                                             <AddNoteButton
                                                 at={accessToken || ''}
                                                 listId={id}
-                                                mt={c.media_type}
+                                                mt={c.media_type || ''}
                                                 mi={+c.id}
                                             />
                                         </div>

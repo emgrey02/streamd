@@ -3,8 +3,10 @@
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
+type ImageAsset = { file_path: string };
+
 export default function ImageSlider(props: {
-    images: any;
+    images: ImageAsset[];
     type: 'Backdrops' | 'Posters' | 'Logos';
 }) {
     const images = props.images;
@@ -38,22 +40,22 @@ export default function ImageSlider(props: {
     }
 
     useEffect(() => {
-        let windowWidth = window.innerWidth;
-        let middle = windowWidth / 2;
+        const windowWidth = window.innerWidth;
+        const middle = windowWidth / 2;
 
-        let selectedEl: HTMLElement | null = document.querySelector(
+        const selectedEl: HTMLElement | null = document.querySelector(
             `#${props.type} li:nth-child(${slideNum + 1})`
         );
-        let scrollCont = selectedEl?.parentElement;
+        const scrollCont = selectedEl?.parentElement;
 
         if (selectedEl && scrollCont) {
-            let elWidth = selectedEl.offsetWidth;
-            let elCenter =
+            const elWidth = selectedEl.offsetWidth;
+            const elCenter =
                 selectedEl.getBoundingClientRect().left + elWidth / 2;
 
-            let totalContWidth = scrollCont.scrollWidth;
-            let currentScrollDistance = scrollCont.scrollLeft;
-            let maxScrollDistance = totalContWidth - scrollCont.clientWidth;
+            const totalContWidth = scrollCont.scrollWidth;
+            const currentScrollDistance = scrollCont.scrollLeft;
+            const maxScrollDistance = totalContWidth - scrollCont.clientWidth;
 
             if (
                 elCenter >= middle &&
@@ -84,7 +86,7 @@ export default function ImageSlider(props: {
                             id={props.type}
                             className={`flex overflow-x-scroll overflow-y-clip gap-4 ${heights}`}
                         >
-                            {images.map((i: any, index: number) => (
+                            {images.map((i: ImageAsset, index: number) => (
                                 <li key={index}>
                                     <button
                                         className={`${slideNum === index ? widths.selected : widths.default} transition-all`}

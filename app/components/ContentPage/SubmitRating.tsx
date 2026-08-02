@@ -19,10 +19,10 @@ export default function SubmitRating(props: {
     const [isRating, setIsRating] = useState(false);
     const [userRating, setUserRating] = useState(0);
     const [hasUserRated, setHasUserRated] = useState(false);
-    const [progress, setProgress] = useState({ width: '0px' });
     const [youProgress, setYouProgress] = useState({ width: '0px' });
 
     const voteAverage = Math.round(props.voteAvg * 10) / 10;
+    const progress = convertRating(voteAverage);
 
     function deletePrevRating() {
         if (props.seasonNum && props.episodeNum) {
@@ -119,8 +119,6 @@ export default function SubmitRating(props: {
             }
         }
 
-        const convertedRating = convertRating(voteAverage);
-        setProgress(convertedRating);
         seeIfUserRated();
     }, [
         props.content,

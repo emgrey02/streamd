@@ -6,45 +6,40 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function AddContentToList(props: { at: string; id: string }) {
-    const [searchResults, setSearchResults] = useState<any>();
+    const [searchResults, setSearchResults] = useState<ContentItem[] | null>(
+        null
+    );
     const [searchValue, setSearchValue] = useState('');
     const [pageNum, setPageNum] = useState(1);
     const router = useRouter();
-    const [itemStatuses, setItemStatuses] = useState<any>();
+    const [itemStatuses, setItemStatuses] = useState<boolean[]>([]);
 
     const LoadMore = () => {
         setPageNum(pageNum + 1);
     };
 
     const getItemStatuses = async () => {
+        if (!searchResults) return;
         for (let i = 0; i < searchResults.length; i++) {
             const itemStatus = await getItemStatus(
                 props.at,
                 props.id,
-                searchResults[i].media_type,
+                searchResults[i].media_type || '',
                 searchResults[i].id
-            ).then(() =>
-                setItemStatuses((itemStatuses: any) => [
-                    ...itemStatuses,
-                    itemStatus,
-                ])
             );
+            setItemStatuses((prev) => [...prev, itemStatus]);
         }
     };
 
     useEffect(() => {
+        if (searchValue.length <= 2) return;
+
         const doASearch = async () => {
             const results = await searchForContent(searchValue, pageNum);
             setSearchResults(results);
         };
 
-        if (searchValue.length > 2) {
-            doASearch();
-        } else {
-            setSearchResults(null);
-            setPageNum(1);
-            setItemStatuses(null);
-        }
+        doASearch();
     }, [searchValue, pageNum]);
 
     return (
@@ -56,7 +51,13 @@ export default function AddContentToList(props: { at: string; id: string }) {
                 <input
                     className="text-slate-900 bg-slate-300 ps-2 py-1"
                     onChange={(e) => {
-                        setSearchValue(e.target.value);
+                        const value = e.target.value;
+                        setSearchValue(value);
+                        if (value.length <= 2) {
+                            setSearchResults(null);
+                            setPageNum(1);
+                            setItemStatuses([]);
+                        }
                         getItemStatuses();
                     }}
                     type="text"
@@ -67,7 +68,7 @@ export default function AddContentToList(props: { at: string; id: string }) {
             {searchResults && (
                 <div className="bg-slate-900">
                     <ul className="grid gap-4 overflow-y-scroll h-75 p-4">
-                        {searchResults.map((r: any, index: number) => (
+                        {searchResults.map((r: ContentItem, index: number) => (
                             <li key={index} className="flex gap-2 items-center">
                                 {r.profile_path || r.poster_path ?
                                     <Image
@@ -92,7 +93,7 @@ export default function AddContentToList(props: { at: string; id: string }) {
                                                     AddToList(
                                                         props.at,
                                                         props.id,
-                                                        r.media_type,
+                                                        r.media_type || '',
                                                         +r.id
                                                     );
                                                     router.refresh();

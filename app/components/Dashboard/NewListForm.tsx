@@ -1,22 +1,28 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { createList, updateList } from '../../actions';
+import type { ListFormData } from './Lists';
 
 export default function NewListForm(props: {
     at: string;
-    updateLists: any;
+    updateLists: () => void;
     edit: boolean;
-    data?: any;
+    data?: ListFormData;
 }) {
     const [showForm, setShowForm] = useState<boolean>(false);
-    let data = props.data;
+    const [prevEdit, setPrevEdit] = useState(props.edit);
+    const data = props.data;
 
-    console.log(props.edit);
-    console.log(data);
+    if (props.edit !== prevEdit) {
+        setPrevEdit(props.edit);
+        if (props.edit) {
+            setShowForm(true);
+        }
+    }
 
     const formAction = async (formData: FormData) => {
         if (!props.edit) {
             await createList(props.at, formData);
-        } else {
+        } else if (data) {
             await updateList(props.at, data.id, formData);
         }
         setShowForm(false);
@@ -29,12 +35,6 @@ export default function NewListForm(props: {
             props.updateLists();
         }
     };
-
-    useEffect(() => {
-        if (props.edit) {
-            setShowForm(true);
-        }
-    }, [props.edit]);
 
     return (
         <div className="flex flex-col gap-2 w-full">
@@ -55,7 +55,7 @@ export default function NewListForm(props: {
                             type="text"
                             name="list name"
                             id="list-name"
-                            defaultValue={props.data.name || ''}
+                            defaultValue={props.data?.name || ''}
                             className="text-slate-800 px-2 py-1 bg-slate-400"
                         />
                     </div>
@@ -65,7 +65,7 @@ export default function NewListForm(props: {
                             name="list description"
                             id="list-desc"
                             rows={10}
-                            defaultValue={props.data.desc || ''}
+                            defaultValue={props.data?.desc || ''}
                             className="text-slate-800 px-2 py-1 bg-slate-400"
                         ></textarea>
                     </div>
@@ -74,7 +74,7 @@ export default function NewListForm(props: {
                             type="checkbox"
                             name="public toggle"
                             id="public-toggle"
-                            defaultValue={props.data.pub || false}
+                            defaultChecked={props.data?.pub || false}
                         />
                         <label htmlFor="public-toggle" className="">
                             Make Public?
