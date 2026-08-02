@@ -55,11 +55,11 @@ export default async function Search({
 
     if (genre) {
         movies = await fetch(
-            `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${query.split('--')[0]}'`,
+            `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${query.split('--')[0]}`,
             options
         ).then((res) => res.json());
         shows = await fetch(
-            `https://api.themoviedb.org/3/discover/tv?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${query.split('--')[0]}'`,
+            `https://api.themoviedb.org/3/discover/tv?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${query.split('--')[0]}`,
             options
         ).then((res) => res.json());
     } else if (keyword) {

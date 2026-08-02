@@ -39,7 +39,7 @@ export default async function Episode({
         console.error('failed to fetch episode data');
     }
 
-    if (!res.ok) {
+    if (!seasonRes.ok) {
         console.error('failed to fetch season data');
     }
 

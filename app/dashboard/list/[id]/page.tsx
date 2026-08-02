@@ -35,16 +35,18 @@ export default async function ListPage({
     );
 
     const list = await res.json();
-    console.log(list.results);
 
-    list.results.forEach(async (res: any) => {
-        const accountInfo = await getContentAccountInfo(
-            sessionId || '',
-            res.media_type,
-            res.id
+    if (list.results) {
+        await Promise.all(
+            list.results.map((item: ContentItem) =>
+                getContentAccountInfo(
+                    sessionId || '',
+                    item.media_type || '',
+                    item.id
+                )
+            )
         );
-        console.log(accountInfo);
-    });
+    }
 
     if (!res.ok) {
         console.error('failed to get list details by id');

@@ -17,9 +17,7 @@ export default function AddContentToList(props: { at: string; id: string }) {
     };
 
     const getItemStatuses = async () => {
-        if (itemStatuses) {
-        }
-        for (let i = 0; i++; i < searchResults.length) {
+        for (let i = 0; i < searchResults.length; i++) {
             const itemStatus = await getItemStatus(
                 props.at,
                 props.id,

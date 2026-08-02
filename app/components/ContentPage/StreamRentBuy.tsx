@@ -18,6 +18,7 @@ export default function StreamRentBuy(props: { content: any }) {
                 break;
             case 'Rent it':
                 setCurrentContent(content?.rent);
+                break;
             default:
                 break;
         }

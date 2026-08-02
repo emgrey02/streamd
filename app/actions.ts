@@ -158,7 +158,7 @@ export async function genreSearch(search: string, type: string, page: string) {
     };
 
     const res = await fetch(
-        `https://api.themoviedb.org/3/discover/${type}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${search.split('--')[0]}'`,
+        `https://api.themoviedb.org/3/discover/${type}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${search.split('--')[0]}`,
         options
     );
 
