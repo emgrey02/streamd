@@ -4,9 +4,14 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { reqToken } = body;
 
+    const secureFlag =
+        process.env.NODE_ENV === 'production' ? '; Secure' : '';
+
     return new Response('successfully set cookie', {
         status: 200,
-        headers: { 'Set-Cookie': `reqToken=${reqToken}; HttpOnly; Max-Age=60` },
+        headers: {
+            'Set-Cookie': `reqToken=${reqToken}; HttpOnly; SameSite=Lax; Max-Age=60${secureFlag}`,
+        },
     });
 }
 

@@ -2,6 +2,12 @@
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 
+const secureCookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax' as const,
+};
+
 //movie,tv,people info
 
 export async function getContent(
@@ -210,7 +216,7 @@ export async function getRequestToken() {
 
 export async function setReqTokenCookie(rt: string) {
     console.log('setting request token cookie');
-    (await cookies()).set('reqToken', rt);
+    (await cookies()).set('reqToken', rt, secureCookieOptions);
     if ((await cookies()).get('reqToken')?.value === rt) {
         return 'success';
     } else {
@@ -220,7 +226,7 @@ export async function setReqTokenCookie(rt: string) {
 
 export async function setAccountIdCookie(accId: string) {
     console.log('setting account id cookie');
-    (await cookies()).set('accId', accId);
+    (await cookies()).set('accId', accId, secureCookieOptions);
 }
 
 export async function getReqTokenCookie() {
@@ -237,11 +243,15 @@ export async function setSessionCookies(
 ) {
     //console.log(sessionId, accessToken, userInfo.id, userInfo.username);
     console.log('setting user session cookies');
-    (await cookies()).set('sessionId', sessionId);
-    (await cookies()).set('accId', userInfo.id);
-    (await cookies()).set('username', userInfo.username);
-    (await cookies()).set('accessToken', accessToken);
-    (await cookies()).set('accountObjectId', accountObjectId);
+    (await cookies()).set('sessionId', sessionId, secureCookieOptions);
+    (await cookies()).set('accId', userInfo.id, secureCookieOptions);
+    (await cookies()).set('username', userInfo.username, secureCookieOptions);
+    (await cookies()).set('accessToken', accessToken, secureCookieOptions);
+    (await cookies()).set(
+        'accountObjectId',
+        accountObjectId,
+        secureCookieOptions
+    );
     console.log('session cookies are set');
 }
 
