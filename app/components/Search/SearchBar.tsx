@@ -15,8 +15,11 @@ export default function SearchBar(props: { searchTerm?: string }) {
     return (
         <div className="max-w-125">
             <form
-                onSubmit={() => {
-                    router.push(`/search/multi?query=${search}&page=1`);
+                onSubmit={(event) => {
+                    event.preventDefault();
+                    router.push(
+                        `/search/multi?query=${encodeURIComponent(search)}&page=1`
+                    );
                 }}
                 aria-label="search bar"
                 name="search"
