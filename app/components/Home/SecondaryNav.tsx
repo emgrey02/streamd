@@ -1,13 +1,36 @@
-import { cookies } from 'next/headers';
+'use client';
+
+import { useSyncExternalStore } from 'react';
 import TmdbSignIn from '../TmdbSignIn';
 import TmdbSignOut from '../TmdbSignOut';
 import DashboardLink from './DashboardLink';
-import { getSessionId } from '@/app/actions/auth';
 
-export default async function SecondaryNav() {
-    const cookieStore = await cookies();
-    const sessionId = await getSessionId();
-    const username = cookieStore.get('username')?.value;
+// Reads the non-httpOnly 'username' cookie set alongside the session cookies
+// in setSessionCookies (and cleared alongside them in deleteCookies), so its
+// presence is an accurate client-readable proxy for "signed in". Cookies
+// aren't a subscribable store, so there's nothing to notify on -- this only
+// needs to read the value once, after mount.
+function getUsernameCookie(): string | undefined {
+    const match = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith('username='));
+    return match ? decodeURIComponent(match.split('=')[1]) : undefined;
+}
+
+function subscribe() {
+    return () => {};
+}
+
+function getServerSnapshot() {
+    return undefined;
+}
+
+export default function SecondaryNav() {
+    const username = useSyncExternalStore(
+        subscribe,
+        getUsernameCookie,
+        getServerSnapshot
+    );
 
     return (
         <nav
@@ -15,7 +38,7 @@ export default async function SecondaryNav() {
             className={`flex justify-between items-center w-full h-fit mb-8 sm:py-4 px-4 bg-slate-700/50`}
         >
             <div>
-                {sessionId && username ? (
+                {username ? (
                     <div>
                         <p>hello {username}!</p>
                     </div>
@@ -32,7 +55,7 @@ export default async function SecondaryNav() {
                 <li>
                     <DashboardLink />
                 </li>
-                <li>{sessionId ? <TmdbSignOut /> : <TmdbSignIn />}</li>
+                <li>{username ? <TmdbSignOut /> : <TmdbSignIn />}</li>
             </ul>
         </nav>
     );

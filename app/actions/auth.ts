@@ -9,6 +9,15 @@ const secureCookieOptions = {
     sameSite: 'lax' as const,
 };
 
+// Not httpOnly: this cookie only holds a display name, never a credential.
+// It exists so client components can show sign-in state without calling
+// next/headers' cookies() (which would force every route to render dynamically).
+const publicCookieOptions = {
+    httpOnly: false,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax' as const,
+};
+
 //account log-in and log-out tasks
 export async function getRequestToken() {
     const options: RequestInit = {
@@ -59,7 +68,7 @@ export async function setSessionCookies(
 ) {
     (await cookies()).set('sessionId', encrypt(sessionId), secureCookieOptions);
     (await cookies()).set('accId', userInfo.id, secureCookieOptions);
-    (await cookies()).set('username', userInfo.username, secureCookieOptions);
+    (await cookies()).set('username', userInfo.username, publicCookieOptions);
     (await cookies()).set(
         'accessToken',
         encrypt(accessToken),
