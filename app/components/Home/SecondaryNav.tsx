@@ -2,10 +2,11 @@ import { cookies } from 'next/headers';
 import TmdbSignIn from '../TmdbSignIn';
 import TmdbSignOut from '../TmdbSignOut';
 import DashboardLink from './DashboardLink';
+import { getSessionId } from '@/app/actions/auth';
 
 export default async function SecondaryNav() {
     const cookieStore = await cookies();
-    const sessionId = cookieStore.get('sessionId')?.value;
+    const sessionId = await getSessionId();
     const username = cookieStore.get('username')?.value;
 
     return (

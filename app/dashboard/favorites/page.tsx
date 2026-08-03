@@ -1,10 +1,11 @@
 import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 import { cookies } from 'next/headers';
 import { fetchAllTmdbPages } from '@/app/lib/tmdb';
+import { getSessionId } from '@/app/actions/auth';
 
 export default async function Page() {
     const cookieStore = await cookies();
-    const sessionId: string | undefined = cookieStore.get('sessionId')?.value;
+    const sessionId = await getSessionId();
     const accountId: string | undefined = cookieStore.get('accId')?.value;
 
     const options = {

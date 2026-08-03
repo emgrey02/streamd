@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import SubmitRating from '@/app/components/ContentPage/SubmitRating';
 import FavorWatchButton from '@/app/components/ContentPage/FavorWatchButton';
 import { fetchTmdb } from '@/app/lib/tmdb';
+import { getAccessToken, getSessionId } from '@/app/actions/auth';
 
 export default async function UserContentInfoBox(props: {
     id: string;
@@ -13,10 +14,12 @@ export default async function UserContentInfoBox(props: {
     const id = props.id;
 
     const cookieStore = await cookies();
-    const sessionId = cookieStore.get('sessionId')?.value;
+    const [sessionId, accessToken] = await Promise.all([
+        getSessionId(),
+        getAccessToken(),
+    ]);
     const accountId = cookieStore.get('accId')?.value;
     const accountObjectId = cookieStore.get('accountObjectId')?.value;
-    const accessToken = cookieStore.get('accessToken')?.value;
 
     let favWatchRated;
     let deets;

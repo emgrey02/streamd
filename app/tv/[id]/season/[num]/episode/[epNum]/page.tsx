@@ -1,5 +1,4 @@
 import Text from '@/app/components/ContentPage/Text';
-import { cookies } from 'next/headers';
 import Image from 'next/image';
 import BackButton from '@/app/components/BackButton';
 import SubmitRating from '@/app/components/ContentPage/SubmitRating';
@@ -7,6 +6,7 @@ import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 import Link from 'next/link';
 import { getDate, getRuntime } from '@/app/utils';
 import { fetchTmdb } from '@/app/lib/tmdb';
+import { getSessionId } from '@/app/actions/auth';
 
 export default async function Episode({
     params,
@@ -15,8 +15,7 @@ export default async function Episode({
 }) {
     const { id, num, epNum } = await params;
 
-    const cookieStore = await cookies();
-    const sessionId = cookieStore.get('sessionId')?.value;
+    const sessionId = await getSessionId();
 
     const options = {
         method: 'GET',

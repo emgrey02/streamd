@@ -1,6 +1,7 @@
 'use server';
 import { cookies } from 'next/headers';
 import { fetchTmdb } from '../lib/tmdb';
+import { decrypt, encrypt } from '../lib/crypto';
 
 const secureCookieOptions = {
     httpOnly: true,
@@ -56,10 +57,14 @@ export async function setSessionCookies(
     accessToken: string,
     accountObjectId: string
 ) {
-    (await cookies()).set('sessionId', sessionId, secureCookieOptions);
+    (await cookies()).set('sessionId', encrypt(sessionId), secureCookieOptions);
     (await cookies()).set('accId', userInfo.id, secureCookieOptions);
     (await cookies()).set('username', userInfo.username, secureCookieOptions);
-    (await cookies()).set('accessToken', accessToken, secureCookieOptions);
+    (await cookies()).set(
+        'accessToken',
+        encrypt(accessToken),
+        secureCookieOptions
+    );
     (await cookies()).set(
         'accountObjectId',
         accountObjectId,
@@ -68,11 +73,25 @@ export async function setSessionCookies(
 }
 
 export async function getSessionId() {
-    return (await cookies()).get('sessionId')?.value;
+    const value = (await cookies()).get('sessionId')?.value;
+    if (!value) return undefined;
+    try {
+        return decrypt(value);
+    } catch {
+        console.error('failed to decrypt sessionId cookie');
+        return undefined;
+    }
 }
 
 export async function getAccessToken() {
-    return (await cookies()).get('accessToken')?.value;
+    const value = (await cookies()).get('accessToken')?.value;
+    if (!value) return undefined;
+    try {
+        return decrypt(value);
+    } catch {
+        console.error('failed to decrypt accessToken cookie');
+        return undefined;
+    }
 }
 
 export async function tmdbLogOut(accessToken: string) {

@@ -4,12 +4,12 @@ import AddNoteButton from '@/app/components/Dashboard/AddNoteButton';
 import AddContentToList from '@/app/components/Dashboard/AddContentToList';
 import BackButton from '@/app/components/BackButton';
 import DeleteListItemButton from '@/app/components/Dashboard/DeleteListItemButton';
-import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import Note from '@/app/components/Dashboard/Note';
 import { getContentAccountInfo } from '@/app/actions/favorites';
 import { fetchTmdb } from '@/app/lib/tmdb';
+import { getAccessToken, getSessionId } from '@/app/actions/auth';
 
 export default async function ListPage({
     params,
@@ -17,10 +17,8 @@ export default async function ListPage({
     params: Promise<{ id: string }>;
 }) {
     const { id } = await params;
-    const cookieStore = await cookies();
-    const accessToken: string | undefined =
-        cookieStore.get('accessToken')?.value;
-    const sessionId: string | undefined = cookieStore.get('sessionId')?.value;
+    const accessToken = await getAccessToken();
+    const sessionId = await getSessionId();
 
     const options = {
         method: 'GET',

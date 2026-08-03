@@ -1,12 +1,13 @@
 import TmdbSignIn from '../TmdbSignIn';
 import Link from 'next/link';
 import { cookies } from 'next/headers';
+import { getSessionId } from '@/app/actions/auth';
 
 export default async function DashContent(props: {
     children: React.ReactNode;
 }) {
     const cookieStore = await cookies();
-    const sessionId: string | undefined = cookieStore.get('sessionId')?.value;
+    const sessionId = await getSessionId();
     const username: string | undefined = cookieStore.get('username')?.value;
     return (
         <>
