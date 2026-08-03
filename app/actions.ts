@@ -156,7 +156,6 @@ export async function getRequestToken() {
 }
 
 export async function setReqTokenCookie(rt: string) {
-    console.log('setting request token cookie');
     (await cookies()).set('reqToken', rt, secureCookieOptions);
     if ((await cookies()).get('reqToken')?.value === rt) {
         return 'success';
@@ -166,12 +165,10 @@ export async function setReqTokenCookie(rt: string) {
 }
 
 export async function setAccountIdCookie(accId: string) {
-    console.log('setting account id cookie');
     (await cookies()).set('accId', accId, secureCookieOptions);
 }
 
 export async function getReqTokenCookie() {
-    console.log('getting request token cookie');
     const cookie = (await cookies()).get('reqToken')?.value;
     return cookie;
 }
@@ -182,8 +179,6 @@ export async function setSessionCookies(
     accessToken: string,
     accountObjectId: string
 ) {
-    //console.log(sessionId, accessToken, userInfo.id, userInfo.username);
-    console.log('setting user session cookies');
     (await cookies()).set('sessionId', sessionId, secureCookieOptions);
     (await cookies()).set('accId', userInfo.id, secureCookieOptions);
     (await cookies()).set('username', userInfo.username, secureCookieOptions);
@@ -193,7 +188,6 @@ export async function setSessionCookies(
         accountObjectId,
         secureCookieOptions
     );
-    console.log('session cookies are set');
 }
 
 export async function getSessionId() {
@@ -205,9 +199,6 @@ export async function getAccessToken() {
 }
 
 export async function tmdbLogOut(accessToken: string) {
-    console.log('logging out...');
-    //console.log(accessToken);
-
     const options = {
         method: 'DELETE',
         headers: {
@@ -227,8 +218,6 @@ export async function tmdbLogOut(accessToken: string) {
 
     if (!res.ok) {
         console.error('failed to log out');
-    } else {
-        console.log('successfully logged out');
     }
 
     return await res.json();
@@ -257,12 +246,8 @@ export async function createTmdbSession(rt: string) {
     const accessTokenResJson = await accessTokenRes.json();
 
     if (!accessTokenRes.ok) {
-        console.log(accessTokenResJson);
-        console.error('failed to get accessToken');
+        console.error('failed to get accessToken', accessTokenResJson);
     } else {
-        //console.log(accessTokenResJson);
-        console.log('successfully got an accessToken');
-
         const sessionOptions: RequestInit = {
             method: 'POST',
             headers: {
@@ -282,10 +267,8 @@ export async function createTmdbSession(rt: string) {
         );
 
         if (!sessionRes.ok) {
-            console.log(sessionRes);
             console.error('failed to get session id from v4 access token');
         }
-        console.log('successfully got a session id');
         const sessionResJson = await sessionRes.json();
 
         return { session: sessionResJson, access: accessTokenResJson };
@@ -293,7 +276,6 @@ export async function createTmdbSession(rt: string) {
 }
 
 export async function deleteCookies() {
-    console.log(`deleting cookies`);
     (await cookies()).delete('accId');
     (await cookies()).delete('reqToken');
     (await cookies()).delete('sessionId');
@@ -389,11 +371,9 @@ export async function addToFavorWatch(
     );
 
     if (!res.ok) {
-        console.log(`failed to add ${type} to ${whichOne}`);
-        console.error(await res.json());
+        console.error(`failed to add ${type} to ${whichOne}`, await res.json());
         return false;
     } else {
-        console.log(`success in adding ${type} to ${whichOne}`);
         return true;
     }
 }
@@ -436,10 +416,9 @@ export async function removeFavorWatch(
     );
 
     if (!res.ok) {
-        console.error('failed', await res.json());
+        console.error(`failed to remove ${type} from ${whichOne}`, await res.json());
         return false;
     } else {
-        console.log(`success in removing ${type} from ${whichOne}`);
         return true;
     }
 }
@@ -476,10 +455,8 @@ export async function deleteRating(
 
     const resJson = await res.json();
 
-    //error handling
     if (!res.ok) {
-        console.log(resJson);
-        console.error(`failed to rate this ${content}`);
+        console.error(`failed to rate this ${content}`, resJson);
     }
 
     return resJson;
@@ -521,10 +498,8 @@ export async function rateContent(
 
     const resJson = await res.json();
 
-    //error handling
     if (!res.ok) {
-        console.log(resJson);
-        console.error(`failed to rate this ${content}`);
+        console.error(`failed to rate this ${content}`, resJson);
     }
 
     return resJson;
@@ -576,13 +551,8 @@ export async function createList(at: string, formData: FormData) {
     const res = await fetch('https://api.themoviedb.org/4/list', options);
     const resJson = await res.json();
 
-    console.log(resJson);
-
     if (!res.ok) {
-        console.log(res);
-        console.error(`failed to create list`);
-    } else {
-        console.log('successfuly created list');
+        console.error('failed to create list', resJson);
     }
 
     revalidatePath('/dashboard', 'page');
@@ -594,9 +564,6 @@ export async function updateList(at: string, id: string, formData: FormData) {
         description: formData.get('list description'),
         public: formData.get('public toggle'),
     };
-
-    console.log(rawFormData);
-    console.log(at);
 
     const options = {
         method: 'PUT',
@@ -616,13 +583,8 @@ export async function updateList(at: string, id: string, formData: FormData) {
     const res = await fetch(`https://api.themoviedb.org/4/list/${id}`, options);
     const resJson = await res.json();
 
-    console.log(resJson);
-
     if (!res.ok) {
-        console.log(res);
-        console.error(`failed to update list`);
-    } else {
-        console.log('successfuly updated list');
+        console.error('failed to update list', resJson);
     }
 
     revalidatePath('/dashboard', 'page');
@@ -637,8 +599,6 @@ export async function deleteList(at: string, listId: string) {
         },
     };
 
-    console.log(listId);
-
     const res = await fetch(
         `https://api.themoviedb.org/4/list/${listId}`,
         options
@@ -646,10 +606,7 @@ export async function deleteList(at: string, listId: string) {
     const resJson = await res.json();
 
     if (!res.ok) {
-        console.log(resJson);
-        console.error(`failed to delete list`);
-    } else {
-        console.log('successfuly deleted list');
+        console.error('failed to delete list', resJson);
     }
 
     revalidatePath('/dashboard', 'page');
@@ -680,10 +637,7 @@ export async function AddToList(
     const resJson = await res.json();
 
     if (!res.ok) {
-        console.log(resJson);
-        console.error(`failed to add item to list`);
-    } else {
-        console.log('successfuly added item to list');
+        console.error('failed to add item to list', resJson);
     }
 
     revalidatePath('/dashboard/list/[id]', 'page');
@@ -718,10 +672,7 @@ export async function deleteListItem(
     const resJson = await res.json();
 
     if (!res.ok) {
-        console.log(resJson);
-        console.error(`failed to delete item from list`);
-    } else {
-        console.log('successfuly added item to list');
+        console.error('failed to delete item from list', resJson);
     }
 
     revalidatePath('/dashboard/list/[id]', 'page');
@@ -761,10 +712,7 @@ export async function addNote(
     const resJson = await res.json();
 
     if (!res.ok) {
-        console.log(resJson);
-        console.error(`failed to add note`);
-    } else {
-        console.log('successfuly added note');
+        console.error('failed to add note', resJson);
     }
 
     revalidatePath('/dashboard/list/[id]', 'page');
@@ -792,11 +740,5 @@ export async function getItemStatus(
 
     const status = await res.json();
 
-    if (!status.success) {
-        console.log(`item is not on list ${listId}`);
-        return false;
-    } else {
-        console.log(`item is on list ${listId}`);
-        return true;
-    }
+    return Boolean(status.success);
 }

@@ -22,12 +22,8 @@ export default function ContentPage({ data, type, cat }: ContentPageProps) {
     const [finalData, setFinalData] = useState<ContentPageItem[]>(data);
     const [shownPageNumbers, setShownPageNumbers] = useState(1);
 
-    console.log(type);
-    console.log(cat);
-
     useEffect(() => {
         if (loadMore) {
-            console.log('button pressed');
             const loadMoreContent = async () => {
                 const moreContent = await getContent(
                     type,
@@ -71,10 +67,7 @@ export default function ContentPage({ data, type, cat }: ContentPageProps) {
                 )}
                 <button
                     className="w-full bg-slate-700 py-2 hover:bg-brand-blue hover:text-slate-950 hover:font-bold"
-                    onClick={() => {
-                        console.log('button clicked');
-                        setLoadMore(true);
-                    }}
+                    onClick={() => setLoadMore(true)}
                 >
                     Load More
                 </button>

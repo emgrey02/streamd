@@ -19,7 +19,6 @@ export default function Text(props: { text: string }) {
                 const { clientHeight, scrollHeight } = el;
                 return clientHeight !== scrollHeight;
             } else {
-                console.log('this element is null');
                 return false;
             }
         }

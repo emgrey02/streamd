@@ -79,7 +79,6 @@ export default function SearchResults({
             };
             loadMoreContent();
         }
-        console.log(shownPageNumbers);
     }, [
         finalData,
         loadMore,

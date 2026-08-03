@@ -12,7 +12,6 @@ export default function AddNoteButton(props: {
     const [showForm, setShowForm] = useState(false);
 
     const addNoteWithInfo = async (formData: FormData) => {
-        console.log('adding comment');
         await addNote(props.at, props.listId, props.mt, props.mi, formData);
         setShowForm(false);
     };

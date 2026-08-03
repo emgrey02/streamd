@@ -29,7 +29,6 @@ export default function FavorWatchButton({
     async function handleClick(e: React.PointerEvent<HTMLButtonElement>) {
         const target = e.currentTarget as HTMLButtonElement;
         const text = target.innerText;
-        console.log(target.innerText);
 
         switch (text) {
             case 'Favorite':
@@ -41,10 +40,7 @@ export default function FavorWatchButton({
                     sessionId
                 );
                 if (s1) {
-                    console.log('switching favorite to unfavorite');
                     setCanFavorite(false);
-                } else {
-                    console.log('failed to favorite');
                 }
                 break;
             case 'UnFavorite':
@@ -56,10 +52,7 @@ export default function FavorWatchButton({
                     sessionId
                 );
                 if (s2) {
-                    console.log('switching unfavorite to favorite');
                     setCanFavorite(true);
-                } else {
-                    console.log('failed to unfavorite');
                 }
                 break;
             case 'Add to Watchlist':
@@ -71,12 +64,7 @@ export default function FavorWatchButton({
                     sessionId
                 );
                 if (s3) {
-                    console.log(
-                        'switching add to watchlist to remove from watchlist'
-                    );
                     setCanAddToWatchlist(false);
-                } else {
-                    console.log('failed to add to watchlist');
                 }
                 break;
             case 'Remove from Watchlist':
@@ -88,12 +76,7 @@ export default function FavorWatchButton({
                     sessionId
                 );
                 if (s4) {
-                    console.log(
-                        'switching remove from watchlist to add to watchlist'
-                    );
                     setCanAddToWatchlist(true);
-                } else {
-                    console.log('failed to remove from watchlist');
                 }
                 break;
         }

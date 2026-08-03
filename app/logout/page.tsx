@@ -11,10 +11,8 @@ export default function LogOut() {
         async function removeCookies() {
             const accessToken: string | undefined = await getAccessToken();
             if (accessToken) {
-                const didItWork = await tmdbLogOut(accessToken);
-                console.log(didItWork);
-                const res = await deleteCookies();
-                console.log(res);
+                await tmdbLogOut(accessToken);
+                await deleteCookies();
             }
         }
 

@@ -16,18 +16,14 @@ export default function Page() {
     useEffect(() => {
         //get request token stored in cookie
         async function getTokenCookie() {
-            const reqToken = await getReqTokenCookie();
-            //console.log(reqToken);
-            return reqToken;
+            return await getReqTokenCookie();
         }
 
         //get access Token & other session info w/ this request token & return it
         async function getSessionAccessInfo() {
             const reqToken = await getTokenCookie();
             if (reqToken) {
-                const sessionAccessInfo = await createTmdbSession(reqToken);
-                //console.log(sessionAccessInfo);
-                return sessionAccessInfo;
+                return await createTmdbSession(reqToken);
             } else {
                 return null;
             }
@@ -36,12 +32,10 @@ export default function Page() {
         //set cookies with user session info
         async function setTheCookies() {
             const sessionAccessInfo = await getSessionAccessInfo();
-            console.log(sessionAccessInfo);
             if (sessionAccessInfo) {
                 const userInfo = await getUserInfo(
                     sessionAccessInfo.session.session_id
                 );
-                //console.log(userInfo);
                 const accessToken = sessionAccessInfo.access.access_token;
                 const sessionId = sessionAccessInfo.session.session_id;
                 const accountId = sessionAccessInfo.access.account_id;

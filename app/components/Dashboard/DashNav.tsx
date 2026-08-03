@@ -10,7 +10,6 @@ export default function DashNav() {
     const category = pathnameArray[1];
 
     useEffect(() => {
-        console.log('setting new category: ', category);
         localStorage.setItem('dashCat', category);
     }, [category]);
 

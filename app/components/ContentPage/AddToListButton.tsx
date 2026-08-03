@@ -66,8 +66,6 @@ export default function AddToListButton(props: {
         setItemStatuses(currentItemStatuses);
     };
 
-    //console.log(itemStatuses);
-
     return (
         <div className="flex flex-col items-start bg-slate-700 relative w-full">
             <button

@@ -55,7 +55,6 @@ export default function Lists({ accessToken, accountObjectId }: Props) {
     }, [accountObjectId, listsUpdated]);
 
     function updateLists() {
-        console.log('updating list');
         setListsUpdated(true);
     }
 
