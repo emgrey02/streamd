@@ -62,7 +62,7 @@ export default function SmallCard({
                     no image
                 </div>
             }
-            <div className="flex flex-col overflow-scroll">
+            <div className="flex flex-col overflow-auto">
                 <h4 className="text-wrap font-medium text-[16px] w-fit text-brand-blue">
                     {(p as CastCrewItem | ShowItem).name ||
                         (p as MovieItem).title}

@@ -56,7 +56,7 @@ export default function BigCard({ data, type }: BigCardProps) {
                     no image available
                 </div>
             }
-            <div className="flex flex-col gap-2 overflow-scroll">
+            <div className="flex flex-col gap-2 overflow-auto">
                 <h4 className="text-wrap mt-4 font-medium text-[17px] w-fit text-brand-blue">
                     {cardTitle}
                 </h4>
