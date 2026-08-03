@@ -5,6 +5,7 @@ import UserContentInfoBox from '@/app/components/ContentPage/UserContentInfoBox'
 import Genres from '@/app/components/ContentPage/Genres';
 import Text from '@/app/components/ContentPage/Text';
 import Image from 'next/image';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -23,16 +24,11 @@ export default async function Layout({ children, params }: LayoutProps) {
         cache: 'force-cache',
     };
 
-    const res = await fetch(
+    const deets = await fetchTmdb(
         `https://api.themoviedb.org/3/movie/${id}?language=en-US`,
-        options
+        options,
+        'fetch movie data'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch movie data');
-    }
-
-    const deets = await res.json();
     return (
         <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">
             <Suspense fallback={<p>Loading...</p>}>

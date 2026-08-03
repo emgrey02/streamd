@@ -3,6 +3,7 @@ import SearchResults from '../../components/Search/SearchResults';
 import SearchResNav from '@/app/components/Search/SearchResNav';
 import SearchBar from '@/app/components/Search/SearchBar';
 import { Suspense } from 'react';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function Search({
     params,
@@ -20,27 +21,20 @@ export default async function Search({
     let theKeyword;
     let theGenre;
 
-    console.log(content);
-    console.log(query, page);
-
     if (content.includes('keyword')) {
         content = content.split('-')[1];
         keyword = true;
         theKeyword = query.split('--')[1];
-        console.log(query);
     } else if (content.includes('genre')) {
         content = content.split('-')[1];
         genre = true;
         theGenre = query.split('--')[1];
-        console.log(query.split('--')[0]);
-        console.log(query);
     }
 
     let movies;
     let shows;
     let people;
     let all;
-    console.log(query);
 
     const options = {
         method: 'GET',
@@ -54,40 +48,54 @@ export default async function Search({
     };
 
     if (genre) {
-        movies = await fetch(
-            `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${query.split('--')[0]}`,
-            options
-        ).then((res) => res.json());
-        shows = await fetch(
-            `https://api.themoviedb.org/3/discover/tv?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${query.split('--')[0]}`,
-            options
-        ).then((res) => res.json());
+        [movies, shows] = await Promise.all([
+            fetchTmdb(
+                `https://api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${query.split('--')[0]}`,
+                options,
+                'genre movie search'
+            ),
+            fetchTmdb(
+                `https://api.themoviedb.org/3/discover/tv?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${query.split('--')[0]}`,
+                options,
+                'genre tv search'
+            ),
+        ]);
     } else if (keyword) {
-        movies = await fetch(
-            `https://api.themoviedb.org/3/discover/movie?with_keywords=${query.split('--')[0]}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
-            options
-        ).then((res) => res.json());
-        shows = await fetch(
-            `https://api.themoviedb.org/3/discover/tv?with_keywords=${query.split('--')[0]}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
-            options
-        ).then((res) => res.json());
+        [movies, shows] = await Promise.all([
+            fetchTmdb(
+                `https://api.themoviedb.org/3/discover/movie?with_keywords=${query.split('--')[0]}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
+                options,
+                'keyword movie search'
+            ),
+            fetchTmdb(
+                `https://api.themoviedb.org/3/discover/tv?with_keywords=${query.split('--')[0]}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
+                options,
+                'keyword tv search'
+            ),
+        ]);
     } else {
-        movies = await fetch(
-            `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
-            options
-        ).then((res) => res.json());
-        shows = await fetch(
-            `https://api.themoviedb.org/3/search/tv?query=${query}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
-            options
-        ).then((res) => res.json());
-        people = await fetch(
-            `https://api.themoviedb.org/3/search/person?query=${query}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
-            options
-        ).then((res) => res.json());
-        all = await fetch(
-            `https://api.themoviedb.org/3/search/multi?query=${query}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
-            options
-        ).then((res) => res.json());
+        [movies, shows, people, all] = await Promise.all([
+            fetchTmdb(
+                `https://api.themoviedb.org/3/search/movie?query=${query}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
+                options,
+                'movie search'
+            ),
+            fetchTmdb(
+                `https://api.themoviedb.org/3/search/tv?query=${query}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
+                options,
+                'tv search'
+            ),
+            fetchTmdb(
+                `https://api.themoviedb.org/3/search/person?query=${query}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
+                options,
+                'person search'
+            ),
+            fetchTmdb(
+                `https://api.themoviedb.org/3/search/multi?query=${query}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
+                options,
+                'multi search'
+            ),
+        ]);
     }
 
     let peopleLength;

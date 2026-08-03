@@ -6,6 +6,7 @@ import SubmitRating from '@/app/components/ContentPage/SubmitRating';
 import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 import Link from 'next/link';
 import { getDate, getRuntime } from '@/app/utils';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function Episode({
     params,
@@ -25,26 +26,18 @@ export default async function Episode({
         },
     };
 
-    const seasonRes = await fetch(
-        `https://api.themoviedb.org/3/tv/${id}/season/${num}?language=en-US`,
-        options
-    );
-
-    const res = await fetch(
-        `https://api.themoviedb.org/3/tv/${id}/season/${num}/episode/${epNum}?language=en-US`,
-        options
-    );
-
-    if (!res.ok) {
-        console.error('failed to fetch episode data');
-    }
-
-    if (!seasonRes.ok) {
-        console.error('failed to fetch season data');
-    }
-
-    const season = await seasonRes.json();
-    const deets = await res.json();
+    const [season, deets] = await Promise.all([
+        fetchTmdb(
+            `https://api.themoviedb.org/3/tv/${id}/season/${num}?language=en-US`,
+            options,
+            'fetch season data'
+        ),
+        fetchTmdb(
+            `https://api.themoviedb.org/3/tv/${id}/season/${num}/episode/${epNum}?language=en-US`,
+            options,
+            'fetch episode data'
+        ),
+    ]);
     const totalEpisodes = season.episodes.length;
 
     return (

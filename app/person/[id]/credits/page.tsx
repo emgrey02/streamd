@@ -1,4 +1,5 @@
 import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function PersonCredits({
     params,
@@ -16,16 +17,11 @@ export default async function PersonCredits({
         cache: 'force-cache',
     };
 
-    const res = await fetch(
+    const content = await fetchTmdb(
         `https://api.themoviedb.org/3/person/${id}/combined_credits?language=en-US`,
-        options
+        options,
+        'fetch person data'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch person data');
-    }
-
-    const content = await res.json();
 
     return (
         <div className="grid md:grid-cols-2 gap-10">

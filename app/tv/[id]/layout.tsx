@@ -5,6 +5,7 @@ import ContentPageNav from '@/app/components/ContentPage/ContentPageNav';
 import { getDate } from '@/app/utils';
 import { Suspense } from 'react';
 import UserContentInfoBox from '@/app/components/ContentPage/UserContentInfoBox';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -22,18 +23,11 @@ export default async function Layout({ children, params }: LayoutProps) {
         },
     };
 
-    const res = await fetch(
+    const deets = await fetchTmdb(
         `https://api.themoviedb.org/3/tv/${id}?language=en-US`,
-        options
+        options,
+        'fetch show data'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch show data');
-    } else {
-        console.log(`successfully fetch show num: ${id} from tmdb`);
-    }
-
-    const deets = await res.json();
 
     return (
         <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">

@@ -1,6 +1,7 @@
 'use server';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { fetchTmdb } from './lib/tmdb';
 
 const secureCookieOptions = {
     httpOnly: true,
@@ -28,18 +29,11 @@ export async function getContent(
         if (cat === 'people') cat = 'person';
     }
 
-    const res = await fetch(
+    const result = await fetchTmdb(
         `https://api.themoviedb.org/3/${content}/${cat}${content === 'trending' ? '/day' : ''}?language=en-US&page=${pageNum}`,
-        options
+        options,
+        `fetch ${content} content`
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch content');
-    } else {
-        console.log(`successfully retrieved ${content} content`);
-    }
-
-    const result = await res.json();
     return result;
 }
 
@@ -52,34 +46,18 @@ export async function searchForContent(search: string, pageNum: number) {
         },
     };
 
-    console.log(search);
-
-    const tvRes = await fetch(
-        `https://api.themoviedb.org/3/search/tv?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${pageNum}`,
-        options
-    );
-
-    const movieRes = await fetch(
-        `https://api.themoviedb.org/3/search/movie?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${pageNum}`,
-        options
-    );
-
-    if (!movieRes.ok) {
-        console.error('failed to get movie search results');
-    } else {
-        console.log('successfully retrieved movie search results');
-    }
-
-    if (!tvRes.ok) {
-        console.error('failed to get tv search results');
-    } else {
-        console.log('successfully retrieved tv search results');
-    }
-
-    const movieResult = await movieRes.json();
-    const tvResult = await tvRes.json();
-
-    console.log(movieResult, tvResult);
+    const [tvResult, movieResult] = await Promise.all([
+        fetchTmdb<{ results: ContentItem[] }>(
+            `https://api.themoviedb.org/3/search/tv?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${pageNum}`,
+            options,
+            'tv search'
+        ),
+        fetchTmdb<{ results: ContentItem[] }>(
+            `https://api.themoviedb.org/3/search/movie?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${pageNum}`,
+            options,
+            'movie search'
+        ),
+    ]);
 
     movieResult.results.forEach((r: ContentItem) => {
         r.media_type = 'movie';
@@ -96,8 +74,6 @@ export async function searchForContent(search: string, pageNum: number) {
         finalArray.push(tvResult.results[i]);
     }
 
-    console.log(finalArray);
-
     return finalArray;
 }
 
@@ -112,18 +88,11 @@ export async function doASearch(search: string, type: string, page: number) {
         },
     };
 
-    const res = await fetch(
+    return fetchTmdb(
         `https://api.themoviedb.org/3/search/${type}?query=${search}&include_adult=false&sort_by=popularity.asc&language=en-US&page=${page}`,
-        options
+        options,
+        `${type} search`
     );
-    const results = await res.json();
-
-    if (!res.ok) {
-        console.log(results);
-        console.error(`unable to do a ${type} search`);
-    }
-
-    return results;
 }
 
 export async function keywordSearch(
@@ -139,19 +108,11 @@ export async function keywordSearch(
         },
     };
 
-    const res = await fetch(
+    return fetchTmdb(
         `https://api.themoviedb.org/3/discover/${type}?with_keywords=${search.split('--')[0]}&include_adult=false&sort_by=popularity.desc&language=en-US&page=${page}`,
-        options
+        options,
+        `keyword ${type} search`
     );
-
-    const results = await res.json();
-
-    if (!res.ok) {
-        console.log(results);
-        console.error(`unable to do keyword ${type} search`);
-    }
-
-    return results;
 }
 
 export async function genreSearch(search: string, type: string, page: string) {
@@ -163,20 +124,11 @@ export async function genreSearch(search: string, type: string, page: string) {
         },
     };
 
-    const res = await fetch(
+    return fetchTmdb(
         `https://api.themoviedb.org/3/discover/${type}?include_adult=false&include_video=false&language=en-US&page=${page}&sort_by=popularity.desc&with_genres=${search.split('--')[0]}`,
-        options
+        options,
+        `genre ${type} search`
     );
-
-    const results = await res.json();
-    //console.log(results);
-
-    if (!res.ok) {
-        //console.log(results);
-        console.error(`unable to do genre ${type} search`);
-    }
-
-    return results;
 }
 
 //account log-in and log-out tasks
@@ -368,8 +320,6 @@ export async function getContentAccountInfo(
     seasonNum?: string,
     episodeNum?: string
 ) {
-    let res;
-
     const options = {
         method: 'GET',
         headers: {
@@ -378,25 +328,12 @@ export async function getContentAccountInfo(
         },
     };
 
-    if (seasonNum && episodeNum) {
-        res = await fetch(
-            `https://api.themoviedb.org/3/${content}/${contentId}/season/${seasonNum}/episode/${episodeNum}/account_states?session_id=${sessionId}`,
-            options
-        );
-    } else {
-        res = await fetch(
-            `https://api.themoviedb.org/3/${content}/${contentId}/account_states?session_id=${sessionId}`,
-            options
-        );
-    }
+    const url =
+        seasonNum && episodeNum ?
+            `https://api.themoviedb.org/3/${content}/${contentId}/season/${seasonNum}/episode/${episodeNum}/account_states?session_id=${sessionId}`
+        :   `https://api.themoviedb.org/3/${content}/${contentId}/account_states?session_id=${sessionId}`;
 
-    if (!res.ok) {
-        console.error('failed to get content account info');
-    } else {
-        console.log('successfully got content account info');
-    }
-
-    return await res.json();
+    return fetchTmdb(url, options, 'get content account info');
 }
 
 export async function getUserInfo(sessionId: string) {
@@ -408,17 +345,11 @@ export async function getUserInfo(sessionId: string) {
         },
     };
 
-    const res = await fetch(
+    return fetchTmdb(
         `https://api.themoviedb.org/3/account/account_id?session_id=${sessionId}`,
-        options
+        options,
+        'fetch account info'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch account info');
-    }
-    const userInfo = await res.json();
-    console.log(userInfo);
-    return userInfo;
 }
 
 //favorite, add to watchlist, rate
@@ -621,17 +552,11 @@ export async function getLists(accountObjectId: string, pageNum: number) {
         cache: 'no-cache',
     };
 
-    const res = await fetch(
+    const lists = await fetchTmdb(
         `https://api.themoviedb.org/4/account/${accountObjectId}/lists?page=${pageNum}`,
-        options
+        options,
+        'fetch lists'
     );
-
-    const lists = await res.json();
-
-    if (!res.ok) {
-        console.log(lists);
-        console.error(`failed to fetch lists`);
-    }
 
     return lists.results;
 }

@@ -1,4 +1,5 @@
 import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function SeasonsArea({
     params,
@@ -15,16 +16,11 @@ export default async function SeasonsArea({
         },
     };
 
-    const res = await fetch(
+    const content = await fetchTmdb(
         `https://api.themoviedb.org/3/tv/${id}?language=en-US`,
-        options
+        options,
+        'fetch show data'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch show data');
-    }
-
-    const content = await res.json();
 
     return (
         <div className="@container" id="seasons">

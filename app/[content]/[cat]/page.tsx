@@ -4,6 +4,7 @@ import ListNav from '@/app/components/FullContentListPage/ListNav';
 import SearchBar from '@/app/components/Search/SearchBar';
 import { capitalizeCategory, changeToSearchTerm } from '@/app/utils';
 import { Suspense } from 'react';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 // type is either movies, shows, or trending
 export default async function Page({
@@ -27,13 +28,11 @@ export default async function Page({
 
     const url = `https://api.themoviedb.org/3/${changeToSearchTerm(content)}/${cat == 'people' ? 'person' : cat}${changeToSearchTerm(content) === 'trending' ? '/day' : ''}?language=en-US&page=1`;
 
-    const res = await fetch(url, options);
-
-    if (!res.ok) {
-        console.error('failed to fetch movie/show category');
-    }
-
-    const contentData = await res.json();
+    const contentData = await fetchTmdb(
+        url,
+        options,
+        'fetch movie/show category'
+    );
 
     return (
         <main className="flex flex-col gap-10 px-2 sm:px-4 pb-10">

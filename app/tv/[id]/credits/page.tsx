@@ -1,4 +1,5 @@
 import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function ShowCredits({
     params,
@@ -15,16 +16,11 @@ export default async function ShowCredits({
         },
     };
 
-    const res = await fetch(
+    const deets = await fetchTmdb(
         `https://api.themoviedb.org/3/tv/${id}/aggregate_credits?language=en-US`,
-        options
+        options,
+        'fetch show credits'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch show credits');
-    }
-
-    const deets = await res.json();
 
     return (
         <div className="grid md:grid-cols-2 gap-10">

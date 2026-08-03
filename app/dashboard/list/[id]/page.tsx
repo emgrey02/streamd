@@ -9,6 +9,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import Note from '@/app/components/Dashboard/Note';
 import { getContentAccountInfo } from '@/app/actions';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function ListPage({
     params,
@@ -29,12 +30,11 @@ export default async function ListPage({
         },
     };
 
-    const res = await fetch(
+    const list = await fetchTmdb(
         `https://api.themoviedb.org/4/list/${id}?language=en-US&page=1`,
-        options
+        options,
+        'get list details by id'
     );
-
-    const list = await res.json();
 
     if (list.results) {
         await Promise.all(
@@ -46,12 +46,6 @@ export default async function ListPage({
                 )
             )
         );
-    }
-
-    if (!res.ok) {
-        console.error('failed to get list details by id');
-    } else {
-        console.log('successfully retrieved list details by id');
     }
 
     return (

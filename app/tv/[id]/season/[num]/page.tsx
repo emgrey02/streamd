@@ -4,6 +4,7 @@ import BackButton from '@/app/components/BackButton';
 import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 import EpisodeList from '@/app/components/ContentPage/EpisodeList';
 import { getDate } from '@/app/utils';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function Season({
     params,
@@ -20,16 +21,11 @@ export default async function Season({
         },
     };
 
-    const res = await fetch(
+    const deets = await fetchTmdb(
         `https://api.themoviedb.org/3/tv/${id}/season/${num}?append_to_response=credits&language=en-US`,
-        options
+        options,
+        'fetch season data'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch season data');
-    }
-
-    const deets = await res.json();
 
     return (
         <div className="flex flex-col gap-4">

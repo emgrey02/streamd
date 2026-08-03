@@ -1,4 +1,5 @@
 import Reviews from '@/app/components/ContentPage/Reviews';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function ReviewsArea({
     params,
@@ -15,16 +16,11 @@ export default async function ReviewsArea({
         },
     };
 
-    const res = await fetch(
+    const r = await fetchTmdb(
         `https://api.themoviedb.org/3/tv/${id}/reviews?language=en-US`,
-        options
+        options,
+        'fetch show reviews'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch show reviews');
-    }
-
-    const r = await res.json();
 
     return (
         <div id="reviews" className="flex flex-col gap-4">

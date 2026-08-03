@@ -2,6 +2,7 @@ import Text from '@/app/components/ContentPage/Text';
 import Image from 'next/image';
 import BackButton from '@/app/components/BackButton';
 import ContentPageNav from '@/app/components/ContentPage/ContentPageNav';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -20,16 +21,11 @@ export default async function Layout({ children, params }: LayoutProps) {
         cache: 'force-cache',
     };
 
-    const res = await fetch(
+    const deets = await fetchTmdb(
         `https://api.themoviedb.org/3/person/${id}?append_to_response=combined_credits&language=en-US&sort_by=primary_release_date.asc`,
-        options
+        options,
+        'fetch person data'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch person data');
-    }
-
-    const deets = await res.json();
 
     function getDate(birthday: string) {
         const birthArray = birthday.split('-');

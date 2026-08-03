@@ -1,6 +1,9 @@
 import { Suspense } from 'react';
 import ContentList from './components/Home/ContentList';
 import SearchBar from './components/Search/SearchBar';
+import { fetchTmdb } from './lib/tmdb';
+
+type TmdbListResponse = { results: ContentItem[] };
 
 export default async function Home() {
     const trendingCats: string[] = ['all', 'movie', 'tv', 'person'];
@@ -17,56 +20,12 @@ export default async function Home() {
         },
     };
 
-    // trending
-
-    const allTrending = await fetch(
-        `https://api.themoviedb.org/3/trending/${trendingCats[0]}/day?language=en-US&page=1`,
-        options
-    );
-
-    const movieTrending = await fetch(
-        `https://api.themoviedb.org/3/trending/${trendingCats[1]}/day?language=en-US&page=1`,
-        options
-    );
-
-    const tvTrending = await fetch(
-        `https://api.themoviedb.org/3/trending/${trendingCats[2]}/day?language=en-US&page=1`,
-        options
-    );
-
-    const pplTrending = await fetch(
-        `https://api.themoviedb.org/3/trending/${trendingCats[3]}/day?language=en-US&page=1`,
-        options
-    );
-
-    // movies
-
     const movieCats: string[] = [
         'now_playing',
         'popular',
         'top_rated',
         'upcoming',
     ];
-
-    const nowPlayingMovies = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieCats[0]}?language=en-US&page=1`,
-        options
-    );
-
-    const popularMovies = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieCats[1]}?language=en-US&page=1`,
-        options
-    );
-    const topRatedMovies = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieCats[2]}?language=en-US&page=1`,
-        options
-    );
-    const upcomingMovies = await fetch(
-        `https://api.themoviedb.org/3/movie/${movieCats[3]}?language=en-US&page=1`,
-        options
-    );
-
-    // tv
 
     const showCats: string[] = [
         'airing_today',
@@ -75,46 +34,37 @@ export default async function Home() {
         'top_rated',
     ];
 
-    const airingTodayShows = await fetch(
-        `https://api.themoviedb.org/3/tv/${showCats[0]}?language=en-US&page=1`,
-        options
-    );
+    const fetchList = (url: string, context: string) =>
+        fetchTmdb<TmdbListResponse>(url, options, context).then(
+            (res) => res.results
+        );
 
-    const onAirShows = await fetch(
-        `https://api.themoviedb.org/3/tv/${showCats[1]}?language=en-US&page=1`,
-        options
-    );
-
-    const popularShows = await fetch(
-        `https://api.themoviedb.org/3/tv/${showCats[2]}?language=en-US&page=1`,
-        options
-    );
-
-    const topRatedShows = await fetch(
-        `https://api.themoviedb.org/3/tv/${showCats[3]}?language=en-US&page=1`,
-        options
-    );
-
-    const trendingData: ContentItem[][] = [
-        await allTrending.json().then((res) => res.results),
-        await movieTrending.json().then((res) => res.results),
-        await tvTrending.json().then((res) => res.results),
-        await pplTrending.json().then((res) => res.results),
-    ];
-
-    const moviesData: ContentItem[][] = [
-        await nowPlayingMovies.json().then((res) => res.results),
-        await popularMovies.json().then((res) => res.results),
-        await topRatedMovies.json().then((res) => res.results),
-        await upcomingMovies.json().then((res) => res.results),
-    ];
-
-    const showsData: ContentItem[][] = [
-        await airingTodayShows.json().then((res) => res.results),
-        await onAirShows.json().then((res) => res.results),
-        await popularShows.json().then((res) => res.results),
-        await topRatedShows.json().then((res) => res.results),
-    ];
+    const [trendingData, moviesData, showsData] = await Promise.all([
+        Promise.all(
+            trendingCats.map((cat) =>
+                fetchList(
+                    `https://api.themoviedb.org/3/trending/${cat}/day?language=en-US&page=1`,
+                    `fetch ${cat} trending`
+                )
+            )
+        ),
+        Promise.all(
+            movieCats.map((cat) =>
+                fetchList(
+                    `https://api.themoviedb.org/3/movie/${cat}?language=en-US&page=1`,
+                    `fetch ${cat} movies`
+                )
+            )
+        ),
+        Promise.all(
+            showCats.map((cat) =>
+                fetchList(
+                    `https://api.themoviedb.org/3/tv/${cat}?language=en-US&page=1`,
+                    `fetch ${cat} shows`
+                )
+            )
+        ),
+    ]);
 
     return (
         <main className="min-h-screen px-2 sm:px-4 flex flex-col gap-10 pb-10">

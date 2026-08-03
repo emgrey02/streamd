@@ -4,6 +4,7 @@ import ImageSlider from '@/app/components/ContentPage/ImageSlider';
 import Genres from '@/app/components/ContentPage/Genres';
 import StreamRentBuy from '@/app/components/ContentPage/StreamRentBuy';
 import { getRuntime, convertQuantity } from '@/app/utils';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function Movie({
     params,
@@ -21,16 +22,11 @@ export default async function Movie({
         cache: 'force-cache',
     };
 
-    const res = await fetch(
+    const content = await fetchTmdb(
         `https://api.themoviedb.org/3/movie/${id}?append_to_response=images,credits,keywords,recommendations,similar,videos,watch/providers,reviews`,
-        options
+        options,
+        'fetch movie data'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch movie data');
-    }
-
-    const content = await res.json();
 
     return (
         <div className="flex flex-col md:grid md:grid-cols-2 gap-10 max-w-vw @container">

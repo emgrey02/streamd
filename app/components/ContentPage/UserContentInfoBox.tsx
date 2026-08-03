@@ -4,6 +4,7 @@ import AddToListButton from '@/app/components/ContentPage/AddToListButton';
 import { cookies } from 'next/headers';
 import SubmitRating from '@/app/components/ContentPage/SubmitRating';
 import FavorWatchButton from '@/app/components/ContentPage/FavorWatchButton';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function UserContentInfoBox(props: {
     id: string;
@@ -40,57 +41,31 @@ export default async function UserContentInfoBox(props: {
         };
 
         if (props.content == 'movie') {
-            const movieFavWatchRated = await fetch(
-                `https://api.themoviedb.org/3/movie/${id}/account_states?session_id=${sessionId}`,
-                accountInfoOptions
-            );
-
-            if (!movieFavWatchRated.ok) {
-                console.error('failed to fetch movie fav/watch/rated info');
-            } else {
-                console.log('fetched fav/watched/rated movie info');
-            }
-
-            favWatchRated = await movieFavWatchRated.json();
-
-            const res = await fetch(
-                `https://api.themoviedb.org/3/movie/${id}?language=en-US`,
-                options
-            );
-
-            if (!res.ok) {
-                console.error('failed to fetch movie data');
-            } else {
-                console.log('fetched movie data');
-            }
-
-            deets = await res.json();
+            [favWatchRated, deets] = await Promise.all([
+                fetchTmdb(
+                    `https://api.themoviedb.org/3/movie/${id}/account_states?session_id=${sessionId}`,
+                    accountInfoOptions,
+                    'fetch movie fav/watch/rated info'
+                ),
+                fetchTmdb(
+                    `https://api.themoviedb.org/3/movie/${id}?language=en-US`,
+                    options,
+                    'fetch movie data'
+                ),
+            ]);
         } else {
-            const tvFavWatchRated = await fetch(
-                `https://api.themoviedb.org/3/tv/${id}/account_states?session_id=${sessionId}`,
-                accountInfoOptions
-            );
-
-            if (!tvFavWatchRated.ok) {
-                console.error('failed to fetch tv fav/watch/rated info');
-            } else {
-                console.log('fetched tv fav/watch/rated info');
-            }
-
-            favWatchRated = await tvFavWatchRated.json();
-
-            const res = await fetch(
-                `https://api.themoviedb.org/3/tv/${id}?language=en-US`,
-                options
-            );
-
-            if (!res.ok) {
-                console.error('failed to fetch tv data');
-            } else {
-                console.log('fetched tv info');
-            }
-
-            deets = await res.json();
+            [favWatchRated, deets] = await Promise.all([
+                fetchTmdb(
+                    `https://api.themoviedb.org/3/tv/${id}/account_states?session_id=${sessionId}`,
+                    accountInfoOptions,
+                    'fetch tv fav/watch/rated info'
+                ),
+                fetchTmdb(
+                    `https://api.themoviedb.org/3/tv/${id}?language=en-US`,
+                    options,
+                    'fetch tv data'
+                ),
+            ]);
         }
     }
 

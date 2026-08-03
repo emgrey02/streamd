@@ -3,6 +3,7 @@ import SmallCreditsList from '@/app/components/Lists/SmallCreditsList';
 import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 import EpisodeList from '@/app/components/ContentPage/EpisodeList';
 import StreamRentBuy from '@/app/components/ContentPage/StreamRentBuy';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function Show({
     params,
@@ -19,16 +20,11 @@ export default async function Show({
         },
     };
 
-    const res = await fetch(
+    const content = await fetchTmdb(
         `https://api.themoviedb.org/3/tv/${id}?append_to_response=aggregate_credits,watch/providers&language=en-US`,
-        options
+        options,
+        'fetch show data'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch show data');
-    }
-
-    const content = await res.json();
 
     return (
         <div className="flex flex-col md:grid md:grid-cols-2 gap-10 max-w-vw @container">

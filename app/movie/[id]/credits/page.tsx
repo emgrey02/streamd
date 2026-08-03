@@ -1,5 +1,6 @@
 import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 import { Suspense } from 'react';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function MovieCredits({
     params,
@@ -17,16 +18,11 @@ export default async function MovieCredits({
         cache: 'force-cache',
     };
 
-    const res = await fetch(
+    const deets = await fetchTmdb(
         `https://api.themoviedb.org/3/movie/${id}/credits?language=en-US`,
-        options
+        options,
+        'fetch movie credits'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch movie credits');
-    }
-
-    const deets = await res.json();
 
     return (
         <div id="credits" className="grid grid-cols-2 gap-10">

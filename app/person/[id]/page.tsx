@@ -1,4 +1,5 @@
 import SmallCreditsList from '@/app/components/Lists/SmallCreditsList';
+import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function PersonPage({
     params,
@@ -16,16 +17,11 @@ export default async function PersonPage({
         cache: 'force-cache',
     };
 
-    const res = await fetch(
+    const content = await fetchTmdb(
         `https://api.themoviedb.org/3/person/${id}?append_to_response=combined_credits&language=en-US&sort_by=primary_release_date.asc`,
-        options
+        options,
+        'fetch person data'
     );
-
-    if (!res.ok) {
-        console.error('failed to fetch person data');
-    }
-
-    const content = await res.json();
 
     return (
         <>
