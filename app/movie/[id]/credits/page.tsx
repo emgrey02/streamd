@@ -2,6 +2,10 @@ import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 import { Suspense } from 'react';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
+export async function generateStaticParams() {
+    return [];
+}
+
 export default async function MovieCredits({
     params,
 }: {

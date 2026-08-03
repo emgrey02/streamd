@@ -3,9 +3,10 @@ import Image from 'next/image';
 import Genres from '@/app/components/ContentPage/Genres';
 import ContentPageNav from '@/app/components/ContentPage/ContentPageNav';
 import { getDate } from '@/app/utils';
-import { Suspense } from 'react';
 import UserContentInfoBox from '@/app/components/ContentPage/UserContentInfoBox';
 import { fetchTmdb } from '@/app/lib/tmdb';
+
+export const revalidate = 86400;
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -84,9 +85,12 @@ export default async function Layout({ children, params }: LayoutProps) {
                             </div>
                         )}
                     </div>
-                    <Suspense fallback={<p>Loading...</p>}>
-                        <UserContentInfoBox id={id} content="tv" />
-                    </Suspense>
+                    <UserContentInfoBox
+                        id={id}
+                        content="tv"
+                        voteAvg={deets.vote_average}
+                        totalVotes={deets.vote_count}
+                    />
                 </div>
             </div>
             <ContentPageNav />

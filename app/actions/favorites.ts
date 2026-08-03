@@ -1,5 +1,11 @@
 'use server';
 import { fetchTmdb } from '../lib/tmdb';
+import {
+    getAccessToken,
+    getAccountId,
+    getAccountObjectId,
+    getSessionId,
+} from './auth';
 
 export async function getContentAccountInfo(
     sessionId: string,
@@ -8,12 +14,13 @@ export async function getContentAccountInfo(
     seasonNum?: string,
     episodeNum?: string
 ) {
-    const options = {
+    const options: RequestInit = {
         method: 'GET',
         headers: {
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
+        cache: 'no-store',
     };
 
     const url =
@@ -22,6 +29,38 @@ export async function getContentAccountInfo(
         :   `https://api.themoviedb.org/3/${content}/${contentId}/account_states?session_id=${sessionId}`;
 
     return fetchTmdb(url, options, 'get content account info');
+}
+
+// Called client-side (from UserContentInfoBox) instead of during the page's
+// server render, so movie/tv detail pages can stay statically cached instead
+// of every view forcing a dynamic render just to check sign-in state.
+export async function getContentUserState(content: string, contentId: number) {
+    const [sessionId, accessToken, accountId, accountObjectId] =
+        await Promise.all([
+            getSessionId(),
+            getAccessToken(),
+            getAccountId(),
+            getAccountObjectId(),
+        ]);
+
+    if (!sessionId || !accountId) {
+        return null;
+    }
+
+    const favWatchRated = await getContentAccountInfo(
+        sessionId,
+        content,
+        contentId
+    );
+
+    return {
+        favorite: Boolean(favWatchRated.favorite),
+        watchlist: Boolean(favWatchRated.watchlist),
+        sessionId,
+        accessToken: accessToken || '',
+        accountId,
+        accountObjectId: accountObjectId || '',
+    };
 }
 
 //favorite, add to watchlist, rate

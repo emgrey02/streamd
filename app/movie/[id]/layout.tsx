@@ -7,6 +7,8 @@ import Text from '@/app/components/ContentPage/Text';
 import Image from 'next/image';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
+export const revalidate = 86400;
+
 interface LayoutProps {
     children: React.ReactNode;
     params: Promise<{ id: string }>;
@@ -75,9 +77,12 @@ export default async function Layout({ children, params }: LayoutProps) {
                             )}
                         </div>
                     </div>
-                    <Suspense fallback={<p>Loading...</p>}>
-                        <UserContentInfoBox id={id} content="movie" />
-                    </Suspense>
+                    <UserContentInfoBox
+                        id={id}
+                        content="movie"
+                        voteAvg={deets.vote_average}
+                        totalVotes={deets.vote_count}
+                    />
                 </div>
                 <ContentPageNav />
             </Suspense>

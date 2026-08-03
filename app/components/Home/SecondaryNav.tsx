@@ -1,36 +1,12 @@
 'use client';
 
-import { useSyncExternalStore } from 'react';
 import TmdbSignIn from '../TmdbSignIn';
 import TmdbSignOut from '../TmdbSignOut';
 import DashboardLink from './DashboardLink';
-
-// Reads the non-httpOnly 'username' cookie set alongside the session cookies
-// in setSessionCookies (and cleared alongside them in deleteCookies), so its
-// presence is an accurate client-readable proxy for "signed in". Cookies
-// aren't a subscribable store, so there's nothing to notify on -- this only
-// needs to read the value once, after mount.
-function getUsernameCookie(): string | undefined {
-    const match = document.cookie
-        .split('; ')
-        .find((row) => row.startsWith('username='));
-    return match ? decodeURIComponent(match.split('=')[1]) : undefined;
-}
-
-function subscribe() {
-    return () => {};
-}
-
-function getServerSnapshot() {
-    return undefined;
-}
+import { useUsername } from '@/app/lib/useUsername';
 
 export default function SecondaryNav() {
-    const username = useSyncExternalStore(
-        subscribe,
-        getUsernameCookie,
-        getServerSnapshot
-    );
+    const username = useUsername();
 
     return (
         <nav

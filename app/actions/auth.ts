@@ -103,6 +103,14 @@ export async function getAccessToken() {
     }
 }
 
+export async function getAccountId() {
+    return (await cookies()).get('accId')?.value;
+}
+
+export async function getAccountObjectId() {
+    return (await cookies()).get('accountObjectId')?.value;
+}
+
 export async function tmdbLogOut(accessToken: string) {
     const options = {
         method: 'DELETE',

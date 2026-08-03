@@ -4,6 +4,8 @@ import BackButton from '@/app/components/BackButton';
 import ContentPageNav from '@/app/components/ContentPage/ContentPageNav';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
+export const revalidate = 86400;
+
 interface LayoutProps {
     children: React.ReactNode;
     params: Promise<{ id: string }>;

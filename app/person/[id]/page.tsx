@@ -1,6 +1,10 @@
 import SmallCreditsList from '@/app/components/Lists/SmallCreditsList';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
+export async function generateStaticParams() {
+    return [];
+}
+
 export default async function PersonPage({
     params,
 }: {

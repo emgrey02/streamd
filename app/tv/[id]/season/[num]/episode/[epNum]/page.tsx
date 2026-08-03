@@ -1,12 +1,15 @@
 import Text from '@/app/components/ContentPage/Text';
 import Image from 'next/image';
 import BackButton from '@/app/components/BackButton';
-import SubmitRating from '@/app/components/ContentPage/SubmitRating';
+import EpisodeRating from '@/app/components/ContentPage/EpisodeRating';
 import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 import Link from 'next/link';
 import { getDate, getRuntime } from '@/app/utils';
 import { fetchTmdb } from '@/app/lib/tmdb';
-import { getSessionId } from '@/app/actions/auth';
+
+export async function generateStaticParams() {
+    return [];
+}
 
 export default async function Episode({
     params,
@@ -14,8 +17,6 @@ export default async function Episode({
     params: Promise<{ id: string; num: string; epNum: string }>;
 }) {
     const { id, num, epNum } = await params;
-
-    const sessionId = await getSessionId();
 
     const options = {
         method: 'GET',
@@ -90,17 +91,13 @@ export default async function Episode({
                         <h2 className="font-bold">Air Date</h2>
                         <p>{getDate(deets.air_date)}</p>
                     </div>
-                    {sessionId && (
-                        <SubmitRating
-                            content="tv"
-                            id={+id}
-                            sessionId={sessionId}
-                            voteAvg={deets.vote_average}
-                            totalVotes={deets.vote_count}
-                            seasonNum={num}
-                            episodeNum={epNum}
-                        />
-                    )}
+                    <EpisodeRating
+                        id={+id}
+                        voteAvg={deets.vote_average}
+                        totalVotes={deets.vote_count}
+                        seasonNum={num}
+                        episodeNum={epNum}
+                    />
                 </div>
             </div>
 

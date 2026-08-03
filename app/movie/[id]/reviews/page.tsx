@@ -2,6 +2,10 @@ import Reviews from '@/app/components/ContentPage/Reviews';
 import { Suspense } from 'react';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
+export async function generateStaticParams() {
+    return [];
+}
+
 export default async function ReviewsArea({
     params,
 }: {
