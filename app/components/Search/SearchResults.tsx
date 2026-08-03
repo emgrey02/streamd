@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { doASearch, genreSearch, keywordSearch } from '../../actions';
+import { doASearch, genreSearch, keywordSearch } from '../../actions/content';
 import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 
 interface SearchResultsProps {

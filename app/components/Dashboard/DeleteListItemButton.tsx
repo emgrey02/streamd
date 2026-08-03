@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteListItem } from '../../actions';
+import { deleteListItem } from '../../actions/lists';
 
 export default function DeleteListItemButton(props: {
     at: string;

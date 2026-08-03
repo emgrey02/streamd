@@ -1,5 +1,5 @@
 'use client';
-import { addToFavorWatch, removeFavorWatch } from '../../actions';
+import { addToFavorWatch, removeFavorWatch } from '../../actions/favorites';
 import { useState } from 'react';
 
 export default function FavorWatchButton({

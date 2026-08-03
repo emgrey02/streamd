@@ -6,7 +6,7 @@ import {
     createTmdbSession,
     setSessionCookies,
     getUserInfo,
-} from '../actions';
+} from '../actions/auth';
 import { useEffect } from 'react';
 
 //user is sent to this page after authenticating with tmdb

@@ -1,6 +1,6 @@
 'use client';
 
-import { deleteCookies, getAccessToken, tmdbLogOut } from '../actions';
+import { deleteCookies, getAccessToken, tmdbLogOut } from '../actions/auth';
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 

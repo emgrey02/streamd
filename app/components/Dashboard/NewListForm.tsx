@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { createList, updateList } from '../../actions';
+import { createList, updateList } from '../../actions/lists';
 import type { ListFormData } from './Lists';
 
 export default function NewListForm(props: {

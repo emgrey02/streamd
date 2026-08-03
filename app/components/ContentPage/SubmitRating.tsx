@@ -5,7 +5,7 @@ import {
     getContentAccountInfo,
     rateContent,
     deleteRating,
-} from '../../actions';
+} from '../../actions/favorites';
 
 export default function SubmitRating(props: {
     content: string;

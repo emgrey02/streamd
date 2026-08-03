@@ -6,7 +6,7 @@ import {
     deleteListItem,
     getItemStatus,
     getLists,
-} from '../../actions';
+} from '../../actions/lists';
 
 type TmdbList = { id: string; name: string };
 type ItemStatus = { id: string; isItemInList: boolean };

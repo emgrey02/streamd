@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { deleteList, getLists } from '@/app/actions';
+import { deleteList, getLists } from '@/app/actions/lists';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import NewListForm from '@/app/components/Dashboard/NewListForm';

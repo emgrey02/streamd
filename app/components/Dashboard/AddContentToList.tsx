@@ -1,6 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { AddToList, getItemStatus, searchForContent } from '../../actions';
+import { AddToList, getItemStatus } from '../../actions/lists';
+import { searchForContent } from '../../actions/content';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

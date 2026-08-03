@@ -8,7 +8,7 @@ import { cookies } from 'next/headers';
 import Image from 'next/image';
 import Link from 'next/link';
 import Note from '@/app/components/Dashboard/Note';
-import { getContentAccountInfo } from '@/app/actions';
+import { getContentAccountInfo } from '@/app/actions/favorites';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
 export default async function ListPage({

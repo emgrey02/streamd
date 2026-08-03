@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { addNote } from '../../actions';
+import { addNote } from '../../actions/lists';
 
 export default function AddNoteButton(props: {
     at: string;

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect } from 'react';
-import { setReqTokenCookie } from '../actions';
+import { setReqTokenCookie } from '../actions/auth';
 import { redirect } from 'next/navigation';
 
 export default function SetReqToken(props: { rt: string }) {
