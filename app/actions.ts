@@ -140,30 +140,19 @@ export async function getRequestToken() {
             'content-type': 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
-        next: { revalidate: 60 },
+        cache: 'no-store',
         body: JSON.stringify({
             redirect_to: `${process.env.NEXT_PUBLIC_BASE_URL}/approval`,
         }),
     };
 
-    //fetch to get a request token from TMDB
-    const res = await fetch(
+    const resJson = await fetchTmdb<{ request_token: string }>(
         'https://api.themoviedb.org/4/auth/request_token',
-        options
+        options,
+        'fetch v4 request token from tmdb'
     );
 
-    //error handling
-    if (!res.ok) {
-        console.error('failed to fetch v4 request token from tmdb');
-    }
-
-    //assign request Token
-    const resJson = await res.json();
-
-    const reqToken = resJson.request_token;
-
-    console.log('successfully got request token from tmdb');
-    return reqToken;
+    return resJson.request_token;
 }
 
 export async function setReqTokenCookie(rt: string) {
