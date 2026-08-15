@@ -18,6 +18,16 @@ const publicCookieOptions = {
     sameSite: 'lax' as const,
 };
 
+// Vercel sets VERCEL_URL to the unique host of the current deployment (no
+// protocol), including previews, where NEXT_PUBLIC_BASE_URL can't be set
+// per-deployment. Prefer it, falling back to NEXT_PUBLIC_BASE_URL for local dev.
+function getBaseUrl() {
+    if (process.env.VERCEL_URL) {
+        return `https://${process.env.VERCEL_URL}`;
+    }
+    return process.env.NEXT_PUBLIC_BASE_URL;
+}
+
 //account log-in and log-out tasks
 export async function getRequestToken() {
     const options: RequestInit = {
@@ -29,7 +39,7 @@ export async function getRequestToken() {
         },
         cache: 'no-store',
         body: JSON.stringify({
-            redirect_to: `${process.env.NEXT_PUBLIC_BASE_URL}/approval`,
+            redirect_to: `${getBaseUrl()}/approval`,
         }),
     };
 
