@@ -138,8 +138,6 @@ export async function AddToList(
     }
 
     revalidatePath('/dashboard/list/[id]', 'page');
-    revalidatePath('/tv/[id]', 'layout');
-    revalidatePath('/movie/[id]', 'layout');
 
     return resJson;
 }
