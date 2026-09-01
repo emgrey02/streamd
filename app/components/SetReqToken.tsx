@@ -2,19 +2,15 @@
 
 import { useEffect } from 'react';
 import { setReqTokenCookie } from '../actions/auth';
-import { redirect } from 'next/navigation';
 
 export default function SetReqToken(props: { rt: string }) {
     useEffect(() => {
-        async function setToken() {
-            setReqTokenCookie(props.rt).then(() =>
-                redirect(
-                    `https://www.themoviedb.org/auth/access?request_token=${props.rt}`
-                )
-            );
-        }
-        setToken();
-    });
+        // next/navigation's redirect() can't send the browser to an external
+        // origin from a client callback -- this leaves the app entirely.
+        setReqTokenCookie(props.rt).then(() => {
+            window.location.href = `https://www.themoviedb.org/auth/access?request_token=${props.rt}`;
+        });
+    }, [props.rt]);
 
     return <p>Setting request token...</p>;
 }

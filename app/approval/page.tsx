@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
 import {
     getReqTokenCookie,
     createTmdbSession,
@@ -11,8 +10,6 @@ import { useEffect } from 'react';
 
 //user is sent to this page after authenticating with tmdb
 export default function Page() {
-    const router = useRouter();
-
     useEffect(() => {
         //get request token stored in cookie
         async function getTokenCookie() {
@@ -49,8 +46,11 @@ export default function Page() {
             }
         }
 
-        setTheCookies().then(() => router.replace('/'));
-    }, [router]);
+        // A full document load, not router.replace: the sign-in state in the
+        // nav lives in the root layout, which persists across a client-side
+        // transition and would keep rendering the pre-sign-in cookie snapshot.
+        setTheCookies().then(() => window.location.replace('/'));
+    }, []);
 
     return (
         <div className="text-center my-8">
