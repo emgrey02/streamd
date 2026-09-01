@@ -52,13 +52,15 @@ export async function getRequestToken() {
     return resJson.request_token;
 }
 
-export async function setReqTokenCookie(rt: string) {
-    (await cookies()).set('reqToken', rt, secureCookieOptions);
-    if ((await cookies()).get('reqToken')?.value === rt) {
-        return 'success';
-    } else {
-        return 'failed';
-    }
+// Mints a request token and stores it, returning the TMDB URL to send the user
+// to. Deliberately an action rather than something a page does while rendering:
+// minting during render meant every render of /signin burned a token, and since
+// the sign-in link sits in the root layout, Next prefetched that route on every
+// page view -- spending TMDB's auth rate limit with nobody clicking anything.
+export async function startTmdbSignIn() {
+    const requestToken = await getRequestToken();
+    (await cookies()).set('reqToken', requestToken, secureCookieOptions);
+    return `https://www.themoviedb.org/auth/access?request_token=${requestToken}`;
 }
 
 export async function setAccountIdCookie(accId: string) {
