@@ -42,9 +42,9 @@ export default async function Search({
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
-        next: {
-            revalidate: 86400,
-        },
+        // Search keys are unbounded user input and essentially never repeat,
+        // so a cached entry is written, billed, and then never read again.
+        cache: 'no-store' as const,
     };
 
     if (genre) {

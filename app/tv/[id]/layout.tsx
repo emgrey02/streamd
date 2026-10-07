@@ -6,7 +6,7 @@ import { getDate } from '@/app/utils';
 import UserContentInfoBox from '@/app/components/ContentPage/UserContentInfoBox';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
-export const revalidate = 86400;
+export const dynamic = 'force-dynamic';
 
 interface LayoutProps {
     children: React.ReactNode;

@@ -5,10 +5,6 @@ import EpisodeList from '@/app/components/ContentPage/EpisodeList';
 import StreamRentBuy from '@/app/components/ContentPage/StreamRentBuy';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
-export async function generateStaticParams() {
-    return [];
-}
-
 export default async function Show({
     params,
 }: {
