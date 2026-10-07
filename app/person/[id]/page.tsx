@@ -1,10 +1,6 @@
 import SmallCreditsList from '@/app/components/Lists/SmallCreditsList';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
-export async function generateStaticParams() {
-    return [];
-}
-
 export default async function PersonPage({
     params,
 }: {
@@ -18,7 +14,7 @@ export default async function PersonPage({
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
-        cache: 'force-cache',
+        cache: 'no-store',
     };
 
     const content = await fetchTmdb(

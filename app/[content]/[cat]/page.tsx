@@ -6,7 +6,29 @@ import { capitalizeCategory, changeToSearchTerm } from '@/app/utils';
 import { Suspense } from 'react';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
-// type is either movies, shows, or trending
+// The valid set is 12 URLs, so prerender all of them. With dynamicParams
+// false, Next 404s anything else at the routing layer without rendering --
+// previously changeToSearchTerm fell back to 'trending' for unknown content,
+// so every junk URL a bot tried became a TMDB request and a cache entry.
+export const dynamicParams = false;
+
+export async function generateStaticParams() {
+    return [
+        ...['now_playing', 'popular', 'top_rated', 'upcoming'].map((cat) => ({
+            content: 'movies',
+            cat,
+        })),
+        ...['airing_today', 'on_the_air', 'popular', 'top_rated'].map((cat) => ({
+            content: 'shows',
+            cat,
+        })),
+        ...['all', 'movie', 'tv', 'people'].map((cat) => ({
+            content: 'trending',
+            cat,
+        })),
+    ];
+}
+
 export default async function Page({
     params,
 }: {

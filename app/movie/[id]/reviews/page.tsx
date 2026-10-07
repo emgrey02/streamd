@@ -2,10 +2,6 @@ import Reviews from '@/app/components/ContentPage/Reviews';
 import { Suspense } from 'react';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
-export async function generateStaticParams() {
-    return [];
-}
-
 export default async function ReviewsArea({
     params,
 }: {
@@ -19,7 +15,7 @@ export default async function ReviewsArea({
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
-        cache: 'force-cache',
+        cache: 'no-store',
     };
 
     const r = await fetchTmdb(

@@ -7,7 +7,7 @@ import Text from '@/app/components/ContentPage/Text';
 import Image from 'next/image';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
-export const revalidate = 86400;
+export const dynamic = 'force-dynamic';
 
 interface LayoutProps {
     children: React.ReactNode;
@@ -23,7 +23,7 @@ export default async function Layout({ children, params }: LayoutProps) {
             accept: 'application/json',
             Authorization: `Bearer ${process.env.TMDB_AUTH_TOKEN}`,
         },
-        cache: 'force-cache',
+        cache: 'no-store',
     };
 
     const deets = await fetchTmdb(

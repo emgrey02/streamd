@@ -1,10 +1,6 @@
 import LargeCreditsList from '@/app/components/Lists/LargeCreditsList';
 import { fetchTmdb } from '@/app/lib/tmdb';
 
-export async function generateStaticParams() {
-    return [];
-}
-
 export default async function ShowCredits({
     params,
 }: {
